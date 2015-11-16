@@ -1,0 +1,77 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float} %necessary to make [H] work for figures (place in text)
+\usepackage{subfig}
+\title{(yeaheyah)}
+\author{Pawe\l{} Janowski}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+%\usepackage{fullpage}
+\parskip 8pt
+\begin{document}
+\begin{flushright}
+\parskip 0pt
+Pawe\l{} Janowski
+ 
+\today
+\vspace{10 mm}
+\end{flushright}
+\begin{center}
+\begin{Large}
+\textbf{Basic Applied Statistics
+Assignment 3: Statistical Intervals}
+\vspace{10 mm}
+\end{Large}
+\end{center}
+
+
+\begin{enumerate}
+\item Problems 28,30,42,43 see attached sheet.
+\item Problem 32\\
+      $x\pm t_{\alpha/2,df}*s/\sqrt{n}$\\
+      $1584\pm t_{1-.01/2,19}*607/\sqrt{20} = 1584\pm 389$
+\item Problem 33\\
+    \begin{enumerate}
+        \item The box plot is shown below. The interesting feature is that it is very symmetrical so a normal distribution for this sample may be a good guess.
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW4/33.png}
+                \end{figure}
+        \item The results of the boxplot above indicate that a symmetrical distribution is reasonable. However the qq-plot for this sample seems to show a bit of a light tail on the left end of the distribution, indicating that perhaps the normal distribution is not the best. Personally, I would still go ahead and say that a normality assumption is ok, but I don't have a subjective feel yet for how much of a deviation from the straight line in the qq-plot is sufficient to reject the normality assumption.
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW4/33b.png}
+                \end{figure}
+        \item sample mean=438.29; sample st.error = 15.14 \\
+        95\% confidence interval: $438.29\pm t_{1-.05/2,16}*15.14/\sqrt{17} = 438.29\pm 7.78$\\
+        440 lies within the 95\% confidence interval so it is a plausible value for the true average. 450 lies outside of the 95\% CI as well as the 99\% CI so it is rather unplausible.
+    \end{enumerate}
+\item Problem 34\\
+    \begin{enumerate}
+        \item $8.48- t_{1-.95,13}*.79/\sqrt{14} = 8.48-0.37 = 8.11$\\
+        We can be 95\% confident that the true mean proportional limit stress is greater than 8.11. If we repeat this experiment and find the 95\% confidence interval each time for many samples, 95\% of the resulting intervals will contain the true mean.The assumption here is of normality of the population.
+        \item $8.48- t_{1-.95,13}*.79*\sqrt{1+1/14} = 8.48-1.43 = 7.05$\\
+    \end{enumerate}
+\item Problem 44 \\
+95\% CI for $\sigma^2$: Lower bound: $8*2.81^2/\chi^2_{.975,8}=3.60.$ Upper bound: $8*2.81^2/\chi^2_{.025,8}=28.98.$ So the CI is (3.60, 28.98)\\
+95\% for $\sigma$: $(\sqrt{3.60},\sqrt{28.98})=(1.90,5.38)$
+\item Problem 46 \\
+    \begin{enumerate}
+        \item  The qq-plot below shows that yes, it is plausible that the population from which this sample is taken is normally distributed.
+                \begin{figure}[H]
+                    \centering
+                    \includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW4/46.png}
+                \end{figure}
+        \item 95\% upper CI for the variance is: $14*2.49/\chi^2_{.05,14}=5.31$ so the 95\% upper CI for the standard deviation is $\sqrt{5.31}=2.30$
+    \end{enumerate}
+\end{enumerate}
+
+\end{document}

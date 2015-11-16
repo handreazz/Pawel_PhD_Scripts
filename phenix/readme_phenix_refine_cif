@@ -1,0 +1,81 @@
+from iotbx import reflection_file_reader
+from iotbx import cif
+cif_object = cif.reader(file_path=arg, strict=False).model()  ->ordered dict which I need to parse...
+
+
+run:
+	command_line_interpreter = interpreter(...)
+
+
+		interpreter.__init__.py
+			self.process_args(external_params=external_params)
+				cif_object = cif.reader(file_path=arg, strict=False).model()
+				self.cif_objects.append((arg, cif_object))
+			self.processed_pdb_files_srv = utils.process_pdb_file_srv(...)
+			self.processed_pdb_file, self.pdb_inp = self.processed_pdb_files_srv.process_pdb_files(pdb_file_names = pdbs_to_process)
+			
+
+
+	refine_object = phenix.refinement.driver.refine( inputs = command_line_interpreter.inputs(),...)
+		command_line_interpreter.inputs()
+			phenix.refinement.inputs(processed_pdb_files_srv = self.processed_pdb_files_srv, processed_pdb_file=self.processed_pdb_file, pdb_inp=self.pdb_inp,...)
+
+
+phenix.refine shaken.pdb data.mtz topology_file_name=vAla3.prmtop coordinate_file_name=vAla3.rst7 use_amber=True  output.prefix=amber refine.strategy=individual_sites --overwrite hydrogens.refine=individual vAla3.cif refinement.main.number_of_macro_cycles=1 use_afitt=True ligand_name=vAla3
+
+
+In driver.py class refine takes inputs object 
+
+inputs.pdb_inp is iotbx_pdb_ext.input object
+	input.pdb_inp.as_pdb_string() - string of pdb file
+	input.pdb_inp.atoms()  iotbx_pdb_hierarchy_ex	t.af_shared_atom
+	input.pdb_inp.atoms_with_labels() iotbx_pdb_hierarchy_ext.atom_with_labels
+	input.pdb_inp.chain_indices() array where chains end
+	input.pdb_inp.construct_hierarchy()  constructs a hierchy object
+	input.pdb_inp.crystal_symmetry().space_group()
+	input.pdb_inp.crystal_symmetry().space_group_info()
+	input.pdb_inp.crystal_symmetry().unit_cell()
+
+
+	labels_list = pdb_inp.input_atom_labels_list() 
+	atoms = pdb_inp.atoms() 
+	for labels,atom in zip(labels_list, atoms): 
+	   print labels.chain(), labels.resname(), labels.name(), atom.xyz, atom.b
+
+
+
+inputs.processed_pdb_file is mmtbx.monomer_library.pdb_interpretation.process
+    inputs.processed_pdb_file.all_chain_proxies -mmtbx.monomer_library.pdb_interpretation.build_all_chain_proxies
+    inputs.processed_pdb_file.all_chain_proxies.pdb_atoms - iotbx_pdb_hierarchy_ext.af_shared_atom
+    inputs.processed_pdb_file.all_chain_proxies.pdb_inp - 	
+    inputs.processed_pdb_file.all_chain_proxies.sel_backbone - backbone TRUE/FALSE
+    inputs.processed_pdb_file.all_chain_proxies.sites_cart - 
+    inputs.processed_pdb_file.all_chain_proxies.pdb_hierarchy - 
+
+    for model in hierarchy.models(): 
+      for chain in model.chains(): 
+        for conformer in chain.conformers(): 
+          for residue in conformer.residues(): 
+           for atom in residue.atoms(): 
+
+
+    p.models()[0].chains()[0].residues()[0].resname
+    p.models()[0].chains()[0].id
+    p.models()[0].chains()[0].conformers()[0].altloc
+    p.models()[0].chains()[0].conformers()[0].residues()[0].atoms()[0].id_str
+    p.models()[0].chains()[0].conformers()[0].residues()[0].atoms()[0].i_seq
+
+phenix.pdb.hierarchy
+
+
+
+ N   N
+ H   H
+ CH3 CH3
+HH31 HH31
+HH32 HH32
+HH33 HH33
+[36, 37, 38, 39, 40, 41]
+
+
+

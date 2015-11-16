@@ -1,0 +1,6 @@
+trajin supertraj_RevSymm.nc 
+translate x -3
+box x 10.802 fixx
+image center triclinic
+trajout supertraj_RevSymm_WatWrap.nc netcdf
+average supertraj_RevSymm_WatWrap_Avg.mdcrd

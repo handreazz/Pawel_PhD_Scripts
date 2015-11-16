@@ -1,0 +1,33 @@
+static Matrix4 myfit3(const float *x1, const float *x2,
+                      const float *y1, const float *y2,
+                      const float *comx, const float *comy) {
+
+  Matrix4 mx, my, rx1, ry1;
+  double dx1[3], dy1[3], angle;
+  float dx2[3], dy2[3], x2t[3], y2t[3];
+
+  for (int i=0; i<3; i++) {
+    dx1[i] = x1[i] - comx[i];
+    dx2[i] = x2[i] - comx[i];
+    dy1[i] = y1[i] - comy[i];
+    dy2[i] = y2[i] - comy[i];
+  }
+
+  transvecinv(dx1, rx1);
+  rx1.multpoint3d(dx2, x2t);
+  angle = atan2(x2t[2], x2t[1]);
+  mx.translate(-comx[0], -comx[1], -comy[2]);
+  mx.multmatrix(rx1);
+  mx.rot((float) RADTODEG(angle), 'x');
+
+  transvecinv(dy1, ry1);
+  ry1.multpoint3d(dy2, y2t);
+  angle = atan2(y2t[2], y2t[1]);
+  my.translate(-comy[0], -comy[1], -comy[2]);
+  my.multmatrix(ry1);
+  my.rot((float) RADTODEG(angle), 'x');
+
+  my.inverse();
+  mx.multmatrix(my);
+  return mx;
+} 

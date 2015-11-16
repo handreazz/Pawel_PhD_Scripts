@@ -1,0 +1,20 @@
+ctrl - backapostrophe - color schemes
+ctrl slash - comment
+ctrl-shift-f7 - highlight usage
+ctrl-l and ctrl-shift-l - jumt to next usage
+alt-enter - show light bulb suggestions
+ctrl-f1 - expand error warning
+ctrl-shift-f10  -run script
+
+ctrl-shift-bkspace - go to last change
+ctrl-b - go to declaration
+ctrl-alt-shift-n - go to any symbol
+shift-f6 - refactor
+ctrl-alt-P - refactor extract parameter
+add files to project by going to settings/project structure/ add root
+ctrl-space - code completion
+ctrl-enter - what is light bulb
+ctrl-f7 - next usage
+
+      import code; code.interact(local=dict(globals(), **locals()))
+      sys.exit()

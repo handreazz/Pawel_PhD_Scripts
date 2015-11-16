@@ -1,0 +1,6 @@
+To specify where to put the figure:
+If you right click on the "figure" box, and choose settings, you can change
+from "use default placement" to something else (I chose "here if possible").
+Looks like that fixes things
+
+To type in math: C-m

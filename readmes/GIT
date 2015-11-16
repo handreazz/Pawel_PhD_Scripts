@@ -1,0 +1,261 @@
+https://www.atlassian.com/git/tutorial
+
+##GIT
+git checkout --nameoffile (goes back to last commited version of that file)
+git pull
+git clone /home/case/amber11 amber11
+
+##YORK
+mrgit --age --checkout
+tkYorkLib.pl  (library browser)
+mrgit --age --update
+mrgit --age
+mrgit --h (help)
+cd $GIT_HOME
+
+#to clone a specific york repository outside of mrgit
+git clone git@riesling.rutgers.edu:Manuscripts/Hugh_HPR 
+
+### to put a file into the git repository
+cd into the folder you want to have the file in
+create the file then:
+git add nameoffile
+git commit -a -m "a message explaining what the file is or what you are doing"
+git push
+
+##
+Git store many branches, each one of which is like a vision of the entire software package. At any point in time, I can have one branch checked out, which is the files I can see in the folders. However, I also have a hidden file, .git, in the folder which is binary and has all those other versions in it. So git checkout will pull out one of the branches. 
+
+Git pull is actually a combination of two things: git fetch and git merge. Git merge is a combination of git checkout and git merge. 
+
+Use gitk to visually examine the chronological modifications to a branch. 
+
+When you do a git commit, those changes I made are commited on my own computer. But they are not added to the repository somewhere else, like on casegroup, until I do a git push. I need to do a git commit before I can do anything else, like checking out a different branch.
+
+There may be files I've added to the folders, like for example the compiled .o files. These are not monitored by git until I do a git add on them and then a git commit. So if I checkout a different branch, these files will be ignored and will be left behind as is in my folders. If all the files from a directory are monitored by git and removed upon doing a checkout of another branch, the directory itself is also deleted.
+
+git reset --hard HEAD (nameoffile) will undo all changes to tracked (added) files since the last commit.
+git reset HEAD (nameoffile) will undo stageing (ie git add) but not the actual modification. To undo modifications do git reset --hard or git checkout nameoffile.
+
+git status - important command that tells you files that have been added but are not being tracked and also files that have been changed but not commited and files commited
+
+git add nameoffile - need to do this if I have a new file that hasn't been added yet to tracking. Also if I make a change to a file this will add it to the commiting
+
+git commit -a  - with the a flag all tracked files that have been modified will be added and commited. If I have created a new file, it is not being tracked so the -a flag will not affect it and it will not be commited.
+
+
+To check where the remote is for my git-synced directory: in the top folder find .git/config. In this file the url is the url of the remote "origin".
+
+git pull --rebase - this will undo all changes in the last commits I made, do a git pull, then apply all my commits to the top of the stack. After I can do a git push and my commits will be on top. If I don't do this I will have to do a git pull and this will effect a git merge and there will be a merge-commit log in git log.
+
+git rebase -i $commitid (commit id of the latest commit you want to squash from. The rest will be interactive and will allow me to combine multiple commits into one before pushing).
+
+git commit ammend (or something like that, allows me to add changes to the last commit I made)
+
+git cherry-pick - instead of merging two branches just merge in specific commits
+
+###To get an earlier version of a file
+git log - will show you all the git commits along with their serial numbers
+ or git log --oneline - abbreviated git log
+git checkout serialnumber filename - will checkout that version of the file. Than work on it. To go back to the latest version do 'git reset --hard'
+or git checkout HEAD filename
+
+
+git reset (careful, don't reset to obliterate pushed commmits)
+	git reset filename - remove file from staging (i.e. remove a git added file but don't change it)
+	git reset - remove all staged files from staging (but doesn't change them)
+	git reset --hard - remove all staged files and changes, ie obliterate all uncommitted changes
+	git reset serialnumber - move back to the serialnumber commit, adjust staging area (doesn't change files)
+	git reset serialnumber --hard - obliterate all changes since the commit
+	git reset --hard HEAD~2 - reset two commits back
+
+git clean -f - remove untracked files, together with git reste --hard makes your directory match last commit
+git clean -n - dry run: show which files will be removed
+git -fxd - clean up without doint make uninstall (eg in cpptraj sources)	
+
+
+git revert serialnumber - adds a commit that undoes whatever that commit did
+
+git blame filename - show line by line the last commit that changed that line
+
+##########################################################################################
+###### Making a git repo (Dave Case's instructions):
+to get to the git repo for the fav8 paper do this:
+
+   git clone casegroup.rutgers.edu:/home/case/docs/fav8 <dirname>
+
+where the optional dirname can be used to say where you want the working
+directory to appear; default is ./fav8.git.
+
+This is a bare repo, so you can push to it, as well as pull from it.  I've set
+it up to send email to the three of us whenever someone pushes material
+to the repo.
+###########################################################################################
+---------------------------------------------------------------------------
+How I made it (since Pawel asked):
+
+1. collect the lyx file and figures, etc into a directory, say /home/case/fav8.
+2. git init
+3. git add .
+4. git commit -m "original files from Pawel"
+
+Then to make the bare repo:
+
+cd /home/case/docs
+git clone --bare /home/case/fav8 fav8
+
+Then I can get rid of the original repo (to avoid any confusion):
+
+cd /home/case
+rm -rf fav8
+
+After that, each of us clones from /home/case/docs/fav8.
+
+#############################################################################################
+#### How to set up git to send emails automatically
+1) Make sure that the central (bare) repo you want to send the emails is 
+hosted on a server with a functional sendmail (e.g. casegroup)
+
+2)Go into the hooks directory of your bare repo
+
+cd hooks/
+
+and either
+
+2a) rename/copy/link the sample script and edit
+
+mv post-receive.sample post-receive
+
+You can uncomment the one line in there but I put in the following
+
+if [ `hostname` = "casegroup.rutgers.edu" ]; then
+    . /usr/share/git-core/contrib/hooks/post-receive-email
+fi
+
+If the repo is accessed from other hosts that do not have sendmail (e.g. 
+chem-latzer) then it causes unwanted mail behaviour on that machine.
+
+2b) copy the example script to the hooks directory and rename
+
+cp /usr/share/git-core/contrib/hooks/post-receive-email post-receive
+
+3) Go to the top level of the repo and edit the config file
+
+cd ..
+
+and add to config something like
+
+[hooks]
+        mailinglist = 
+tluchko@rutgers.edu,i.joung@gmail.com,case@biomaps.rutgers.edu
+        envelopesender = git
+        emailprefix = "[GIT IET Ions] "
+
+The post-receive-email script lists some additional options you can use 
+at the top of the file.
+
+4) (optional) Edit the description file to give a short description of 
+the repo.  This shows up in the subject line.  E.g.
+
+IET Ions Chapter
+
+###############################################################################################
+http://ambermd.org/pmwiki/index.php/Main/Coding
+http://schacon.github.com/git/gittutorial.html
+http://jswails.wikidot.com/using-git
+
+
+Good to do at beginning:
+
+git config --global user.name "Joe Q. Developer"
+git config --global user.email "jqd@gmail.com"
+git config --global status.showUntrackedFiles no
+git config --global push.default tracking
+
+
+git diff --stat origin/master
+git branch -av
+git reflog
+
+############################################################################################
+
+When I got a (no branch), here's what Dave did:
+21776  rsync -av fav8_manuscript/ /tmp
+21777  cd fav8_manuscript/
+21778  git branch may12
+21779  git status
+21780  git reflog
+21781  git checkout may12
+21782  git branch
+21783  git diff --stat master
+21784  git checkout master
+21785  git merge may12
+21786  git log
+21787  git status
+21788  git push
+
+###############################
+Checking what's happened since my last git pull
+First do git fetch
+Now git status and/or git checkout master will tell me how many commits I'm behind.
+git log origin/master will tell me the commits on the repo master so I can see which ones were since the last pull
+git log master will show me the commits on my local repo
+git log master..origin/master will show me just the ones I'm missing (commits in origin/master not yet in local master)
+git log master src/pmemd will show me just those commits that modified files in src/pmemd directory
+git log master..origin/master src/pmemd will show the missing commits in that directory
+
+
+
+######################################
+You can't push to a remote branch that is checke out. That's why you either use a bare repo (no working files, just the git history. Or you can push to a remote branch that's not checked out.
+
+
+Git checkout of a file from a former commit: the file from the former commit is loaded and the changes relative to HEAD are staged for commit (like having done git add). So git status will show that the file is changed but git diff will show no difference because they are staged. To unstage use git revert. Than git diff will show the changes relative to HEAD. Or without unstaging (revert) you can do git diff HEAD nameoffile to see the changes. 
+
+git add -p - will let you interactively add chunks of modified code for commit.
+Then you can do git checkout on all files to remove the changes you don't want to commit.
+
+git checkout - won't remove staged changes
+git checkout HEAD - will remove stages changes from staging ?
+git checkout --hard HEAD - will go back to the original version ?
+
+git bisect - between two commits untill find the commit that introduced the bug...
+
+git push - to avoid doing "git push origin master" do once "git push -u origin master"
+
+######################################
+Github
+1. First you want to fork the branch you'll be working with.
+2. git clone <myforkedbranch>
+3. git add remote <the original master branch>
+4. now when you work you pull from the original master
+   git pull jason master
+5. when you want to submit a pull request. First create a new branch
+	git branch newpawel
+   then push that branch to remote 
+	git push origin pawel
+6. now go to github and submit the pull
+7. When it's approved you want to make your master up to date with jason's mamster and delete the branch
+	git checkout master
+	git pull jason master
+	git push
+	git branch -d newpawel
+	git push origin :newpawel
+
+If I cloned Jason's repo first and then git add remote my fork, i can switch git pull/push to direct itself to my fork by doing
+	git branch --set-upstream-to=<myfork>
+And I can rename my remote from pjanowski to origin by
+	git remote rename...
+
+
+Github - setting up a new repo of mine
+1. Go to github and click + in upper right and make new repo. Copy the new repo's ssh url to clipboard
+2. Go to project on local machine.
+3. git init, git add files, git commit
+4. git remote add origin remote_URL #remote_URL is the url you copied in step 1
+5. git remote -v # to check it works
+6. git pull origin master
+7. git push origin master
+
+
+

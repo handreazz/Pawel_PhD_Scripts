@@ -1,0 +1,9 @@
+Scripts for calculation of <f>^2 and <f^2> from MD data are in:
+
+  $PHENIX/phenix/phenix/utilities/get_struct_fact_from_md.py
+
+I have attached a little demo that shows how to do it. The input data consists of a file of protein atoms, arranged as MODELs (3 present in this example), and a similar file for water atoms, also grouped as MODELs (one-to-one with protein MODELS).  The script calculates structure factors and squared structure factors from the models in these files (or just protein file if you like).  Then the script is run again to merge any such sets of structure factors to get one set of master files.
+
+you can run the demo with:
+
+    ./run_demo.csh

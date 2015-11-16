@@ -1,0 +1,59 @@
+parm ../asu.prmtop
+trajin ../revsym/RevSym_01_01.nc 1 -1 1
+trajin ../revsym/RevSym_01_02.nc 1 -1 1
+trajin ../revsym/RevSym_02_01.nc 1 -1 1
+trajin ../revsym/RevSym_02_02.nc 1 -1 1
+trajin ../revsym/RevSym_03_01.nc 1 -1 1
+trajin ../revsym/RevSym_03_02.nc 1 -1 1
+trajin ../revsym/RevSym_04_01.nc 1 -1 1
+trajin ../revsym/RevSym_04_02.nc 1 -1 1
+trajin ../revsym/RevSym_05_01.nc 1 -1 1
+trajin ../revsym/RevSym_05_02.nc 1 -1 1
+trajin ../revsym/RevSym_06_01.nc 1 -1 1
+trajin ../revsym/RevSym_06_02.nc 1 -1 1
+trajin ../revsym/RevSym_07_01.nc 1 -1 1
+trajin ../revsym/RevSym_07_02.nc 1 -1 1
+trajin ../revsym/RevSym_08_01.nc 1 -1 1
+trajin ../revsym/RevSym_08_02.nc 1 -1 1
+trajin ../revsym/RevSym_09_01.nc 1 -1 1
+trajin ../revsym/RevSym_09_02.nc 1 -1 1
+trajin ../revsym/RevSym_10_01.nc 1 -1 1
+trajin ../revsym/RevSym_10_02.nc 1 -1 1
+trajin ../revsym/RevSym_11_01.nc 1 -1 1
+trajin ../revsym/RevSym_11_02.nc 1 -1 1
+trajin ../revsym/RevSym_12_01.nc 1 -1 1
+trajin ../revsym/RevSym_12_02.nc 1 -1 1
+trajin ../revsym/RevSym_13_01.nc 1 -1 1
+trajin ../revsym/RevSym_13_02.nc 1 -1 1
+trajin ../revsym/RevSym_14_01.nc 1 -1 1
+trajin ../revsym/RevSym_14_02.nc 1 -1 1
+trajin ../revsym/RevSym_15_01.nc 1 -1 1
+trajin ../revsym/RevSym_15_02.nc 1 -1 1
+trajin ../revsym/RevSym_16_01.nc 1 -1 1
+trajin ../revsym/RevSym_16_02.nc 1 -1 1
+trajin ../revsym/RevSym_17_01.nc 1 -1 1
+trajin ../revsym/RevSym_17_02.nc 1 -1 1
+trajin ../revsym/RevSym_18_01.nc 1 -1 1
+trajin ../revsym/RevSym_18_02.nc 1 -1 1
+trajin ../revsym/RevSym_19_01.nc 1 -1 1
+trajin ../revsym/RevSym_19_02.nc 1 -1 1
+trajin ../revsym/RevSym_20_01.nc 1 -1 1
+trajin ../revsym/RevSym_20_02.nc 1 -1 1
+trajin ../revsym/RevSym_21_01.nc 1 -1 1
+trajin ../revsym/RevSym_21_02.nc 1 -1 1
+trajin ../revsym/RevSym_22_01.nc 1 -1 1
+trajin ../revsym/RevSym_22_02.nc 1 -1 1
+trajin ../revsym/RevSym_23_01.nc 1 -1 1
+trajin ../revsym/RevSym_23_02.nc 1 -1 1
+trajin ../revsym/RevSym_24_01.nc 1 -1 1
+trajin ../revsym/RevSym_24_02.nc 1 -1 1
+trajin ../revsym/RevSym_25_01.nc 1 -1 1
+trajin ../revsym/RevSym_25_02.nc 1 -1 1
+trajin ../revsym/RevSym_26_01.nc 1 -1 1
+trajin ../revsym/RevSym_26_02.nc 1 -1 1
+trajin ../revsym/RevSym_27_01.nc 1 -1 1
+trajin ../revsym/RevSym_27_02.nc 1 -1 1
+reference ../revsym/AvgCoord_asu.rst7
+rms reference mass :3-127&!(@H=)
+matrix mwcovar name mwcvmat2 out mwcvmat2.dat :3-56@CA 
+diagmatrix mwcvmat2 out evecs2.dat vecs 20 thermo outthermo thermo2.dat nmwiz nmwizvecs 20 nmwizfile out2.nmd

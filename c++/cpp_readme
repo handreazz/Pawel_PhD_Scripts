@@ -1,0 +1,281 @@
+#shared_ptr
+You should always avoid using RAW pointers like
+thingie * mythingie
+
+and instead use
+
+std::tr1::shared_ptr<thingie> mythingie 
+
+So, to get the "python-like" behavior, just say
+std::tr1::shared_ptr<mythingie> p( new mythingie() );
+std::tr1::shared_ptr<mythingie> q( new mythingie() );
+p = q; // p and q now refer to the same thing
+p.some_method(); // effects q too 
+
+Here's another case:
+
+std::tr1::shared_ptr<thingie> p( new thingie() );
+std::tr1::shared_ptr<thingie> q( new thingie() );
+std::tr1::shared_ptr<thingie> r; // r points at nothing
+// at this point p and q point to two different thingies
+r = p; // both r and p point to thingie #1
+p = q; // both p and q point to thingie #2
+// r continues to point at thingie #1, so thingie #1 is not deleted 
+
+
+There is an exception to this:
+It's fine to use it when it has local scope and does not involve new or delete:
+void DoSomething( thingie * mythingie )
+{
+  mythingie->dosoemthing1()
+  mythingie->dosomething2()
+} 
+
+
+
+#POINTERS
+double* ptr = & x  - address operator: double* is a pointer to a double. ptr is an address pointint at x. &x returns the address of x.
+doubly y = *ptr - "dereference operator": the value of y is set to the value of the thing that ptr points to
+
+data types:
+double* p - p is a pointer to a double
+double const * p - p is a pointer to a constant double
+double * const p - p is a constant pointer to a double
+double * const * p - p is a pointer to a constant pointer to a double
+double & x = y - x is an alias to y, any change to to x is applied to y and vice versa
+
+#COMPILING
+g++ nameofcode.cpp //produces the compiled program a.out
+g++ nameofcode.cpp -o nameofprogram // produces nameofprogram
+
+gcc -g -Wall -o new new.c
+valgrind -v ./new -o inputf outfill
+
+
+#comments
+//     line comment
+/*  */ block comment
+
+###
+	#include <iostream>
+	using namespace std
+
+	int main () {
+
+	return 0
+	}
+
+###
+
+#variables listed in
+http://gcc.gnu.org/onlinedocs/gcc-4.4.3/gcc/Environment-Variables.html#Environment-Variables
+# for includes you can set CPATH or CPLUS_INCLUDE_PATH variables
+
+# python boost tutorial kind of
+http://www.boost.org/doc/libs/1_53_0/libs/python/doc/building.html
+http://www.boost.org/doc/libs/1_53_0/libs/python/doc/tutorial/doc/html/python/exposing.html
+
+#include header files
+export CPLUS_INCLUDE_PATH=/home/pjanowsk/lib/eigen/
+
+# useing make magic
+create Makefile
+make make
+make -f Makefile.simple
+
+#include <type_traits>   //c++11 thing
+cout << std::extent <decltype( myints )> ::value <<endl;
+
+gcc 1exe.c -o 1exe.out
+#for cpp use:
+g++ pointer3.cpp -o test
+
+# declare a pointer to c and to d
+void addone( int * c, int * d)
+
+#return the value at address d
+cout << *d <<endl;
+
+#return address d
+cout << d <<endl;
+
+##Two ways to pass by reference:
+
+void addone( int * c, int * d)
+{
+  ++*c;
+  ++*d;
+  cout << d <<endl;
+}
+
+void swap( int &a, int &b)
+{
+int tmp;
+
+  tmp = a;
+  a = b;
+  b = tmp;
+}
+
+int main()
+{
+addone(&a,&b);
+swap(a,b);
+}
+
+### pointers:
+
+int myInt=99 -declare int varialbe
+int * pointInt=0 - declare pointer int variable
+
+
+
+myInt - will give the value of myInt
+&myInt - address of operator: will give the memory address of myInt
+
+pointInt= &myInt - assign memory addres of myInt to the pointer pointInt
+pointInt - adress of myInt
+*pointInt - dereference operator: will give the value of myInt
+
+*pointInt=11 - dereference and assign new value at that address, myInt is now 11
+
+
+### arrays
+an array name is a pointer to its first element
+Marks[10]={1,2,3,4,5,6,7,8,9,0};
+Marks - memory address of the first element
+&Marks[0]- same: memory address of the first element
+*Marks - dereference of the memory address of the first element, so value of first element, 1
+
+
+
+#debugging
+nm
+ldd
+
+#time
+clock_t begin, end;
+double time_spent;  
+begin = clock();
+  GetPrmTop(&thisU.tp, tj, 1);
+end = clock();
+time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+printf("Time spent: %5.12f\n", time_spent);
+
+# structs and pointers (uform* U)
+  printf("%d\n", (*U).rcinp.nlev);
+  printf("%d\n", (&U->rcinp)->nlev) ;
+  
+
+
+#####################################################
+# TIM ON uform_wrapper                              #
+#####################################################
+### how to add deleter to the cpp wrapper functions
+struct uform_Deleter
+{
+  void operator() ( uform * & ptr )
+  {
+    if ( ptr )
+      {
+    cfcn_uform_deleter( *ptr );
+    ptr=NULL;
+      };
+  }
+};
+
+class uform_wrapper
+{
+public:
+  uform_wrapper();
+  std::tr1::shared_ptr<uform> ptr;
+};
+
+uform_wrapper::uform_wrapper()
+{
+  std::tr1::shared_ptr<uform> tmp( &(cfcn_new_uform()) , uform_Deleter() );
+  ptr = tmp;
+} 
+
+### ASSIGNING THE SHARED POINTER
+# the c-fcn returns a copy of a uform (return by value)
+ptr.reset( (uform*)malloc(sizeof(uform)), uform_deleter() );
+
+#if the c-fcn returns a pointer to the uform:
+boost::shared_ptr<uform> tmp( LoadTopology2(p) );  //no deleter!!!
+ptr = tmp; 
+
+
+### OVERLOAD OPERATOR 
+
+(uform*)U  is usually implicit, tells how to type cast...
+  operator uform*(){
+	  return ptr.get();
+in other words:
+	uform* tmp = me;
+is really
+	uform* tmp = (uform*)me;
+and this opetator says how to interpret that (uform*)
+
+# this extracts the python object into a uform_wrapper
+	uform_wrapper U = boost::python::extract<uform_wrapper & > (someuform);
+# now to get the raw pointer, this uses the typecast operator defined above
+        uform * Uptr = U;
+# but I could also do that explicitely (without defining that operator):
+	boost::shared_ptr<uform> U_shared_ptr=U.ptr;
+	uform * Uptr=U_shared_ptr.get();
+# or even
+	uform* Uptr=U.ptr.get();
+
+
+### arrow and dot
+foo->bar is the same as (*foo).bar
+foo->bar->QL[0] - pointer to bar array to element 0 of QL of the fist element of bar
+foo->bar[0].QL[0] - same but first bar array to first element of QL in first bar array
+
+
+### size of array
+sizeof(arr)/sizeof(arr[0]) only works for arrays whose size is known at compile time. For dynamically allocated, you can't do this, have to keep track yourself when malloc'ing.
+
+
+#compiling
+g++ nameofcode.cpp //produces the compiled program a.out
+g++ nameofcode.cpp -o nameofprogram // produces nameofprogram
+
+gcc -g -Wall -o new new.c
+valgrind -v ./new -o inputf outfill
+
+
+#comments
+//     line comment
+/*  */ block comment
+
+###
+	#include <iostream>
+	using namespace std
+
+	int main () {
+
+	return 0
+	}
+
+###
+
+#variables listed in
+http://gcc.gnu.org/onlinedocs/gcc-4.4.3/gcc/Environment-Variables.html#Environment-Variables
+# for includes you can set CPATH or CPLUS_INCLUDE_PATH variables
+
+# python boost tutorial kind of
+http://www.boost.org/doc/libs/1_53_0/libs/python/doc/building.html
+http://www.boost.org/doc/libs/1_53_0/libs/python/doc/tutorial/doc/html/python/exposing.html
+
+
+nm - shows symbols
+ldd - shows where linked libraries are
+
+fgets - get string from stream into a buffer. Then use sscanf to scan that buffer into a specific format.
+getline - is better to get a line from a stream. Need a character pointer first.
+
+#linker stuff
+http://www.lurklurk.org/linkers/linkers.html#objpng
+

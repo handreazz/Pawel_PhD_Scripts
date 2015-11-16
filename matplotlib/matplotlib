@@ -1,0 +1,185 @@
+### to clear an image before opening new one
+"pl.clf()" or "pl.cla()
+
+###rcparameter file is in 
+/usr/lib64/python2.7/site-packages/matplotlib/mpl-data/matplotlibrc
+#I can also make one and put it in ~/.matplotlib and call it maplotlibrc.
+#To check which matplotlibrc if being used:
+matplotlib.matplotlib_fname()
+
+#if you get errors like this:
+#/usr/lib64/python2.7/site-packages/matplotlib/font_manager.py:1242: UserWarning: findfont: Font family ['cmtt10'] not found. Falling back to Bitstream Vera Sans
+#Then put this line in your matplotlibrc:
+mathtext.fontset: stix
+
+####axis label positions
+If you want full control of label coordinates, you need to use
+"Axis.set_label_coords" method. For example,
+
+ax = gca()
+ax.xaxis.set_label_coords(0.5, -0.1)
+
+And alternative way is to adjust the padding between the axis and the label.
+
+ax.xaxis.labelpad = 0
+ax.set_xlabel('my label', labelpad=0)
+
+savefig('example.png', bbox_inches='tight')
+
+#axis range
+ax.set_ylim([0, 129])
+
+#invert axis
+ax.invert_yaxis()
+
+#ticks on top
+ax.xaxis.tick_top()
+
+####Try this out for axis label positions
+plt.ylabel('Scores')
+plt.xticks(ind+width/2., ('G1', 'G2', 'G3', 'G4', 'G5') )
+plt.yticks(np.arange(0,81,10))
+
+
+###Legend
+p1 = plt.bar(ind, menMeans,   width, color='r', yerr=womenStd)
+p2 = plt.bar(ind, womenMeans, width, color='y',
+             bottom=menMeans, yerr=menStd)
+plt.legend( (p1[0], p2[0]), ('Men', 'Women') )
+# multiple columns
+ax.legend(bbox_to_anchor=(0, 0, .95, .2),prop=font,ncol=4)
+
+#legend fond
+legend = ax1.legend(prop={'size':18, 'family':'monospace'})
+
+#legend title
+legend = ax1.legend(title='hello')
+legend.get_title().set_fontsize('18')
+
+#legend frame
+legend = ax1.legend(frameon=True)
+legend.get_frame().set_edgecolor('k')
+legend.get_frame().set_linewidth(1.0)
+
+#tick labels
+ax.set_xticklabels(['Boc','Aib','Ala','Phe','Aib','Phe','Ala','Val','Aib','Ome','Boc','Aib','Ala','Phe','Aib','Phe','Ala','Val','Aib','Ome'])
+from matplotlib.ticker import Formatter, Locator, NullLocator, FixedLocator, NullFormatter
+ax.xaxis.set_major_locator(FixedLocator([4,10.5,16,24,32.5,41,49,55,61,68,75,81.5,87,95,103.5,112,120,126,132,139]))
+
+#remove tick labels
+ax1.set_yticklabels([], minor=False)
+
+#tick labels font size:
+#Method 1:
+            for tick in ax.xaxis.get_major_ticks():
+                tick.label.set_fontsize(14) 
+                tick.label.set_rotation('vertical')
+#method 2:
+plt.setp(ax.get_xticklabels(), rotation='vertical', fontsize=14)
+#method 3:
+ax.tick_params(axis='x', labelsize=8)
+
+#tick width 
+#method 1
+ax.tick_params(width=2) 
+#method2
+for line in ax.get_xticklines() + ax.get_yticklines():
+	line.set_markeredgewidth(4)
+	line.set_markersize(10)
+#method 3
+plt.rc(('xtick.major','xtick.minor','ytick.major','ytick.minor'), pad=10)
+plt.rc('axes',linewidth=3)
+plt.rc('legend', fontsize=20) 
+plt.rc('lines', markeredgewidth=2)
+plt.rc('xtick.minor',size=5)
+plt.rc('xtick.minor',width=2)
+plt.rc('xtick.major',size=12)
+plt.rc('xtick.major',width=4)
+plt.rc('lines', linewidth=3) 
+
+#tick label font fixed width
+from matplotlib.font_manager import FontProperties
+ticks_font = FontProperties(family='monospace', size=10)
+ax.set_yticklabels(data.index, minor=False, fontproperties=ticks_font)
+
+##change font and position of only some tick labels
+xticks = ax.get_xticklabels()
+for i in range(1,20,2):
+	xticks[i].set_position((0,-.02))
+#~ xticks[19].set_fontsize(18)
+
+# ticks label minor but not major, disappear minor tick lines, center tick labels on minor ticks (I think better to use method 3 above)
+	ax.set_xticks(arange(30,730,61),minor=True)
+	ax.set_xticks(arange(0,730,61))
+	ax.set_xticklabels(arange(1,13),minor=True)
+	ax.set_xticklabels([])
+	ax.set_yticks(arange(30,730,61),minor=True)
+	ax.set_yticks(arange(0,730,61))
+	ax.set_yticklabels(arange(1,13),minor=True)
+	ax.set_yticklabels([])
+	for tick in ax.xaxis.get_minor_ticks():
+		tick.tick1line.set_markersize(0)
+		tick.tick2line.set_markersize(0)
+		tick.label1.set_horizontalalignment('center')
+	for tick in ax.yaxis.get_minor_ticks():
+		tick.tick1line.set_markersize(0)
+		tick.tick2line.set_markersize(0)
+		tick.label1.set_verticalalignment('center')
+
+# mathtext math expressions latex fontset
+plt.rc('mathtext',default='regular')  #will make mathtext appear as all other text
+plt.annotate(r'Slope=$\mathrm{7.2 x 10^{-4}}$',xy=(5000,200), xytext=(340000,200),fontsize=28) #makes just this part math roman (can also do it and others)
+
+# grid
+plt.grid(True,ls="-",which='majorminor')
+
+# color and markertype separately:
+ax.plot(x,y,'#F86606', linewidth=4)
+
+ax.plot(x,data[:,i], linestyle='-', marker='o', color='#1BEA2C', markersize=10)
+
+colors = itertools.cycle(["r", "b", "g"])
+for y in ys:
+    plt.scatter(x, y, color=next(colors))
+colors = iter(cm.rainbow(np.linspace(0, 1, len(ys))))
+for y in ys:
+    plt.scatter(x, y, color=next(colors))
+
+#tight border
+fig.tight_layout()
+
+#math latex
+ax2.set_xlabel('Energy PDB($blue$) or AFITT-cif($red$)  $(kJ/mol)$', fontsize=20)
+
+#text box
+textstr='                $<\Delta E>$ \n       '          \
+        '    PDB    vs. Phenix-AFITT = %2.f%%\n'   \
+        'AFITT-cif vs. Phenix-AFITT = %2.f%%\n '    %(mean(en_depo_10), mean(en_noaf_10))
+props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+ax2.text(0.10, 0.90, textstr, transform=ax2.transAxes, fontsize=20,
+      verticalalignment='top', bbox=props)
+
+#frame around plot, border, rectangle
+autoAxis = ax1.axis()
+rec1 = plt.Rectangle((autoAxis[0]-2,autoAxis[2]-2),(autoAxis[1]-autoAxis[0])+1,(autoAxis[3]-autoAxis[2])+1,fill=False,lw=4)
+rec1 = plt.Rectangle((-40,-.0003),1073, .00435,
+                    fill=False,lw=2)
+rec1 = ax1.add_patch(rec1)
+rec1.set_clip_on(False)
+
+
+#iterate loop over all axes objects in figure:
+for ax in fig.axes:
+  ax.set_xlim(-1.5,1.5)
+  ax.set_ylim(-1.5,1.5)
+
+# plot_benchmarks.py
+double axis, double y axis
+double legend
+legend title
+legend location
+colors
+axis lable, axis size
+axis locations
+axis range (limit)
+

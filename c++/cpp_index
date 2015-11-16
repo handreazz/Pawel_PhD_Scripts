@@ -1,0 +1,13 @@
+#printSet to terminal (sets/set4.cpp)
+
+#printSet to string (sets/set5.cpp)
+
+#number of elements (sets/set4.cpp)
+
+#create Set (sets/set4.cpp)
+
+#pass std array to function (reference_function.cpp)
+
+# pass by reference vs pass by value (reference_function.cpp)
+
+# pass std array to function without knowing how many elements (reference_function2.cpp)

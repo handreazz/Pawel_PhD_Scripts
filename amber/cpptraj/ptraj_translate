@@ -1,0 +1,3 @@
+trajin mergetraj_cent_nowat.nc
+translate x 37.67200 y 26.80862 z 25.55500
+trajout mergetraj_centonpdb_nowat.nc netcdf

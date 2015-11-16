@@ -1,0 +1,2 @@
+trajin ../mergetraj_centonpdb_nowat.nc 4401 6401
+matrix dist @CA,C1' out dist_last40to60.dat

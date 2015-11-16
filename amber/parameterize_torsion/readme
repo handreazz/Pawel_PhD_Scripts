@@ -1,0 +1,10 @@
+CAC_dihEric.com is the basic gaussian input file template. Use mk_files_CAC.sh to generate directories with the modified .com file in each ready for gaussian. 
+RunGyges is a script for gyges to enter each of those directories and run gaussian.
+I usually move the outputs that are good to ./donefolder.
+Go into donefolder
+run ../chk_CAC.sh
+chk_CAC.sh checks for errors in output files and spits out energy to the terminal. Copy paste those energies into a file.
+makeAmatBve.py takes the energies from chk_CAC.sh makes the b vector (this is the energies minus the bond, angle, 1-4 and non-bonded energy components) and the a matrix (this is a column for each dihedral to be fit and a row for each conformation. The elements are the cos(x) (or whatever function I want for that dihedral at that conformation. makeAmatBvec_mod has cos(3x) and adds also produces a matrix of the angles themselves Eng.txt. 
+llsp.m runs in matlab and takes the b vector and A matrix as arguments and spits out the fi.
+fitresult.txt is an sh script which runs the python and matlab analysis together.
+

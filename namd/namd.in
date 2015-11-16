@@ -1,0 +1,21 @@
+#############################################################
+##                                                         ##
+##   ADD THE DESCRIPTION HERE !!!!!                        ##
+##                                                         ##
+#############################################################
+
+source OUT.settings
+source NPT.settings
+source PME.settings
+waterModel tip4
+
+bincoordinates md1.coor
+binvelocities  md1.vel
+extendedSystem md1.xsc
+#temperature 300
+outputName     md2
+
+parmfile topo.prmtop
+ambercoor equil30.rst7
+timestep       1.0    	;# 1fs/step (dt=0.001 in amber)
+run 3000000

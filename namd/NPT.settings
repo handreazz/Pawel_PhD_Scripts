@@ -1,0 +1,42 @@
+# AMBER settings
+cutoff         10
+switching      off
+pairlistDist   12		;#cutoff + 2 or whatever  skinnb was in amber
+amber          on
+exclude        scaled1-4
+1-4scaling     0.833333333
+scnb	       2.0 		;#default
+readexclusions yes		;#default
+LJcorrection   yes
+zeroMomentum   yes		
+
+
+# Integrator Parameters
+rigidBonds          all
+rigidTolerance      1.0e-6	;#the default is 1.0e-8
+nonbondedFreq       1
+fullElectFrequency  2
+stepspercycle       20		;#this is the "old way", amber updates whenever atom moves more than .5skinnb
+
+
+# Constant Temperature Control
+langevin            on    ;# do langevin dynamics (off for NVE)
+langevinDamping     1     ;# damping coefficient (gamma) of 1/ps
+langevinHydrogen    off    ;# don't couple langevin bath to hydrogens
+langevinTemp          300
+
+# Periodic Boundary Conditions
+wrapAll             off   ;#(iwrap=0)
+
+# Constant Pressure Control (variable volume)
+useGroupPressure      yes ;# needed for rigidBonds
+useFlexibleCell       yes  ;#anisotropic pressure scaling
+useConstantArea       no
+
+langevinPiston        on	;# (off for NVE)
+langevinPistonTarget  1.01325 	;#  in bar -> 1 atm
+langevinPistonPeriod  200.
+langevinPistonDecay   100.
+langevinPistonTemp    300
+
+

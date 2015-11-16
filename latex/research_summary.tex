@@ -1,0 +1,89 @@
+\documentclass[10.5pt]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float} %necessary to make [H] work for figures (place in text)
+\usepackage{subfig}
+\usepackage{pdfpages}
+\author{Pawe\l{} Janowski}
+\usepackage{multicol}
+\newenvironment{Figure}
+    {\par\medskip\noindent\minipage{\linewidth}}
+    {\endminipage\par\medskip}
+%\DeclareUnicodeCharacter{00A0}{ }
+\parskip 8pt
+\begin{document}
+    \begin{flushleft}
+    \parskip 0pt
+\begin{large}
+        Pawe\l{} Janowski \hfill pjanowsk@rutgers.edu\\
+    PhD Research Highlights \hfill Tel: 973-919-5434\\
+\end{large}
+%    \vspace{2 mm} 
+    \end{flushleft}
+    
+    
+%\begin{multicols}{2}
+    
+    \begin{center}
+\begin{large}
+        \textbf{Molecular dynamics simulations of biomolecular crystals}
+\end{large}
+%    \vspace{ mm}
+    \end{center}
+
+Crystallography is at the forefront of methods for obtaining macromolecular structural data, but it has traditionally focused on providing a single, "best-fit" static structure of the molecule. However, we know that crystals are anything but static and that beyond the time and space averaged nature of the diffraction experiment lies a dynamic and heterogeneous landscape. Molecular dynamics (MD) offers the potentially to study the time-resolved behavior of molecules at an atomic level. The goal of my research has been to gain a glimpse into the inner life of crystals by integrating biomolecular crystallography with MD. It is my hope that this approach will contribute to a more comprehensive ensemble-based view of crystal structure. 
+
+\subsection*{Molecular dynamics simulations of biomolecular crystals}
+Part of my work has focused on developing novel methods for biomolecular crystal simulations. Our approach models multi-unit-cell systems using an all-atom, explicit solvent approach. Our simulations have not only helped interpret diffraction data but have also provided an important validation tool to the \textit{in silico} approach. For example, simulations of a peptide crystal, revealed a dynamic landscape of solvent as well as structural heterogeneity in the peptide, while maintaining complete consistence between experimental and simulation properties such (eg. structure factors). The simulations furthermore pointed to the need to model additional solvent molecules and alternate confromations which consequently led to a better experimental model with a lower R-free factor. In more recent work I have focused on crystal simulations of larger systems, proteins and nucleic acids.
+
+%    \begin{figure}[H]
+%        \centering
+%        \includegraphics[width=0.5\textwidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/wat.png}
+%        \caption{caption.}
+%    \end{figure}
+%    
+%    \begin{figure}[H]
+%        \centering
+%        \includegraphics[width=0.5\textwidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/rfree.png}
+%        \caption{caption}
+%    \end{figure}
+
+
+\begin{figure}[H]%
+    \centering
+    \subfloat[Experimental (left) vs. simulated (right) electron density. Red dots mark location of deposited model waters. Unbiased simulation density agrees well with experiment (all reflection R-factor 21\%) and possesses predictive capability for temperature factors (numbers). Purple arrow points to putative additional water site.]{{\includegraphics[width=.46\linewidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/wat.png} }}%
+    \qquad
+    \subfloat[Crystal simulation point to additional unmodelled solvent. Agreement of simulation vs. experimental structure factor amplitudes (R-factor on y-axis) with increasing number of modelled waters per crystal unit cell (x-axis). ]{{\includegraphics[width=.46\linewidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/rfree.png} }}%
+\end{figure}
+        
+        
+\subsection*{Improved crystallographic refinement through molecular dynamics force fields}
+Traditionally crystallographic refinement has depended on a set of empirically derived geometric restraints (Engh-Huber - EH - restraints). I have combined the Amber molecular dynamics engine MDGX with the Phenix's refinement program to provide a more sophisticated set of geometry-based gradients for the refinement algorithm. From a technical standpoint, the two programs have been seemlessly integrated through a combined use of Python, C and C++ in an elegant manner that minimizes the memory footprint. The use of Amber in refinement leads to improved structural characteristics: better hydrogen bonding, backbone dihedral conformations and clash scores while maintaining or improving R-factors.
+
+%    \begin{figure}[H]
+%        \centering
+%        \includegraphics[width=0.45\textwidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/hbond_tmp.jpg}
+%        \caption{caption}
+%    \end{figure}
+
+I have also integrated OpenEye's AFITT tool for small ligand crystallography with Phenix.refine to provide a more accurate chemical representation of ligands for the refinement program. This has resulted in a significant drop in ligand energies. Further extensions provide support for alternate conformations and covalently bound ligands. The tool is currently being prepared for release with the next version of AFITT.
+
+
+%    \begin{figure}[H]
+%        \centering
+%        \includegraphics[width=0.45\textwidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/energy_4manual.png}
+%        \caption{caption}
+%    \end{figure}    
+
+\begin{figure}[H]
+    \centering
+    \subfloat[Number of hydrogen bonds maintained after Phenix coordinate minimization using Engh-Huber restraints (x-axis) and Amber restraints (y-axis). The number of hydrogen bonds is greater using Amber in 100\% of the cases. The Amber force field is more accurate and includes explicit treatment of electrostatics.]{{\includegraphics[width=.46\linewidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/hbond_tmp.jpg} }}%
+    \qquad
+    \subfloat[Ligand energies after refinement with traditional Phenix Engh-Huber restraints (red) and refinement using Phenix integrated with AFITT's MMFF94 implementation for ligand geometries (green). Lower-energy ligand conformations are obtained in all cases.]{{\includegraphics[width=.46\linewidth]{/home/pjanowsk/c/Case/pepsim/poster/post_doc_application/energy_afitt_tmp.png} }}%
+\end{figure}
+
+
+
+%\end{multicols}
+\end{document}

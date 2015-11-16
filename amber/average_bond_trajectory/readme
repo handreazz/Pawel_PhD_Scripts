@@ -1,0 +1,36 @@
+To get table of rmsd's and bond length for the average structure(averaged over all asymmetric units) from several equilibration steps:
+
+1. edit AvgBond.py for the specific bond you want to look at
+2. edit AvgBond.sh line 141 for the set of structures you want to analyze.
+3. run AvgBond.sh
+
+	
+
+To get a bond for each of the 12 ASU's in just one frame (like equil30):
+1. edit BondPerASU - SC_TRAJECTORY is the stucture it'll work on, at bottom you have cpptraj scripts to edit specific bond
+2. run BondPerASU.sh
+	
+
+BondPerASU2.sh is used on RevSym trajectiories (not just single frames like from equil30.rst7 to get an average structure first. 
+ - output5.dat
+
+
+Apr 2013: To prepare the publication table (Table1.dat)
+
+1. ran ctraj_rmsd and ctraj_bond (created by AvgBond.py) on:
+/home/pjanowsk/York/hairpin/p2p7e/analysisGPU/revsym/AvgCoord_asu.pdb
+
+Rmsd atom selections:
+rms reference mass out AvgCoord_rmsd_heavy.dat :1-756&!(@H=)&!(:SO4,CON) 
+rms reference mass out AvgCoord_rmsd_active.dat  (:5@P=,O=,C1',C2',C3',C4',C5',C1H,C2H,C3H,C4H,C5H&!@O6G)|(:49@N=,C8,C4,C5,C2,C6)|(:19@N=,C6,C2,C5,C4,C8,O6) 
+
+Bonds:
+distance :49@H1 :5@O5H out Bond_A38H1_G1O5.dat
+distance :49@N1 :5@O5H out Bond_A38N1_G1O5.dat
+angle :49@N1 :49@H1 :5@O5H out Angle_A38N1_A38H1_G1O5.dat
+distance :19@H1 :5@O2' out Bond_G8H1_G1O2.dat
+distance :19@N1 :5@O2' out Bond_G8N1_G1O2.dat
+angle :19@N1 :19@H1 :5@O2' out Angle_G8N1_G8H1_G1O2.dat
+
+
+2. Ran BondPerASU3.sh (used on already made set of RevSym trajectories to get average structure of each and then calculate the 

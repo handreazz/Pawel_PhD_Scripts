@@ -1,0 +1,74 @@
+ShelX uses X-plor or DSN6 format. Huanwang was using ShelxPro.
+
+auto : will produce all the options
+
+auto -map_convert : converts map formats
+
+auto -refine rigid : rigid body refinement
+
+sf_convert : used to convert any structure factor format to any other. For example, cif to mmcif, mtz to cif, etc.
+
+maxi : a program they have to convert mmcif to pdb
+
+dcc..v1.26.py - a validation file that compares the pdb structure to the mmcif file with the structure factors... You can execute by dcc2:
+
+	dcc2 -pdb bfactorpdb.pdb_refmac -sf fav8.hkl.mmcif
+	dcc2 -pdb bfactorpdb.pdb_refmac -sf fav8.hkl.mmcif -scale
+
+Figure of Merit (fom): phase error statistic between PHI real and PHIC (PHIC if centrosymmetric are 0 or 180, otherwise not sure)
+
+For calculating the PHIC: you use the pdb coordinates to get PHIC and FCALC but you combine with FOBS because that's the experimental to make the map. 
+
+
+### 
+To view an electron density map you need an mtz file with str factors and phases. To do this you first need to get a cif or mmcif file with structure factors. If you have structure factors in an hkl text file (this is ShelX format), convert using:
+	sf_convert -o mmcif -sf fav8.hkl (don't need to give input format, it'll figure it out internally)
+
+If you get data from pdb the str facs or intensitites will be in a cif file. This is fine. Don't need to convert cif to mmcif. Also, don't need to convert intensities to str facs. auto will do this automatically by taking square root and setting negative ones equal to 0. (If you want to be accurate, you can run through truncate first to get str facs from intensities but Huanwang says doesn't really matter much. Only with low resolution when you need as much data as possible). 
+
+Once you have the mmcif the following will produce the mtz file with phases and str facs:
+	auto -refine refmac -pdb filename.pdb -sf filename.mmcif
+
+Because auto is not working correctly now, I can also use:
+	dcc2 -pdb filename.pdb -sf filename.mmcif
+This actually creates the script density_eds.csh (which I have added to the /prog-vari/bin/. I run this like this to get an mtz file with str facs and phases do:
+	density_eds.csh filename.pdb filename.mmcif
+
+To view these files: load the pdb into coot
+	coot --pdb filename.pdb
+	Than go to file, open mtz and load the mtz file using FWT and PHWT (!) (not sure why, what this is. I do know PHI and PHI_ALL is that the former are only from the atoms and the latter are with solvent correction.
+
+You could also make a map file directly by running:
+	density_eds.csh filename.pdb filename.mmcif -map_ccp4
+And then load it into coot:
+	coot --pdb filename.pdb --map filename.map
+
+###UPDATE
+Oct 4, 2012: Huanwang gave me new version of dcc. Now run:
+	dcc -pdb filename.pdb -sf filename.mtz
+Dcc will convert the mtz file to mmcif (sf_convert), then calculate Fcalc and phases (refmac by default but can also use phenix, etc) and output a new mtz file and an mmcif file that has validation statistics (R-factor, electron density correlation, etc). If you add the -map keyword it'll save a ccp4 format map as well. Also:
+
+
+### MR/molecular replacement
+This can be used to translate the molecule coordinates to the electron density map.
+Make sure the epmr_linux script is in the path
+	auto -mr epmr -pdb filename.pdb -sf filename.mmcif
+
+Because auto doesn't work right now, auto actually will generate the file epmr_run.scr. I've placed this file in the prog-vari/bin folder. Modify that file by hand and run it (it is shell script).
+
+#convert cif to pdb
+Use mercury. Mercury will open a cif file and can than save it as pdb. The fractional coordinates and Uij will be converted properly to cartesian and b-factors.
+
+### anisotropic ADP's
+Use the script tools_v100.py (or the link tools) in ~/scripts/python/toolpy_huanwang/
+tool  -anis  pdbfilename
+to get a list of the the eigenvalues and ellipsoid ratio for each atom's ADP matrix
+
+For mmCif (macromolecules): the ADP's are in cartesian space. In the mmcif they (Uij) are in units of angstrom (so directly comparable to the fluctuations). In the pdb ANISOU records these are the same Uij but multiplied by 10000 for ease of viewing. To get the equivalent B-factor you do: 
+B=8*pi^2*(U11+U22+U33) 
+
+For cif (small molecules like fav8) the Uij are in crystal space (along the crystal a,b,c vectors. Note that the coordinates in the cif file are also in crystal space.) So to convert them you need to use the formula given in the cif author's file which is from the Fischer and Tillmans, Acta Cryst (1988), C44, 775-776 publication. Implementation of this is in the script:
+~/scripts/Uquiv.m
+
+	
+

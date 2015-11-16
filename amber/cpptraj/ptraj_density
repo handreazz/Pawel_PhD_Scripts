@@ -1,0 +1,11 @@
+trajin supertraj_RevSymm_WatWrap_trans.nc
+#trajin reduced.nc
+#grid densitywaters 110 0.1 165 .1 180 .1 ':721-864 & !(@H=)' box
+#box x 100.0 y 100.0 z 100.0 fixx fixy fixz
+#grid wat_grid1.xplor 100 1.0 100 1.0 100 1.0 ':21-24 & !(@H=)' max 0.1
+#grid wat_grid.25.xplor 320 0.25 320 0.25 320 0.25 ':21-24 & !(@H=)' 
+grid grid.50_revsymm.xplor 200 0.50 200 0.50 200 0.50 ':21-24 & !(@H=)' 
+#grid wat_grid2.xplor 50 2.0 50 2.0 50 2.0 ':21-24 & !(@H=)' 
+#center origin
+#trajout test.nc netcdf
+

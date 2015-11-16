@@ -1,0 +1,7 @@
+parm ../../asu.prmtop
+trajin asu.pdb
+reference AvgCoord_asu.pdb
+rmsd :12,41,119,125,126 mass reference out rmsd_active.dat
+trajout asu_active_aligned.pdb
+
+

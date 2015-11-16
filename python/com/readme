@@ -1,0 +1,53 @@
+1. Need to get rst7 files of both your supercell and just the asymetric units where the original asymetric unit has the same coordinates as the pdb file:
+
+a. create the mergedtrajectory with first frame being the crystal supercell before minimization. Center with ptraj using "center origin mass"
+
+b. find the pdb coordinates of some atom (vec1) and of the same atom in the first frame of the first asymm unit of this merged trajectory (vec2).
+
+c. in matlab do vec1-vec2
+
+d. ptraj_translate the merged trajectory with the vector from c. above. This trajectory will now have first frame asymm unit exactly over pdb asym unit. So com will coincide
+
+Also, there are programs for getting com:
+	COM.tcl
+	COM.py
+	COM in ReadAmberFiles.py
+
+
+2. There are two methods:
+a. COM method: 
+	- Reverse symmetry operate each asym unit.
+	- Translate it's center of mass to the center of mass of the crystal asym unit.
+	- Calculate b-factors
+
+	Run bfac_com.py. 
+
+a. RevSymm method: 
+	- Reverse symmery operate each unit (assuming you have a supercell that is center-of-mass fitted and the center of mass coincides with center of mass of a crystal supercell whose 1st asymmetric unit has same coordinates as pdb coordinates (in other words went through the above process in point 1)
+	- calcualte b-factors
+
+Both these methods will also print out an average structure with "asymmatoms and between atoms". But only asym atoms will be used to calculate rmsd and com in the case of COM method.
+
+
+3. select_bfacs_byname.py
+
+
+###
+There were two other methods that are not useful:
+AsymUnitCOM method:
+	- For each frame, fit the com of the first asym unit to the com of the crystal asym unit.
+	- Reverse symmetry operate each asym unit.
+	- Calculate b-factors
+
+AsymUnitRmsd method:
+	- For each frame, RMSD fit the first asym unit to the crystal asym unit.
+	- Reverse symmetry operate each asym unit.
+	- Calculate b-factors
+It is not useful because the b-factors are very large: if the you have a lot of libration of the first asym unit and the rest of the lattice is good, you still will get very large b-factors. Basically, this method biases the entire calculation to the first asym unit so it is not reliable.
+For this method, need to run ptraj_rmstr to get the trajectory with the rmsd fit 1st asym units.
+###
+
+
+
+
+

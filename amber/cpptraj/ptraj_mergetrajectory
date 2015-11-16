@@ -1,0 +1,11 @@
+trajin 1rpgK.rst7
+trajin /home/pjanowsk/York/1rpg/equilibration/1rpgK/RunEx/Trajectory/md1.nc
+trajin /home/pjanowsk/York/1rpg/equilibration/1rpgK/RunEx/Trajectory/md2.nc
+trajin /home/pjanowsk/York/1rpg/equilibration/1rpgK/RunEx/Trajectory/md3.nc
+trajin /home/pjanowsk/York/1rpg/equilibration/1rpgK/RunEx/Trajectory/md4.nc
+trajin /home/pjanowsk/York/1rpg/equilibration/1rpgK/RunEx/Trajectory/md5.nc
+trajin /home/pjanowsk/York/1rpg/equilibration/1rpgK/RunEx/Trajectory/md6.nc
+trajin /home/pjanowsk/York/1rpg/equilibration/1rpgK/RunEx/Trajectory/md7.nc
+strip :WAT|:Cl-|:MPD
+center mass origin
+trajout mergetraj_cent_nowat.nc netcdf

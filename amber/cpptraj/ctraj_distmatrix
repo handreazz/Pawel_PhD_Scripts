@@ -1,0 +1,3 @@
+parm /home/pjanowsk/c/Case/4lzt/RunSi/4lztSc_nowat.prmtop
+trajin ../fit.nc 0 1720
+matrix dist @CA out dist_firstthird.dat

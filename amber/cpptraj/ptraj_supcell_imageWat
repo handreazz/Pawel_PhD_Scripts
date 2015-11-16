@@ -1,0 +1,9 @@
+trajin /net/casegroup2/u2/pjanowsk/Case/pepsim/RunCase/ptraj/mergtraj_cent.nc
+translate x 15.0
+translate y 30.0
+translate z 30.0
+box z 100 fixz
+box y 100 fixy
+#image origin triclinic
+image center triclinic :721-864
+trajout mergtraj_waterwrapped.nc netcdf

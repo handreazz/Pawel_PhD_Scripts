@@ -1,0 +1,14 @@
+# PME (for full-system periodic electrostatics)
+PME                 on
+cellBasisVector1      93.2957    0.         0.
+cellBasisVector2     -46.6479   80.7964     0.
+cellBasisVector3       0.        0.       131.2834
+cellOrigin            83.14913940429688 60.90369415283203 143.08245849609375
+
+PMEGridSpacing      1.5  	;#see manual for how GridSpacing and GridSize work
+#PMEGridSizeX        140
+#PMEGridSizeY        140
+#PMEGridSizeZ        140
+PMETolerance        1.0e-5 	;#default is 10e-6
+PMEInterpOrder      6      	;#default is 4
+

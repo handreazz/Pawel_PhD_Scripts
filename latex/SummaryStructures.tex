@@ -1,0 +1,44 @@
+\documentclass[11pt,letterpaper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subfig}
+%\usepackage{fullpage}
+%\usepackage[vmargin=.5cm]{geometry}
+\usepackage{chngpage}
+\renewcommand{\thesubfigure}{\roman{subfigure}} %change format of subfloat labels
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}} %scientific notation
+\newcommand{\degr}{\ensuremath{^\circ}}
+\author{Pawe\l{} Janowski}
+\title{bullets}
+\newcommand{\sups}[1]{\ensuremath{^{\textrm{#1}}}}
+\newcommand{\subs}[1]{\ensuremath{_{\textrm{#1}}}}
+
+
+\begin{document}
+\begin{adjustwidth}{-1in}{-0in}
+\begin{tabular}{| l | p{5cm} | l | l | p{2cm} | l |}
+\hline
+Structure Name & Description\sups{1}                     & protonated\sups{3} & forcefield &machine\sups{5} &length \\ \hline
+N:-ff99SB     & Native (precatalytic)                   & no                 & ff99SB     &NAMD            & 70ns \\ \hline
+N:-ff10     & Native (precatalytic)                   & no                 & ff10       &NAMD            & 70ns \\ \hline
+N:(A38+)-ff99SB          & Native (precatalytic)                   & yes                & ff99SB     &NAMD            & 90ns \\ \hline
+TS\_{PC}:-ff99SB           & Transition state mimic (pentacoordinate)& no                 & ff99SB     &Amber           & 70ns \\ \hline
+TS\_{PC}:(A38+)-ff99SB          & Transition state mimic (pentacoordinate)& yes                & ff99SB     &Amber and NAMD  & 70ns \\ \hline
+TS\_{2'-5'}:-ff99SB\sups{4}   & Transition state mimic (2'-5' linked)   & no                 & ---        &---             & --- \\ \hline
+TS\_{2'-5'}:(A38+)-ff99SB\sups{4}  & Transition state mimic (2'-5' linked)   & yes                & ---        &---             & --- \\ \hline
+\end{tabular}
+
+\par\vspace{5mm}
+\textbf{footnotes to table:}\\
+1. The system has about 60 residues per asymmetric unit, 12 asymmetric units per unit cell. All simulations propagate 1 unit cell explicitly. 2oue is the native structure before catalysis (the scissile phosphate is on G6). 2p7e is a transition state mimic where the phosphorous has been subsitituted by a vanadium atom which prevents cleavage. 3cqs switches a linkage from 3'oxygen to a 2'oxygen so the OH group is no longer available to act as a nucleophile and this prevents cleavage. \\
+2. Crystallized cobalt hexamines and SO4 are always modelled (2 CON and 1SO4 per unit cell for 2oue and 2p7e, 1CON for 3cqs and ). Na+ and Cl- used to reproduce ionic strength of crystal liqour and to neutralize charges.\\
+3. A38 protonation state? This is the adenine that has an experimentally measured pKa near neutral and is located close to the scissile phosphate so it could be the general base or acid. We suspect it is more probably the acid. \\
+4. 3cqs and p3cqs have been equilibrated on Kraken (solvent conditions verified), but production runs have not been performed.
+5. All systems were equilibrated according to Taisung protocol in Amber on Kraken Equilibration lasts a total of about 15ns (the last step of Taisung's protocol calls for 10ns of unrestrained NPT. Only 2.5ns of this were done). Solvent conditions have been validated in each case via volume.
+\end{adjustwidth}
+\end{document}
+

@@ -1,0 +1,251 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float} %necessary to make [H] work for figures (place in text)
+\usepackage{subfig}
+\title{(yeaheyah)}
+\author{Pawe\l{} Janowski}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+%\usepackage{fullpage}
+\parskip 8pt
+\usepackage{Sweave}
+\begin{document}
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{flushright}
+\parskip 0pt
+Pawe\l{} Janowski
+ 
+\today
+\vspace{10 mm}
+\end{flushright}
+\begin{center}
+\begin{Large}
+\textbf{Applied Basic Statistics
+Final Exam: Take Home Part}
+\vspace{10 mm}
+\end{Large}
+\end{center}
+
+
+\begin{enumerate}
+\item Problem 1 \\
+a.
+
+%<<echo=FALSE>>=
+\begin{Schunk}
+\begin{Sinput}
+> library("faraway", lib.loc = "/home/pjanowsk/Rlib")
+> library(lattice)
+> boxplot(pulp$bright ~ pulp$operator, horizontal = TRUE, xlab = "brightness", 
++     ylab = "operator")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{final-001}
+
+b.
+\begin{Schunk}
+\begin{Sinput}
+> model = aov(bright ~ operator, data = pulp)
+> summary(model)
+\end{Sinput}
+\begin{Soutput}
+            Df Sum Sq Mean Sq F value  Pr(>F)  
+operator     3   1.34 0.44667  4.2039 0.02261 *
+Residuals   16   1.70 0.10625                  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+\end{Soutput}
+\end{Schunk}
+
+The p-value of the anova F-test is 0.023 so at significance level 0.05 there is enough evidence to conclude that shift operators do affect pulp brightness.\\
+
+c. \\
+The samples have normal distributions (approximately):
+
+\begin{Schunk}
+\begin{Sinput}
+> print(qqmath(~bright | operator, data = pulp, prepanel = prepanel.qqmathline, 
++     panel = function(x, ...) {
++         panel.qqmathline(x, ...)
++         panel.qqmath(x, ...)
++     }))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{final-003}
+
+And the normal residual plot indicates that variances are equal:
+
+\begin{Schunk}
+\begin{Sinput}
+> print(qqmath(~residuals, data = model, prepanel = prepanel.qqmathline, 
++     panel = function(x, ...) {
++         panel.qqmathline(x, ...)
++         panel.qqmath(x, ...)
++     }))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{final-004}
+
+d.
+\begin{Schunk}
+\begin{Sinput}
+> TukeyHSD(model)
+\end{Sinput}
+\begin{Soutput}
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = bright ~ operator, data = pulp)
+
+$operator
+     diff         lwr       upr     p adj
+b-a -0.18 -0.76981435 0.4098143 0.8185430
+c-a  0.38 -0.20981435 0.9698143 0.2903038
+d-a  0.44 -0.14981435 1.0298143 0.1844794
+c-b  0.56 -0.02981435 1.1498143 0.0657945
+d-b  0.62  0.03018565 1.2098143 0.0376691
+d-c  0.06 -0.52981435 0.6498143 0.9910783
+\end{Soutput}
+\end{Schunk}
+
+Based on these results I would say that the evidence is very strong that operators a and b have similar means and c and d have similar means. At 95\% CI a has the same mean as c and d but this is borderline. The evidence strongly suggests that the means of b and d are different.
+
+\item Problem 2
+a.
+\begin{Schunk}
+\begin{Sinput}
+> str(barley)
+\end{Sinput}
+\begin{Soutput}
+'data.frame':	120 obs. of  4 variables:
+ $ yield  : num  27 48.9 27.4 39.9 33 ...
+ $ variety: Factor w/ 10 levels "Svansota","No. 462",..: 3 3 3 3 3 3 7 7 7 7 ...
+ $ year   : Factor w/ 2 levels "1932","1931": 2 2 2 2 2 2 2 2 2 2 ...
+ $ site   : Factor w/ 6 levels "Grand Rapids",..: 3 6 4 5 1 2 3 6 4 5 ...
+\end{Soutput}
+\begin{Sinput}
+> table(barley$variety)
+\end{Sinput}
+\begin{Soutput}
+        Svansota          No. 462        Manchuria          No. 475 
+              12               12               12               12 
+          Velvet         Peatland          Glabron          No. 457 
+              12               12               12               12 
+Wisconsin No. 38            Trebi 
+              12               12 
+\end{Soutput}
+\end{Schunk}
+
+b.
+\begin{Schunk}
+\begin{Sinput}
+> x = barley[barley$year == 1931, ]
+> model2 = aov(yield ~ variety + site, data = x)
+> summary(model2)
+\end{Sinput}
+\begin{Soutput}
+            Df Sum Sq Mean Sq F value    Pr(>F)    
+variety      9  646.3   71.81  3.6799  0.001612 ** 
+site         5 5142.3 1028.45 52.7061 < 2.2e-16 ***
+Residuals   45  878.1   19.51                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+\end{Soutput}
+\end{Schunk}
+
+Yes, even at a 0.01 confidence level, both location and variety have an effect on yield.
+
+c. 
+\begin{Schunk}
+\begin{Sinput}
+> TukeyHSD(model2, ordered = TRUE, conf.level = 0.99)
+\end{Sinput}
+\begin{Soutput}
+  Tukey multiple comparisons of means
+    99% family-wise confidence level
+    factor levels have been ordered
+
+Fit: aov(formula = yield ~ variety + site, data = x)
+
+$variety
+                                 diff       lwr      upr     p adj
+Svansota-No. 475            2.1944450 -7.809974 12.19886 0.9969345
+Manchuria-No. 475           2.3777800 -7.626639 12.38220 0.9944400
+Velvet-No. 475              2.6722200 -7.332199 12.67664 0.9872452
+Peatland-No. 475            4.7666667 -5.237753 14.77109 0.6887850
+Glabron-No. 475             5.5111100 -4.493309 15.51553 0.4969561
+No. 462-No. 475             7.2388950 -2.765524 17.24331 0.1546470
+No. 457-No. 475             8.4333350 -1.571084 18.43775 0.0525890
+Wisconsin No. 38-No. 475    8.7666683 -1.237751 18.77109 0.0377288
+Trebi-No. 475              10.6499933  0.645574 20.65441 0.0047635
+Manchuria-Svansota          0.1833350 -9.821084 10.18775 1.0000000
+Velvet-Svansota             0.4777750 -9.526644 10.48219 1.0000000
+Peatland-Svansota           2.5722217 -7.432198 12.57664 0.9902259
+Glabron-Svansota            3.3166650 -6.687754 13.32108 0.9484011
+No. 462-Svansota            5.0444500 -4.959969 15.04887 0.6180347
+No. 457-Svansota            6.2388900 -3.765529 16.24331 0.3243819
+Wisconsin No. 38-Svansota   6.5722233 -3.432196 16.57664 0.2581796
+Trebi-Svansota              8.4555483 -1.548871 18.45997 0.0514577
+Velvet-Manchuria            0.2944400 -9.709979 10.29886 1.0000000
+Peatland-Manchuria          2.3888867 -7.615533 12.39331 0.9942477
+Glabron-Manchuria           3.1333300 -6.871089 13.13775 0.9635638
+No. 462-Manchuria           4.8611150 -5.143304 14.86553 0.6650620
+No. 457-Manchuria           6.0555550 -3.948864 16.05997 0.3646416
+Wisconsin No. 38-Manchuria  6.3888883 -3.615531 16.39331 0.2934298
+Trebi-Manchuria             8.2722133 -1.732206 18.27663 0.0614706
+Peatland-Velvet             2.0944467 -7.909973 12.09887 0.9978488
+Glabron-Velvet              2.8388900 -7.165529 12.84331 0.9807585
+No. 462-Velvet              4.5666750 -5.437744 14.57109 0.7373311
+No. 457-Velvet              5.7611150 -4.243304 15.76553 0.4342116
+Wisconsin No. 38-Velvet     6.0944483 -3.909971 16.09887 0.3558883
+Trebi-Velvet                7.9777733 -2.026646 17.98219 0.0811033
+Glabron-Peatland            0.7444433 -9.259976 10.74886 0.9999996
+No. 462-Peatland            2.4722283 -7.532191 12.47665 0.9926281
+No. 457-Peatland            3.6666683 -6.337751 13.67109 0.9083807
+Wisconsin No. 38-Peatland   4.0000017 -6.004418 14.00442 0.8558989
+Trebi-Peatland              5.8833267 -4.121093 15.88775 0.4046719
+No. 462-Glabron             1.7277850 -8.276634 11.73220 0.9995268
+No. 457-Glabron             2.9222250 -7.082194 12.92664 0.9766974
+Wisconsin No. 38-Glabron    3.2555583 -6.748861 13.25998 0.9538720
+Trebi-Glabron               5.1388833 -4.865536 15.14330 0.5935032
+No. 457-No. 462             1.1944400 -8.809979 11.19886 0.9999781
+Wisconsin No. 38-No. 462    1.5277733 -8.476646 11.53219 0.9998267
+Trebi-No. 462               3.4110983 -6.593321 13.41552 0.9390866
+Wisconsin No. 38-No. 457    0.3333333 -9.671086 10.33775 1.0000000
+Trebi-No. 457               2.2166583 -7.787761 12.22108 0.9966934
+Trebi-Wisconsin No. 38      1.8833250 -8.121094 11.88774 0.9990586
+
+$site
+                                  diff        lwr       upr     p adj
+Morris-Grand Rapids           0.233334 -6.8530524  7.319720 0.9999965
+Duluth-Grand Rapids           1.239998 -5.8463884  8.326384 0.9883425
+University Farm-Grand Rapids  6.773331 -0.3130554 13.859717 0.0155063
+Crookston-Grand Rapids       14.606664  7.5202776 21.693050 0.0000000
+Waseca-Grand Rapids          25.293331 18.2069446 32.379717 0.0000000
+Duluth-Morris                 1.006664 -6.0797224  8.093050 0.9955462
+University Farm-Morris        6.539997 -0.5463894 13.626383 0.0213083
+Crookston-Morris             14.373330  7.2869436 21.459716 0.0000001
+Waseca-Morris                25.059997 17.9736106 32.146383 0.0000000
+University Farm-Duluth        5.533333 -1.5530534 12.619719 0.0757032
+Crookston-Duluth             13.366666  6.2802796 20.453052 0.0000003
+Waseca-Duluth                24.053333 16.9669466 31.139719 0.0000000
+Crookston-University Farm     7.833333  0.7469466 14.919719 0.0033408
+Waseca-University Farm       18.520000 11.4336136 25.606386 0.0000000
+Waseca-Crookston             10.686667  3.6002806 17.773053 0.0000330
+\end{Soutput}
+\end{Schunk}
+
+Strictly speaking, at confidence level 0.01, there is no significant difference in yields from the various crop varieties. However, knowing how Tukey's method should be loosely interpreted, I would summarize that Svansota, Manchuria, Velvet, 475 produce similar, lower yields; Trebi, Wisconsin, 457, 462 produce similar higher yields; and Peatlan and Glabron are about the same.
+
+On the other hand the differences in yield due to location are very significant. Morris, Grand Rapids, Duluth all produce similar yields. U. Farm is also not statistically different from those three. The other locations are all very different from this group of 3-4 and from each other.
+
+\end{enumerate}
+\end{document}

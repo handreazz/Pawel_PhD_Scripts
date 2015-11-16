@@ -1,0 +1,24 @@
+Kraken has 2 sockets per node, each socket has 6 cores. So there are 12 cores/node.
+
+#PBS -l walltime=23:00:00,size=24 (size= specifies the number of cores, this has to be a multiple of 12 even if you won't use all cores on each node, you still have to request them)
+
+Flags with aprun:
+-n number of cores to be used ("number of MPI processes")
+-N number of cores per node to be used
+-S number of cores per socket (to even out between the two sockets on each node).
+
+Equilibration on 24 cores: .16 hrs/50000 steps = 4x faster than gyges
+Production on 24 cores: .36 hrs/100000 steps = 2x faster than gyges and slightly faster than Ranger.
+production 2oueN on Kraken was 8ns/day, on gyges it was <2ns/day (4x faster). (72 cores Kraken vs. 8 cores Gyges).
+Equilibration on 72 cores of XtaxIb: 1.27ns/day
+
+Interactive:
+showbf (to know how much time and nodes to request)
+qsub -I -A TG-CHE100072 -V -X -l size=132,walltime=2:00:00 (interactive)
+./jobscript
+
+
+CANT RUN A JOB IF ERR or OUT FILE OF THAT NAME ALREADY EXISTS IN FOLDER.
+qstat -q shows the queues
+checkjob -v job#  give info about the job
+

@@ -1,0 +1,500 @@
+###GENERAL
+prmtop - topology/ff
+inpcrd/rst - coordinates/velocities/box dimensions
+mdin - sander input simulation parameters
+
+
+###FORCE FIELDS
+leaprc.ff10 uses tip3 water by default. Need to load 2.10Ions file for tip4p. 2.11 solute models for tip4pew.
+CYS -> CYX (if disulfide bridge)
+amber5.0/6.0 used FF94, parm95.dat, amber10 uses FF99SB, FF03
+FF94/95/98 overestimate helix formation
+FF99SB better torsion terms for phi and psi (SB is StonyBrook - Simmerling. This was done in 2006)
+FF03 better partial charges on proteins (used multi dielectric, ie new method to fit charges to quantum ESP). But not many people adapted this. ff10 for proteins if identical to ff99sb
+Use FF99bsco (=FF99) for nucleic acids (this correction changed one of the atoms to CI with better dihedral parameters)
+adenine: DA5, DA, DA3, DAN
+water: WAT
+alanine: NALA, ALA, CALA
+need to loadoff RNA_CI.lib for rna params with ff99bsco (So ff99bsco loads DNA_CI.lib automatically. Later the same barcelona correction was developed for RNA and you had to load RNA_CI.lib automatically. Then, the names of the RNA atoms had to be RA, GA, CA, UA, etc.). However, for ff10 the changes are incorporated automatically, so no need to load RNA_CI.lig or DNA_CI.lib. RNA atoms are now A and DNA atoms are DA
+leaprc file is basically a set of tleap commands. In is is specified which parm.dat file (forcefield) to load. Also the default water model, etc. You can modify leaprc or add your commands to a tleap script. Whatever you load last is what will be used.
+.dat files contain atom types. .lib files contain residues/units and say what atom names (what you see in pdb) and types (in .dat) correspond to this residue. .cmd files are command files to create the .dat files which are basically .off files (I think).
+For leaprc.ff10 and leaprc.ff12SB - the ildn correction is included and bsco too. ILDN is Shaw group's correction. Not sure now if it is included or not...
+Alternate to ILDN Bruschweiler also did an NMR based correction to the torsions.
+
+###LEAP
+xleap, tleap
+xleap -s -f ...
+	$AMBERHOME/dat/leap/cmd/nameofforcefield.ff
+	addions
+	solvatebox
+	solvateoct
+	saveamberparm
+	loadpdb
+
+###MDIN file (simulation parameters)
+igb - born implicit solvent (1 is turned on)
+ntwx, ntpr - how often to write coord
+ntt - thermostat (1 berendsen, 2 anderson, 3 langevin)(0 no thermostat - NVE)
+ig=-1 (automatically changes random seed on each restart) (ig is the random seed number)
+ntc=2, ntf=2  SHAKE
+tautp=0.5 closely coupled thermostat (for heating tutorial used 1.0)
+nstlim=2500000, dt=0.002 (2,500,000 steps; each step is 2fs, giving 5ns)
+ntr=1 restraints
+
+#restraints positional
+First you need ntr=1 and you need to provide a reference structure in the input with the -ref flag on the command line. Then to specify force and group of atoms: if one group with one force, you can use the keywords ... and ... (amber manual). If you have various groups you specify groups at the end of the input file. This is explained at the beginning of the section on sander input files and in the 2nd I think appendix of the manual. For example:
+Restraint for solute
+100.0   
+RES 1 254 
+END
+
+# implicit solvent
+Implicit solvent scales O(n^2) but requires less atoms. Explicit is limited by PME and is O(nlogn). So usually implicit is better cause less atoms but with very large systems PME is actually faster. 
+If you need interactions of water, like water mediated h-bonds, use explicit. Explicit more accurate. If you have the computer power use explicit. But if you want to remove water viscosity for faster sampling, use implicit. For free energy calculations like mmpbsa also implicit because explicit you'd never converge waiting for waters to rearrange. In implicit the rearrangement of waters is immediate.
+
+###SANDER
+sander -i mdin -p prmtop -c inpcrd -o mdout -r rst -x mdcrd(trajectory)
+
+
+####WATER
+		tip3p	spc
+LJ sigma	3.15	3.16
+LJ epsilon	0.152	0.16
+bond length	0.957	1
+
+
+###INSTALLATION
+http://ambermd.org/pmwiki (coding guidlines -> info on git)
+
+git clone /home/case/amber11 amber11
+cd amber11/doc/   Amber11.pdf
+
+	###gcc
+	mkdir bin (in home folder)
+	cd bin
+	ln -s /user/bin/gcc44 gcc
+	ln -s /user/bin/gfortran44 gfortran
+?	export PATH="/usr/bin:$PATH"
+	which gcc
+	gcc --version
+
+cd amber11/AmberTools/src
+./configure -noX11 -static gnu (without -static does dyanmic) (gnu or intel) (creates config.h)
+make install (installs AmberTools)
+cd ../../src
+make install (installs Amber11)
+
+	###XRAY VERSION
+	cd amber11/src/sander
+	make clean
+	edit ../config.h for AMBERBUILDFLAGS=-D_XRAY (in config or make file... follow instructions)
+	make
+
+	(changed sander.f xfini (6) xray_fini)???
+
+# Amber 12 serial on my machine (the reason not to use intel is that my intel compilers are on cottus somewhere and than it looks for some /usr/include stuff that's on my machine):
+cd $AMBERHOME
+make uninstall
+.configure gnu
+make install
+
+# Amber 12 on casegroup: this is the one Insuk compiles and it works on everything. Here the gnu does not work because casegroup gnu compilers are so super old. Use intel instead.
+cd $AMBERHOME
+make uninstall #this is necessary if I previously tried to do a make install with other compilers and it failed
+.configure intel
+make install
+# than follow steps for parallel below but instead of -static intel and -static mpi intel use intel and -mpi intel
+
+###PARALLEL
+1. ssh gyges
+2. cd $AMBERHOME
+3. ./configure -static intel
+4. make install
+7. cd ../AmberTools/src
+8. make clean
+8. (downloaded openmpi 1.5 and untar it in $AMBERHOME/AmberTools/src)
+9. ./configure_openmpi -static intel
+10. export MPI_HOME=$AMBERHOME
+	$ export PATH="$AMBERHOME/bin:$PATH"
+	$ export LD_LIBRARY_PATH="$AMBERHOME/lib:$AMBERHOME/src/netcdf/lib:$LD_LIBRARY_PATH"
+11. ./configure -static -mpi intel
+13. make
+
+
+
+# some problems:
+on ssh casegroup the python version is 2.4
+
+# to recomplie/update just a part of Amber, for example, just cpptraj, read the makefile in, for example, AmberTools/src/cpptraj. In the case of cpptraj just do:
+cd $AMBERHOME/AmberTools/src/cpptraj
+make install	
+
+# to correct the license error ssh to casegroup and do (or add to bashrc file; all the other license stuff has to point to v13:
+INTEL_LICENSE_FILE=/cottus/opt/intel/Compiler/11.1/069/licenses 
+source /cottus/opt/intel_2013/composer_xe_2013.1.117/bin/iccvars.sh intel64
+source /cottus/opt/intel_2013/composer_xe_2013.1.117/bin/compilervars.sh intel64
+
+# explanation regarding compilers and mpirun. The mpi library can be compiled either from openmpi or mpich. I used openmpi (step 8 above). Then Amber is compiled using either intel or gnu. The combination of openmpi/mpich +intel/gnu results in mpicc/mpifort/mpirun which are wrappers for those compilers that I used. So if I compiled with intel 11.1 and openmpi I got a specific mpirun in Amber/bin. But if later another mpirun shows up (in the intel 13.1 folder) it won't work because I need to use the mpirun that was compiled with intel 11.1 and openmpi...
+
+#more explanations: more problems occurred in JUne 2013. This time I figured out I needed to comment out the 
+#source /cottus/opt/intel_2013/composer_xe_2013.1.117/bin/iccvars.sh intel64
+#source /cottus/opt/intel_2013/composer_xe_2013.1.117/bin/compilervars.sh intel64
+#lines from my .bashrc. That was not allowing Amber to run. But on the other hand to have intel compilers, I needed to add this to my path:
+#export PATH=$PATH:/cottus/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/bin/intel64:/cottus/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/mpirt/bin/intel64:/cottus/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/bin/intel64:/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/bin/intel64_mic:/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/debugger/gui/intel64
+#All of this is from /home/case/.zshenv file
+
+#on casegroup add /home/case/bin to path to get the latest gcc compiler!
+
+
+
+ambpdb -p -prmtop < .rst > .pdb
+extract energies - perl script
+ptraj .prmtop < _.inputfile
+/cottus/opt/amber11/bin/pmemd (on gyges)
+set box - necessary to set up topology file for Pbc, later use ChBox to give the box the right size
+
+PME takes electrostatics to infinity. Then the cutoff (cut=) only truncates VDW. 8 is a good value.
+If timestep is 2fs and I want to write every 2 ps, ntwx=1000. If every 5ps, ntwx=2500.
+
+
+###This was to create and minimize a pure water box
+/home/cerutti/CPrograms/AddToBox -c waterpdb.pdb -a waterpdb.pdb -na 1727 -P 0 -o solvatedwater.pdb -X 37.448 -Y 37.448 -Z 37.448 -RW 2.3 -RP 2.3 -G 0.1 -V 1
+tleap -f solvatedwaterTleap 
+/home/cerutti/CPrograms/ChBox -c solvatedwater.crd -o solvatedwater.crd -X 37.448 -Y 37.448 -Z 37.488
+pmemd -O -i solvatedwatermin.in -o minout.out -p solvatedwater.top -c solvatedwater.crd -r solvatedwaterminimized.crd
+tail -f minout.out 
+
+###NVE
+ntt=0
+ntb=1, ntp=0
+besides that check the watersim settings
+
+####checkatommasks
+#ambmask requires topology and coordinate file, output can be short or pdb or amber
+ambmask -p solvpep.prmtop -c solvpep.crd -out short -find ':BOC@C1 | :OME@C | @CA'
+#other option is to run
+rdparm solvpep.prmtop
+checkmask ':BOC@C1 | @CA'
+
+
+###pressure scaling/barostat
+ntp1- isotropic: calculates a rescaling factor and rescales each box coordinate by cubed root of that
+ntp2- anistotropic: does not work for non-orthrombic box. diagonal of the virial tensor. Amber uses molecular virial. Each a,b,c is rescaled by the corresponding element on the diagonal.
+
+###AMber on ranger (only pmemd.MPI)
+cd $AMBERHOME/AmberTools/src
+make clean
+./configure -mpi pgi
+cd ../../src/pmemd/
+make parallel
+
+###debugging
+unresolved external - look for the link being linked
+.a is a collection of .o files. 
+AR compiles .o files and adds to arpack. 
+.o is the result of compiling .f or .c (fortran or c) files
+LDFl.. - loader collects .o files into executable files 
+
+
+### generating parameters for amber
+see "generating parameters for amber" on the york mesage board
+1. create your molecule in gaussian view (type gv in terminal), after creating save it to a gaussian com file
+2. modify the .com file (an example is in ~/york/hairpin/20ue/test/so4.com. Need to change the first line to:
+	#HF/6-31G* SCF=tight Test Pop=MK iop(6/33=2) iop(6/42=6) opt
+   and change charge to whatever, multiplicity (usually 1) and erase the connectivity section. Spaces are very important to maintain.
+2.5 g09 <comfile >outputfile
+3. if you want forceconstants and bond lengths and angles, run a file like ~/york/hairpin/20ue/test/s04_freq.com. The first line is chagned to:
+	#HF/6-31G* SCF=tight Test Pop=MK iop(6/33=2) iop(6/42=6) opt freq
+	after you can load the output into gv and look at the lengths, angles and normal modes. See which one you want and look directly for that normal in the out file where you'll find the force constant. It'll be in mdyne/A. Amber uses kcal/mol*A2. There is 143.8 kcal/mol/A2 in 1 mdyne/A.
+4. antechamber -i so4.out -fi gout -o so4.prepin -fo prepi -nc -2 -j 0 -at amber -s 2 -pf n -c resp (change the names of files appropriately and the charge of the molecule (-nc flag)).
+5. change the names and types of atoms in the resulting prepin file. Names is what will be used in the tleap output topology and pdb file to name the atoms (this is the second colulmn). Types (3rd column) is what amber looks for in either the parm.dat file or the frcmod file. That's where LJ, bond, angle, etc values are. Only the topology and the charges are in the prepi file. The charges are the last column. The three columns before are the bond length, angle, dihedral.
+Also, make sure the name of the molecule in the prepin file is the same as the residue name in the pdb file!
+6. build an frcmod file based on something else. You need bond lengths, angles, etc. This is read in last, so put the bond length here that you want not in prepi.
+
+
+## other way to generate parameters for amber
+1. If you type antechamber it will just give you help on the different options.
+2. antechamber -i nitrate.pdb -fi pdb -o nitrate.mol2 -fo mol2 -nc -1 -j 0 -at amber -s 2 -pf y -c bcc . The bcc means it will get the charges through an AM1-BCC calculation. Not so good as resp. But don't need to run a gaussian previously.
+3. you can also use: antechamber -i nitrate.pdb -fi pdb -o nitrate.mol2 -fo mol2 -nc
+which will produce the mol2 file without charges (charges will all be set to 0). The atoms will be assigned atom types form the gaff.dat force field parameter file (these are the small letter atom names).
+
+
+####RED####
+4. If you want you can than run your calculation using RESP from the RED page (http://q4md-forcefieldtools.org/RED/). To do that:
+	a. download RED. Now I have it in ~/bin/RED... Go into /resp-2.2, modify the Makefile so that FC = is set to the fortran compiler I use
+	b. go up a folder and copy Ante-RED..pl and RED-v...pl to wherever I will be paramterizing.
+	c. Create a pdb file with hydrogens. One way to do this is to open the .pdb of the molecule without hydrogens in gaussian (type gv). It will add hydrogens. Than save as a pdb file.
+	d. Run 
+		perl Ante_RED-1.5.pl nameofpdbfile.pdb >Ante_RED.log
+	   This creates a .com file and a .p2n file. Check that the .p2n file is ok (charge and spin multiplicity especially). 
+	   If you are doing multiple conformations you can run Run_Ante_RED.sh script. Here you need to run Ante-RED on each conformation (1 pdb file per each), then you need to combine the p2n files into one file (see /home/pjanowsk/York/1rpg/parametrize_MPD/multiconf/Mol_red1.p2n for an example).
+	   If you are doing multiple orientation, you add a remark line where you specify any three atoms for each orientation. Check the p2n example above to see this. 
+	   Make sure the total number of atoms (atoms per molecule *no of conformations *no of orientations) is not greater than 1000 or RED will give you an error.
+		If there are any symmetry centers that you want to constrain to have the same charge, rename atoms to have the same name in the second column of p2n file. An example is in /home/pjanowsk/York/1rpg/parametrize_MPD/multiconf/constrained/Mol_red1.p2n.
+	e. Run gaussian on the .com file but may need to erase "freq" keyword first.
+		g09 <nameofcom.com >Mol_red1.log
+	   If you need many conformation, use the script Run_gv.sh	
+	f. Make sure the p2n file is renamed to Mol_red1.p2n and the guassian output is Mol_red1.log. If doing mutliple conformations the gaussian logs must be concatenated into one file and make sure the order is the same as the structures in the p2n file. Run_gv.sh should do this for you.
+		Run:
+		perl RED-vIII.5.pl >RED.log
+	   This will create the RED.log output to check to see if it ran right and a mol2 file in a folder named Data-RED.
+		If you did multiple conformations, there is one mol2 file per conformation. The coordinates are different but the charges are the same so just use one of them. 		
+	g. If the mol2 file does not have atom types run antechamber:
+		antechamber -i Mol_m1-o1.mol2 -fi mol2 -o MPD.mol2 -fo mol2 -at gaff
+	    You will also need to match the atom names in your pdb file to the atom names in your mol2 file. CAREFUL! Best thing to do is run: 
+		antechamber -fi mol2 -fo prepi -i MPD.mol2 -o MPD.prepin -at amber (convert mol2 to prepi)
+		antechamber -fi prepi -fo pdb -i MPD.prepin -o tmp.pdb (convert prepin to pdb)
+	     Now compare your original pdb2 file to the tmp.pdb you just created and make sure the naming convention in both is the same. 
+
+	h. Run parmchk to see if all the parameters are in the forcefield. It will make an frcmod file which will be blank if everything is there but if something is missing you'll get estimated numbers or ATTN 0 if it can't estimate.
+		parmchk -i MPD.mol2 -f mol2 -o frcmod
+	To actually see the parameters it found use:
+		parmchk -i MPD.mol2 -f mol2 -o frcmod -a Y
+	If I created mol2 or prepin file with amber not gaff atom types, than do:
+		parmchk -i MPD.mol2 -f mol2 -o frcmod -p /home/pjanowsk/amber11/dat/leap/parm/parm10.dat
+
+### RESP
+HartreeFock calculates an MEP: molecular electrostatic potential. The iop keywords than specify a grid: iop33 and iop42 tell it how many points per atom and how many cocentric shells of points around the atom and it then samples the value of the MEP at each of those points. What resp then does is fit charges to the atoms to best reproduce those values of the electrostatic potential (via least squares fitting I think). Now, it depends a lot on the grid: if the grid oversamples some atoms or parts of space for example. This is why different results with different grid. Also, why RED is better because it allows multiple conformations. Also, difference between RED and antechamber even with just one conformation have to do with some parameters that are set for resp. I can't remember what these are.
+
+Dave Cerutti's IPolQ mdgx approach uses cubegen from gaussian which specifies the grid as you want it to sample the MEP. Than his mdgx uses resp to fit to those points. He only keeps solvent accessible points and the spacing I think is better so as not to oversample.
+
+Darrin on why use multiple conformations: basic principle is that changing conformation won't change charges much. The reason to do it is sometimes you may have a very broad and shallow minimum and the charge you select on that minimum can have a broad spectrum of values that will not change much how good the fit is. So hopefully by adding other conformations you will find ones for that atom that have a narrow minimum so as to define the charge more precisely. In general you are looking to have as little variation (spread between negative and positive atoms as possible, big variations are a bad sign).
+
+### remove delete hydrogens
+reduce -trim old.pdb > new.pdb
+
+###lennard jones parameters
+In amber parameter files, the first number is "sigma star" or "Rmin"(though it is really Rmin/2) and the second number is epsilon. The formula for the LJ potential is:
+	a. 4*epsilon[(sigma/d)^12 -(sigma/d)^6]
+	b. epsilon[(Rmin/d)^12-2(Rmin/d)^6]
+	c. A/(r^12)-B/(r^6)
+Sigma is the x-intercept. Rmin is sigma*2^(1/6) and is the x value of the well minimum. Epsilon is the y value of the well minimum. Remember that the number in Amber parm files is actually Rmin/2, ie sigma*2^(1/6)/2.
+To get the epsilon for the calculating the LJ potential: mutliply the two epsilons and take square root (geometric potential). To get the Rmin (formula b above): just add the two values from the parameter file (Rmin/2 + Rmin/2). To use formula a convert the Rmin/2 to sigmas, add take the arithmetic average of the two sigmas. To use c. calculate the A and B matrix: A=4*epsilon*sigma^12, B=4*epsilon*sigma^6.
+
+if (Rmin/2) are the values in the amber force field files, sigma = (Rmin/2+Rmin/2)/(2^(1/6))
+These A and B coefficients are for the actual potential between two atoms. Amber calculates the potential between all possible atom type pairs and uses that in equation c above.
+
+The value of Rmin/2, which is the first number in the force field file, is the (Ri+Rj)/2 but for two atoms of the same type. 
+
+Once tleap makes the topology, it makes a matrix of all atom types and calculates the (Ri+Rj)/2 and sqrt(epsion_i*epsilon_j). NBFix is the capability to change only some of the elements of that matrix, ie the interactions between atom type i and j without changing all the other interactions of atom type i and j.
+
+
+### atom selections
+# basically don't put any spaces, then you don't need the single quotations
+atomicfluct out bfac_supertraj.dat :1-5&@C1',C1H,PX,P byatom bfactor
+
+# print out parameters for some molecule
+/home/cerutti/AmberReload/bin/CheckMD -p (toplogy) -c (coordinates)
+
+# instead of setBox you can use. Still need to run ChBox after to set angles.
+set x box {30.0000000  38.2700000  53.1700000}
+
+#cloning Amber info and Git info is here:
+http://ambermd.org/pmwiki/index.php/Main/coding
+# the main address is here:
+git clone gitosis@git.ambermd.org:amber.git amber
+
+# compare topologies
+parmed.py
+parm nameofparmtopfile
+? (to show list of commands)
+writeFrcmod nameoffrcmodfile (writes out all the parameters from the last active topology)
+Then quit and compare the two frcmods
+
+Run 1 step of minimization and compare energies.
+
+
+#check disulfides in parmed
+checkValidity (will report error if CYX not bound or if CYS residue and CG-CG distance <4A)
+#check parameters in parmed
+printDetails <MASK> (in terminal)
+writeFrcmod  - prints new frcmod file with details...
+
+# read paramters from topology
+rdparm
+
+# which amber version
+$AMBERHOME/update_amber --version
+
+#constant volume NVT but with pressure print out 
+ntb=2, ntp=1, taup=9999999
+
+#PMEMD uses leapfrog algorithm (Shake and Settle) and mdgx uses verleigh (settle and rattle)
+
+# cpptraj matrix
+Mass-weighted covariance matrix is calculated:
+sqrt(m_1*m_2)*Sum(N){(r_1-r0_1)*(r_2-r0_2) / N
+m_1- mass of atom1
+r_1-coordinate of atom1
+r0_1 - mean coordinate of atom1
+N= number of frames
+
+#cpptraj diagmatrix
+The eigenvectors are not normalized
+The eigenvalues are frequencies in cm-1.
+To get the eigenvalues in cm-1: 108.587*sqrt(0.6/lambda) (lambda is the eigenvalue)
+
+#vaccum simulation
+There are two ways. Either set igb=6 (which will set ntb=0 by default and turn PME/periodicity off). This will only work with sander (probably, because only sander supports igb>0). Or you can set igb=0 and then need to manually set ntb=0 (to turn off periodicity). There is a difference between these two methods because one of them (don't know which) creates a periodic box for quickly generating the pairlist. The other one doesn't have a pairlist. So depending on system size one will be smaller/other bigger. Now if you don't have PME, you still need to set "cut" (instead of es_cutoff, vdw_cutoff). 
+
+
+#CPPTRAJ Development
+Dan's notes on general stuff
+
+In an Analysis object the TopologyList is passed through in the Setup() routine (see any Analysis, e.g. Analysis_Modes etc). To get a Topology from Topology list using recognized args (like parm, parmindex etc) you would just do something like:
+  Topology* parmIn = PFLin->GetParm( analyzeArgs );
+  here PFLin is the passed in TopologyList pointer and analyzeArgs is the passed in ArgList reference.
+ 
+In the CpptrajState RunNormal() and RunEnsemble() routines, the ActionList (actionList_) routine SetupActions is called with the address of the current Topology pointer (in case it gets modified by something like 'strip'). For an Analysis, checkout AnalysisList::AddAnalysis() (Analysis objects are only set up once as opposed to actions which are initialized then set up for different Topology objects).
+
+TEST
+$AMBERHOME/AmberTools/test/cpptraj
+make test.complete or make test.standalone
+For the latter need to have standalone cpptraj. Go to $AMBERHOME/AmberTools/src/cpptraj
+./configure --with-netcdf=$AMBERHOME gnu
+make instal_local
+
+file IO
+The actual file reading for modes is done by DataIO_Evecs; in fact almost all data read/writes are done via DataIO objects now, with the overall goal being that any action or analysis doesn't have to worry about file input/output formats, they can just deal with the data and all the IO is handled elsewhere. There are a lot of classes that do file IO; BufferedFrame and BufferedLine are used for reading/writing text data in chunks and lines respectively, and CpptrajFile (which is actually the parent of BufferedFrame and BufferedLine) is a generic file IO class. CpptrajFile itself uses internally other classes for handling the data if it is gzipped, bzipped, etc; this way compression and the like is handled automatically. At the very base I use basic C stdio routines, since by and large they tend to be faster than iostream (unless you are *really* careful with iostream). I always read by chunks if I can (BufferedFrame and BufferedLine do this), and by line otherwise (CpptrajFile). The only routine that ever reads character by character is Command::ProcessInput(); otherwise it is avoided because it is wayyyy too slow.
+
+DataIO_Evecs
+BufferedFrame BufferedLine -chunks
+CpptrajFile -line
+FileIO_Std.cp
+Gets
+	#include <cstdio>
+	size_t buf_size=1024
+	char linebuffer_[buf_size];
+	FILE fp=fopen(filename, mode)
+	fgets(linebuffer, buf_size, fp)
+Read
+	#include <cstdio>
+	FILE fp=fopen(filename, mode)	
+	SetupFrameBuffer( nelements, colwidth, elementsPerline) //create buffer
+		nelements=sscanf(...)
+		frame_lines=Nelts/Ncols (+1)
+		frameSize=nelements*colwidth+frame_lines
+		buffer=new char[ frameSize ]
+	fread(buffer, 1, frameSize, fp)
+
+sscanf(fp, pattern)
+
+Command::ProcessInput() - by character
+	#include <cstdio>
+	FILE fp=fopen(filename, mode)
+	fgetc(fp)
+
+
+
+
+#python amber mask, prmtop topology
+from chemistry.amber.mask import AmberMask
+from chemistry.amber.readparm import AmberParm
+l = AmberParm('asu.prmtop')
+k = AmberMask(l, ':12,41,119,125,126')
+sel = k.Selected()
+sel2 = k.Selection()
+print sum(sel2)
+for i in sel:
+    print 'Selected atom %d: %s' % (i+1, l.atoms[i])
+
+at = l.atoms[0]
+at.residue
+at.residue.name
+at.residue.number
+at.residue.idx
+at.atomic_number
+at.name
+at.type
+
+# NetCDF write out 
+For NetCDF restarts:
+$AMBERHOME/AmberTools/src/parmed/chemistry/amber/readparm.py:650
+For NetCDF trajectories:
+http://jswails.wikidot.com/helpful-scripts#toc21
+
+#Amber terminal residues
+1. Because of the map statment in the leaprc file, Amber automatically converts terminal residues to N and C types (NALA, CALA). You don't see this in the pdb residue name because only three letters.
+2. These are charged on the ends: N terminal  receives 2 additional hydrogens on the nitrogen. C terminal receives OH so it's a carboxylate group.
+3. You can turn this default behavior off in tleap by clearPdbResMap command. Then terminal residues are left unchanged so that you have open valences.
+4. So either charged ends, open valence or the third option is to add capping residues (NME and ...)
+
+
+#to get the release tarball (to give to others)
+git checkout amber14-with-patches
+./mkrelease
+
+# force constant and Phenix ESD angle units
+Amber force constant: kcal/(mol*rad^2)
+Phenix angle ESD: deg
+
+Derived from: kT/2=k*theta^2  (no 1/2 on the right side because Amber's harmonic terms don't have it)
+
+Amber Force constant to Phenix angle ESD
+equation: sqrt(kT/2k)=theta
+units:sqrt[(kcal/mol)*(mol*rad^2/kcal)*(deg^2/rad^2)]  = deg
+eg.: sqrt(0.6/2/50*180^2/3.14^2) = 4.4
+
+Phenix Angle ESD to Amber Force Constant
+equation: kT/(2*theta^2)=k
+units: (kcal/mol)*(1/deg^2)*(deg^2/rad^2) = kcal/(mol*rad^2)
+eg: 0.6/2/3^2*180^2/3.14^2 = 110
+
+######
+
+#1-4 Scaling
+You used to be able to set this in the input file. Now the scaling factor is directly applied to each dihedral when tleap creates the topology and you can't modify it at run time. The reason is that most of the amber ff is parametrized with a 1.2 scaling factor (SCEE, SCNB) but glycam for example uses 1.0. So tleap applies 1.2 by default but if the .dat file (see eg glycam's dat) specifies something else, that'll be used. 
+
+Berendsen: rescale all velocities by a constant. Leads to flying ice cube.
+Andersen: reset all velocities to new values drawn from Boltzmann distr. Giant comes along and smashes the system...
+Langevin: add a stochastic element at every step. Essentially Brownian. Leads to box moving around.
+
+
+### ENERGY free energy
+III. An Empirical Energy Function: Free Energy vs. Potential Energy
+
+Finally, given a defined system and its initial atomic coordinates, we need a function describing the energy of the system for any configuration, $\vec{R}$, of the atomic coordinates. A functional form must be chosen for the energy as well as the associated numerical constants. For macromolecular simulation potentials, these parameters number in the thousands and include spring stiffnesses and equilibrium distances, torsional barriers and periodicities, partial charges, and Lennard-Jones coefficients. The energy function and its associated constants are contained in the Parameter File (.prm). Development of parameter sets is a laborious process. Both the functional form and numerical parameters require extensive optimization. A brute-force iteration of simulation and parameter modification is performed to improve agreement between simulations of model systems and information derived from ab initio calculations, small-molecule spectroscopy, and educated guessing.
+
+Free Energy vs. Potential Energy
+
+For a system held at constant  $N\cal{V}\it {T}$, the Helmholtz free energy,  $A \equiv U - TS = -kT \rm {ln} (Z)$, is a minimum at equilibrium, where  $U = \langle E \rangle$ is the average total energy of the system (kinetic energy plus potential energy), T is the absolute temperature, S is the entropy, and Z is the partition function (eq 3). Suppose the pressure P is held constant instead of the volume (constant $NPT$, the `isothermal isobaric' ensemble). In this case, the Gibbs free energy,  $G \equiv U + P\cal{V} \it {- TS}$, is minimized at equilibrium. Note that the enthalpy,  $H = U + P\cal{V}$, is the quantity at constant pressure that corresponds to U at constant volume. Differences in G drive chemical reactions.
+
+Some empirical energy functions are designed to approximate the Gibbs free energy G. For example, in Monte Carlo studies of protein structure prediction, the energy function may be based simply on the likelihood of residues of type i and j being within a certain distance of each other. The probabilities p are determined by counting the number of times that residues i and j are found close to each other in the protein structures deposited in the Protein Data Bank. They are then converted into $\Delta G$-like energies by:  $p_{ij} \propto e^{-\Delta G_{ij}/k_BT}$. Because the p's are derived from structures at constant T and P determined experimentally, these energy functions account for entropic contributions to the Gibbs free energy in an approximate way.
+
+In most molecular dynamics software packages, however, the empirical energy function, $V(\vec{R})$ (not to be confused with the volume $\cal{V}$), is developed to approximate the potential energy of the system. In general, it does not include entropic effects in any effective way. Many simulations have been performed at constant energy, E. That is, E is fixed and T fluctuates about an average value as energy is exchanged between the kinetic energy and the potential energy. In principle, simulations performed at constant T and P mimic experimental conditions better than simulations at constant E. Recently, an improved constant-$PT$ algorithm has been developed [11]. Constant E simulations have the advantage that they allow energy conservation to be checked. Any significant drifts in E indicate a problem that should be tracked down before continuing the simulation. Although it fluctuates, the temperature is still well defined at constant E, and differences between dynamics at constant T and constant E are generally not too significant on the time scales currently accessible to MD simulation (100's of ps to a few ns). However, the constant-$PT$ simulation may well become the standard as large solvated systems are simulated over longer time scales.
+
+### NPT vs. NVT
+ I completely understand your question, because it also came up to me. As
+Justin mentioned, NpT simulations are the common situation for biophysical
+processes in cells, because it is their native environment. The minimum of
+the Gibb's free energy G=H+pV determines the system state. Assuming you are
+performing an equilibrium MD, G is a constant of motion. Now the task of the
+integrator including the thermostat and barostat is to keep G constant. If
+you perform an NVT simulation you have no control over G but only the
+Helmholtz free energy H=U-TS. Hence if you are interested in a certain state
+of the system like folding of a protein or free energies, which depend on G
+you have to simulate the corresponding ensemble. If you want to study
+thermodynamic properties such as density, conductivity, diffusion, the
+choice of the ensemble depends on other reasons. If you want to study the
+density, an NVT simulation is not useful, because you set the density as
+input parameter. However, if you are able to extract the desired data from
+an NVT ensemble, it is preferable to an NpT simulation, because you do not
+have to assure that the barostat couples correctly and the sampling is
+sufficient to have no bias from the barostat. This is especially important
+if you are studying new compounds, where the system is not well study such
+that a proper adjustment of the barostat parameters is difficult. Sometimes
+it is also difficult to sample canonically in an NpT ensemble, if the
+simulation time is short, the system is small or the virial theorems are not
+sufficiently fulfilled for other reasons. The common protocol to equilibrate
+in NpT and perform a production run in NVT is finally related to Justin's
+comment regarding the parameterization. An equilibration of the system can
+only be achieved, if the system is allowed to get into the corresponding
+state given by the force field. If you would have a "perfect" force field,
+you could also skip the NpT equilibration, because with the knowledge of the
+experimental density you could setup your system in the correct state and
+sample in an NVT ensemble. At the end in the NVT production run you only
+have to assure that you sample long enough to obtain a reliable average of
+dynamic properties, like diffusion or conductivity, such that they are not
+biased by the thermostat.
+
+

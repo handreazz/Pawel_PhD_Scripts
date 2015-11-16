@@ -1,0 +1,19 @@
+#! /usr/bin/python
+import sys
+import os
+from numpy import *
+from Scientific.IO import NetCDF as Net
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("trajfile", help="trajectory file name")
+#~ parser.add_argument("-f", "--frame", help="frame number")
+#~ parser.add_argument("-a", "--atom", help="atom number")
+parser.add_argument("frame", help="frame number",type=int)
+parser.add_argument("atom", help="atom number", type=int)
+args = parser.parse_args()
+
+
+traj = Net.NetCDFFile(args.trajfile, 'a')
+allcoords=traj.variables['coordinates']
+print allcoords[args.frame,args.atom,:]

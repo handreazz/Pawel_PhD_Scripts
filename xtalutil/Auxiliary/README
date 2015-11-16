@@ -1,0 +1,21 @@
+This directory contains helpful files when dealing with crystal trajectories.
+
+List of files:
+adp.py  		- calcualte anisotropic displacement parameters (b-factors) and write to new pdb format file
+adp_flex.py  		- like adp.py but uses flex arrays, more compatible with PHENIX
+compare_adp.py		- series of analysis on ADP's 
+density.py		- given a prmtop and rst7 file, calculates the density
+difference_vector.py	- calculates the vector between two atoms in a trajectory (was used for translating supercell snapshots, deprecated)
+distance_matrix.py      - calculate c-alpha/c-alpha distance difference matrices over entire trajectory and plot heatmaps
+filter_mtz.py		- filter an mtz file to contain only the hkl reflections present in a reference mtz file	
+fit_supercell_com.py    - fit all trajectory frames to a reference center of mass and output netcdf
+make_nmd.py		- convert Amber evecs normal mode file to nmd file for display in vmd
+MolProb_Trajalyze.py    - analyze trajectory with MolProbity
+ncframes                - commandline tool to get number of frames in netcdf file
+prepscript_asu.sh       - create asu prmtop and rst7 files (deprecated)
+prepscript_nowat.sh	- create water-stripped supercell prmtop and rst7 files (deprecated)
+pressure.sh             - get pressure from out file.
+process_mdout.perl      - script from amber tutorials for parsing out files
+pymol_nmodes.py         - visualize normal modes in pymol (nmd is better)
+StripMerge.sh           - merge md trajectories and strip waters; used to prepare input trajectory for XtalAnalyze.sh
+MolProb_Trajalyze.py    - molprobity analysis of all snapshots in trajectory

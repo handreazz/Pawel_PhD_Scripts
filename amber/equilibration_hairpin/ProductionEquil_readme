@@ -1,0 +1,9 @@
+1. copy the final pdb file to here.
+2. in the pdb file check the number of atoms in the asymmetric unit (include hydrogens, CON's etc) and edit the MakeRestraints.py
+3. in the pdb file check the atom number of the first water Oxygen and edit the MakeRestraints.py file
+4. cut out everything except for the first asymmetric unit and rename ambfile
+5. This step is probably not necessary, but just in case do:
+	reduce -trim ambfile >tmp.pdb 2>trim.err
+	grep -v "ATOM.........EPW" tmp.pdb > ambfile
+6. make sure you have "pdbfile" which is the pdb file with bfactors. Make sure it has the same residue numbering and atom names as ambfile. Atom order need not be the same.
+7. run ./MakeEqFile.sh.

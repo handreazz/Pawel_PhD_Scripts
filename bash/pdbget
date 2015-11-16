@@ -1,0 +1,26 @@
+##!/bin/bash
+
+#echo -n "Enter pdb code: "
+#read FILE
+
+FTPUSER=whatever
+PASSWD=whatever
+HOST=ftp.wwpdb.org
+FILE=$1
+#FILE=3nkb
+#SFILE=pdb${FILE}.ent.gz
+FOLDER=${FILE##?}
+FOLDER=${FOLDER%?}
+WHERE=pub/pdb/data/structures/divided/pdb/${FOLDER}
+
+ftp -n $HOST <<SCRIPT
+user $FTPUSER $PASSWD
+cd $WHERE
+binary
+prompt n
+mget *${FILE}*
+bye
+SCRIPT
+
+gunzip -r *${FILE}*
+mv *${FILE}* ${FILE}.pdb

@@ -1,0 +1,78 @@
+This is a folder to test running hairpin in namd. 
+
+The test structures (equil30.rst7 and topo.prmtop) are of the equilibrated 2oueIb system which was equilibrated and obtained correct volume on kraken on 29.VIII.2011 and is found in ~/York/hairpin/equil9x/2oueIb_ProdEquil.
+
+The prmtop is created with the "set default FlexibleWater on" settings in tleap. The tleap script is ~/York/hairpin/2oue/prep/rnatleap_namd. Ran "tleap -f rnatleap_namd >tleap.out". Copied the resulting "2oueIb_namd.prmtop to this folder as topo.prmtop. Created pdb file from this topo and the equil30.rst7 with ambpdb.
+
+If scee and scnb fields are present in the prmtop erase them.(not sure, if not using default values 1.2 and 2.0???)
+
+For the cellBasisVector settings use matlab thus:
+gdim=[93.2745112  93.2745112 131.2535338  90.0000000  90.0000000 120.0000000] (last line from restart file)
+gdim(4:6)=gdim(4:6)*pi/180
+[a,b,c]=CompXfrmPawel(gdim)
+You need b:
+b =
+
+   93.2745  -46.6373    0.0000
+         0   80.7781    0.0000
+         0         0  131.2535
+which gives:
+cellBasisVector1      93.2745    0.         0.
+cellBasisVector2     -46.6373   80.7781     0.
+cellBasisVector3       0.        0.       131.2535
+
+For the cell origin use in vmd console:
+set sel [atomselect top all]
+measure center $sel (this is the value you plug into the cellOrigin field for namd)
+$sel moveby [vecscale -1 [measure center $sel] ] (this last line is to move the system so that the center is at 0,0,0)
+
+
+#############
+To run:
+MPIR=/cottus/home/pjanowsk/bin/NAMD_2.8_Source/Linux-x86_64-g++/charmrun
+EXE=/cottus/home/pjanowsk/bin/NAMD_2.8_Source/Linux-x86_64-g++/namd2
+NP=48
+
+$MPIR ++local +p${NP} $EXE inputfile.inp
+
+
+#########
+To analyze output:
+vmd topo.prmtop md1.dcd
+namdcheck.sh in OutputAnalysis/
+[pjanowsk@r101c namd4]$ xmgrace -block tmp.txt -bxy 2:13	temp
+
+
+###
+For KRAKEN: each folder should contain:
+.rst7
+.prmtop 
+OUT.settings
+NPT.settings
+PME.settings
+.in file (for namd)
+.coord
+.xsd
+.vel 
+kraken_namd.sh
+krakenMaster.sh
+
+#####
+Very important to remember: for the first run the 
+	bincoordinates
+	extendedsystem
+	binvelocities
+flags have to commented out and then for the subsequent runs the must be turned on. Otherwise you will always restart from the initial amber rst7. 
+
+To check, grep the log output file from namd for 
+
+pjanowsk@krakow:~/pnet/York/hairpin/hairpinXtal/2oueIb_ProdEquil$ grep "BINARY COORDINATES" ./*log
+./10.log:Info: BINARY COORDINATES     md9.coor
+./11.log:Info: BINARY COORDINATES     md10.coor
+./12.log:Info: BINARY COORDINATES     md11.coor
+./13.log:Info: BINARY COORDINATES     md12.coor
+./14.log:Info: BINARY COORDINATES     md13.coor
+
+If you don't get these lines, it means it restarted from the amber rst7
+
+####

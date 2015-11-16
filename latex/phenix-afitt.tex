@@ -1,0 +1,140 @@
+		\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float} %necessary to make [H] work for figures (place in text)
+\usepackage{listings}
+\lstset{language=bash}
+\lstset{backgroundcolor=\color{mymauve},tabsize=2, basicstyle=\small}
+\lstset{commentstyle=\rmfamily, columns=flexible, literate=*{-}{$-$}1}
+\usepackage{color}
+\definecolor{mymauve}{RGB}{202,255,112}
+%\usepackage[sorting=none]{biblatex}
+%\bibliography{library}
+\usepackage[superscript,biblabel]{cite}
+\title{(yeaheyah)}
+\author{Pawe\l{} Janowski}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\mathchardef\mhyphen="2D % Define a "math hyphen"
+%\usepackage{fullpage}
+\DeclareUnicodeCharacter{00A0}{ }
+\parskip 8pt
+\begin{document}
+    \begin{flushright}
+    \parskip 0pt
+    Phenix -  AFITT Manual\\
+    OpenEye Scientific Software\\
+    \today\\
+    by Pawe\l{} Janowski\\
+    \end{flushright}
+    
+    
+%    \begin{center}
+%    \begin{Large}
+%    \textbf{Applications of Parallel Computing
+%    Homework 0}
+%    \vspace{10 mm}
+%    \end{Large}
+%    \end{center}
+
+\section{Theory \&{} Background}
+Phenix-AFITT combines the power and functionality of Phenix crystallographic refinement \cite{Afonine2012} with OpenEye AFITT's\cite{Wlodek2006} implementation of the MMFF94s\cite{Halgren1996} force field for accurate modeling of small molecule stereochemistry. In combination they provide the user with a cutting-edge crystallographic refinement package while ensuring chemically sensible ligand geometry that significantly reduces  conformational strain as compared to traditional refinement. Phenix.refine is a component of the highly regarded Phenix \cite{Adams2010} suite of crystallography software. AFITT is OpenEye's comprehensive package for ligands in crystallography. It provides an automated real space ligand fitting process,  refinement dictionary generator, implementation of MMFF94, MMFF94s, PM3 and AM1 force fields and the OpenEye's core SZYBKI optimizer. 
+
+Phenix.refine employs a maximum likelihood approach to minimize the following residual or energy function:
+
+\begin{equation}
+E_{Phenix}=E_{x\text{-}ray}+E_{geometry}
+\end{equation}
+
+where, in the presence of ligands, the second term in the above equation can be further broken down into:
+
+\begin{equation}
+E_{geometry}=E_{protein}+E_{ligand\_{}non\text{-}bonded}+E_{ligand\_{}bonded}
+\end{equation}
+
+Here \begin{math}E_{ligand\_{}bonded}\end{math} refers to all the "bonded" term restraints, i.e. bonds, angles and dihedrals. Note that in the above equations the weights on the x-ray and geometry terms have been omitted for clarity. Phenix-AFITT replaces Phenix's bonded ligand term with an AFITT term, thus yielding the following final energy function:
+
+\begin{equation}
+E_{Phenix\text{-}AFITT}=E_{x\text{-}ray}+E_{geometry}- E_{ligand\_{}bonded}^{Phenix}+w_{scale}E_{ligand\_{}bonded}^{AFITT}
+\end{equation}
+
+Phenix-AFITT is versatile, easy to use and powerful. It can support any ligand for which a cif dictionary has been created. Refinements can include different types of ligands and multiple instances of each ligand type. Support for ligands with full or partial alternate conformations is fully integrated as is refinement of ligands covalently bound to the macromolecule. 
+
+\section{Running refinement with Phenix-AFITT}
+
+First, the user should make sure that the latest version of Phenix and AFITT are installed and available on the command line (i.e. in the user's \$PATH variable). Second, make sure that the OE\_{}EXE environment variable should be point to the directory where the AFITT executables are located. For example:
+
+\begin{lstlisting}
+	[~:]$ echo $OE_EXE
+	/home/pawelrc/openeye/bin
+\end{lstlisting}
+
+Second prepare the .pdb, .mtz and .cif dictionaries for non-standard residues in your model. AFITT requires explicit ligand hydrogens (if the ligand in question has any) to be included in the .pdb and .cif files. If the ligand is covalently bonded to the macromolecule, at least the covalently bounded residue should also have explicit hydrogens.  For this one can use \textit{phenix.ready\_set}. One simple way to create the cif file is to use AFITT's \textit{writedict} facility:
+
+\begin{lstlisting}
+  writedict -in mymodel.pdb -out myligand -planarAniline -nolookup  
+          -dictionary_type phenix
+\end{lstlisting}
+
+Make sure you specify the  -dictionary\_type phenix. It ensures that the cif dictionaries are specifically compatible with Phenix. Now running Phenix-AFITT refinement is just a question of running standard Phenix.refine with some additional keywords. For example like this:
+
+\begin{lstlisting}
+  phenix.refine mymodel.pdb mymodel.mtz myligand.cif 
+         use_afitt=True afitt.ligand_names=UNL,BCL
+\end{lstlisting}
+
+The above command will run Phenix.refine with AFITT energy and gradients applied to the ligands UNL and BCL according to the topology provided in the file myligand.cif. The following is the full list of AFITT-related keyword that the user can specify on the command line when running Phenix.refine:
+\begin{quote}
+\begin{description}
+\item[ REQUIRED KEYWORDS ]
+\item[ use\_afitt -] turn on ligand refinement with AFITT. (default = False)
+ \item[ afitt.ligand\_file\_name - ] relative path to cif dictionary file that defines the ligand topology for AFITT. Note that this can be different from the cif file provided to Phenix.refine on the command line without any keyword. The former specifies the topology of the ligand for AFITT. The actual bond and angle parameters in it are irrelevant. The latter specifies the both topology and parameters of non-standard residues for Phenix. Any ligands that are not refined by AFITT (using the "ligand\_names" keyword) will be refined by Phenix.refined using the parameters in this file.
+\item[afitt.ligand\_names -] three letter ligand name codes. If multiple ligand types are being refined, separate each three letter code by a comma, no spaces. For a given ligand name, AFITT will refine all instances of that ligand as well as alternate conformations of each ligand.
+\item[OPTIONAL KEYWORDS]
+\item[afitt.ff -] AFITT force field to use. Options are: mmff94s, mmff94, am1, pm3. (default=mmff94s)
+\item[afitt.scale -] weight to place on the AFITT ligand energy term. \begin{math}w_{scale}\end{math} in Eq. 3 above.   (default=10)
+ \end{description}
+ \end{quote}
+ 
+
+\section{Auxiliary functions}
+Two auxiliary command line programs are provided for convenience. \textit{mmtbx.afitt} returns the  AFITT ligand conformational energy given a pdb file (for coordinates) and cif file (for topology) and the three letter names of the ligands the user is querying. Optionally the user can specify the AFITT force field to use using the "-ff" keyword (default=MMFF94s). Example usage:
+\begin{lstlisting}
+[~/work/afitt:]$ mmtbx.afitt 1cvu.pdb 1cvu.cif BOG,ACD
+BOG_702_ AFITT_ENERGY:  2152.1468
+BOG_703_ AFITT_ENERGY:  2151.5215
+BOG_704_ AFITT_ENERGY:  2137.6938
+BOG_2702_ AFITT_ENERGY:  2145.0459
+BOG_2704_ AFITT_ENERGY:  2099.0437
+ACD_701_ AFITT_ENERGY:   136.1296
+ACD_2701_ AFITT_ENERGY:    99.7701
+\end{lstlisting}
+
+\textit{mmtbx.afitt\_fd} runs a finite difference test to check that the Phenix-AFITT energy and gradients are being properly calculated. This is the first test to run if you think something may be wrong with the implementation of the refinement algorithm. \textit{mmtbx.afitt\_fd} requires a pdb file, cif file, ligand names and atom number on whose x-coordinate the finite difference test will be calculated. An optional "-v" keyword provides more verbose output about the individual terms of the energy function. Example usage:
+
+\begin{lstlisting}
+[~/work/afitt:]$ mmtbx.afitt_fd 1cvu.pdb 1cvu.cif ACD 9321
+-> 0.134306495
+-> 0.134306174
+TEST PASSES: (analytical - numerical)= -0.000000321
+\end{lstlisting}
+
+As always, running an auxiliary program with the "-h" keyword provides helpful information about the program.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.75\textwidth]{energy_4manual.png}
+        \caption{Example ligand conformational energies after traditional refinement and after refinement with Phenix-AFITT. Energies are shown as a percentage of the energy of the ligand conformation deposited in the PDB.}
+    \end{figure}
+
+\bibliography{library}
+\bibliographystyle{unsrt}
+
+\end{document}

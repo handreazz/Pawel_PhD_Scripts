@@ -1,0 +1,103 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float} %necessary to make [H] work for figures (place in text)
+\usepackage{subfig}
+\title{(yeaheyah)}
+\author{Pawe\l{} Janowski}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+%\usepackage{fullpage}
+\parskip 8pt
+\begin{document}
+\setkeys{Gin}{width=0.5\textwidth}
+\begin{flushright}
+\parskip 0pt
+Pawe\l{} Janowski
+ 
+\today
+\vspace{10 mm}
+\end{flushright}
+\begin{center}
+\begin{Large}
+\textbf{Basic Applied Statistics
+Midterm \#2}
+\vspace{10 mm}
+\end{Large}
+\end{center}
+
+
+\begin{enumerate}
+\item Problem 1 \\
+a.\\
+<<fig=TRUE,width=4,height=4>>=
+boxplot(intake,horizontal=TRUE)
+@
+\\
+
+b.\\
+<<fig=TRUE,width=4,height=4>>=
+x=(intake$pre-intake$post)
+qqnorm(x)
+qqline(x)
+@
+\\
+The qqplot is not perfect but it also isn't terrible so I would say yes, it is at least plausible that the distribution of the differences is normal.\\
+\\
+
+c.\\
+$\mu_1=$premenstrual intake\\
+$\mu_2=$postmenstrual intake\\
+$H_0:\mu_2-\mu_1=0$
+$H_a:\mu_2-\mu_1<0$
+<<>>=
+t.test(intake$post, intake$pre, alt="less")
+@
+The p-value is .008 so even at a 99 \% significance level we can reject the hypothesis: there is sufficient evidence to believe that the postmenstrual intake is lower than premenstrual intake.\\
+
+\item Problem 2
+<<>>=
+mod2=aov(time ~ poison + treat + poison*treat, data=rats)
+summary(mod2)
+@
+<<fig=TRUE,width=4,height=4>>=
+plot(mod2,which=2)
+@
+<<fig=TRUE,width=4,height=4>>=
+plot(mod2,which=1)
+@
+The Two-Factor ANOVA test results in a high p-value for the interaction effects so we can accept that there is no interaction between the two factors. On the other hand the p-values for both poison and treatment are very low so at any reasonable significance level we can accept that time depends on both the poison and the treatment.
+
+Nevertheless, plots of residuals are shed some doubt on the test and on the normality and constant variance assumptions. In this case I would maybe doubt the results of anova (thought the p-values are really low so probably the dependence conclusion is valid). However, I would seek some other method to make sure.
+
+<<>>=
+TukeyHSD(mod2,which="treat")
+@
+A \; C \; D \; B\\
+|\_\_\_\_\\
+| \; \ \ \ \_\_\_\_\\
+| \quad      \_\_\_\_\\
+\\
+This should be staggered. I can't make these lines yet in latex.
+<<>>=
+TukeyHSD(mod2,which="poison")
+@
+3 \; 2 \; 1\\
+| \; \ \ \ \_\_\_\_\\
+Poison 3 differs from 1 and 2 but 1 and 2 don't differ from each other.
+
+\item Problem 3
+<<>>=
+t.test(vital.capacity ~ group, data=vitcap,alt="less")
+@
+According to these results the null hypothesis can be rejected at any reasonable significance level: there is evidence to support the belief that vital capacity of group 1 (exposed>10 years) workers is less than the vital capacity of not exposed workers (group2). Howevever this data is misleading for two reasons: first the data provided is just a subset of a much larger data set, so it is selected we don't know by which criteria and does not provide all the data. Second, more importantly, there is a second factor which is age: all of the group 1 workers are much older than the group 3 workers, so that may play a role in influencing the vital capacity. A better test would be using group 3 workers who have a mean age equal to the group 1 workers.
+
+\end{enumerate}
+\end{document}

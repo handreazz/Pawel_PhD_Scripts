@@ -1,0 +1,4 @@
+reference ../UC_centonpdb.rst7
+trajin average_revsym.mdcrd
+rms reference mass out avg_revsym_sdcn.dat ':1-124 & !(@H=,CA,C,O,N)' time 0.01 
+rms reference mass out avg_revsym_bbone.dat ':1-124@CA & !(@H=)' time 0.01 

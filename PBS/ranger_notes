@@ -1,0 +1,15 @@
+Ranger has 16 cores per node
+Ranger benchmarks: 10000 atoms, 775ps
+16 cores per node on 2 nodes = 32 cores:Wallclock Time   = 01:34:16
+16 cores per node on 1 node = 16 cores: Wallclock Time   = 02:09:24
+8 cores per node on 2 nodes = 16 cores: Wallclock Time   = 02:13:57
+8 cores per node on 1 node = 8 cores:   Wallclock Time   = 03:41:47
+
+Equilibration 50000 steps was .16hrs (Gyges was .67hrs). 4x faster
+Production 100000 steps was .40 hrs. (gyges was .79 hrs 2x faster
+
+Job dependencies
+qsub -hold_jid 1931443 runRangerEx2.sh 
+
+
+

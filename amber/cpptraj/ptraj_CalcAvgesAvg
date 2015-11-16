@@ -1,0 +1,3 @@
+trajin RevSymm_01_01.nc
+trajin RevSymm_01_02.nc
+average average_revsym.mdcrd 

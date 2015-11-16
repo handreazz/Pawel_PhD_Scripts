@@ -1,0 +1,384 @@
+In the parameter file, a star signifies that parameter is being used, so you can put multiple stars if you want. Or on command line you can do: parameter=setttin1+setting2
+
+For anisotropic ADP refinement see: /home/pjanowsk/bin/phenix-1.8.1-1168/phenix_regression/refinement_examples/example_1c
+
+To calculate structure factors from a model (find "calculate structure factors" in documentation).
+Generally:
+phenix.refine mtzfile.mtz pdbfile.pdb main.number_of_macro_cycles=0 main.bulk_solvent_and_scale=false export_final_f_model=true
+To add bulk solvent and scaling:
+phenix.refine mtzfile.mtz pdbfile.pdb main.number_of_macro_cycles=1 strategy=none export_final_f_model=true
+To apply resolution limits:
+phenix.refine mtzfile.mtz pdbfile.pdb main.number_of_macro_cycles=1 strategy=none xray_data.high_resolution=1.5
+
+
+#Scale geometry contribution restraints
+% phenix.refine data.hkl model.pdb wxc_scale=5
+The default value for wxc_scale is 0.5. Increasing wxc_scale will make the X-ray target contribution greater and restraints looser. Note: wxc_scale=0 will completely exclude the experimental data from the refinement resulting in idealization of the stereochemistry. For stereochemistry idealization use the separate command:
+% phenix.geometry_minimization model.pdb
+Also, one can completely ignore the automatically determined weights (for both, coordinates and ADP refinement) and use specific values instead:
+% phenix.refine data.hkl model.pdb fix_wxc=15.0
+The refinement target will be: Etotal = 15.0 * Exray + Egeom
+
+#list of monomers in library
+phenix.where_mon_lib_list_cif
+
+#generate mtz file with r-free flags
+phenix.reflection_file_converter --generate-r-free-flags ../md_avg.mtz --label="FP,SIGFP" --mtz=FP
+
+# specify r-free flag file
+refinement.input.xray_data.r_free_flags.file_name=md_avg_rfree.mtz
+
+# water picking
+phenix.refine model7.pdb prefix=model7 md_avg_rfree.mtz 4lzt_phenix.eff ordered_solvent=true
+
+
+#ON SVN
+> Also, would you mind explaining how the phenix_svn build (updated with
+> allsvn and rebuilt with make) is connected to the original phenix build I
+> made from the installer? I have noticed one is not independent of the other.
+
+The most essential part of the original installer is the "base"
+subdirectory of the build folder (in my case this was phenix-1.8.2-1309/build), which contains Python and all of the
+third-party libraries.  Recycling the file
+dispatcher_include_phenix.ssh from the original build is how you get
+access to that - it will also contain the environment variables
+specifying the Phenix version.
+
+
+#compiling svn phenix
+1. install phenix from binaries or source. Let's say this directory is phenix-1.8.2-1309
+2. mkdir phenix_svn
+3. mkdir phenix_svn/source phenix_svn/build
+4. cd phenix_svn/source
+5. ../../phenix-1.8.2-1309/phenix_regression/phenix_svn_getting_started.csh pawelrc (where pawelrc is username on cci.lbl.gov)
+	# note: for version 1.8.2 : 
+		rm cctbx_project
+		svn co https://cctbx.svn.sourceforge.net/svnroot/cctbx/trunk cctbx_project
+6. ./allsvn (to make sure all is up to date)
+7. cd ../build
+7. phenix.python ../source/cctbx_project/libtbx/configure.py phenix
+8. make
+9. source /home/pjanowsk/c/bin/phenix_svn/build/setpaths.sh (into .bashrc)
+10. cp ../../phenix-1.8.2-1309/build/intel.../dispatcher_include_phenix.sh phenix_svn/build/
+
+
+
+#updating svn_phenix
+1. cd phenix_svn/source
+2. .allsvn
+3. cd ../build
+3. phenix.python ../sources/cctbx_project/libtbx/configure.py phenix solve_resolve amber_adaptbx (only sometimes necessary)
+4. make
+
+
+
+cd $PHENIX_SOURCES
+svn co svn+ssh://pawelrc@cci.lbl.gov/amber_adaptbx/trunk amber_adaptbx
+ln -s /net/cci-filer2/raid1/home/pawelrc/amber amber
+cd $PHENIX_BUILD
+--
+#either
+cp $PHENIX_SOURCES/amber/AmberTools/lib/* lib/
+#or (this will add $AMBERHOME/lib to phenix.python's $LD_LIBRARY_PATH
+cp $PHENIX_SOURCES/amber_adaptbx/dispatcher_include_amber.sh $PHENIX_BUILD
+libtbx.refresh 
+--
+libtbx.configure amber_adaptbx mmtbx  (can be done from anywhere)
+libtbx.scons -j8     (must be done from buid)
+ 
+make nostop (from build) - compiles everything and doesn't stop if there's an error
+make reconf (libtbx.configure; libtbx.scons)
+
+
+#reconfiguring recompiling
+libtbx.configure amber_adaptbx mmtbx
+libtbx.scons -j8
+
+../sources/cctbx_project/libtbx/configure.py phenix is for the initial set up. 
+Once that's done you can reconfigure by doing libtbx.configure .
+To add another package: libtbx.confiure amber_adaptbx
+After that libtbx.configure . will reconfigure that too.
+To stop checking all packages libtbx.configure --only amber_adaptbx
+To go back to all packages do libtbx.configure phenix
+After reconfigureing recompile with libtbx.scons -j8
+"make reconf" runs libtbx.configure . and libtbx.scons with max number of processors.
+
+
+
+
+
+
+
+# atom object
+resCA.xyz
+resCA.parent().resname
+resCA.parent().parent().resseq
+# residue object
+residue.resname
+residue.resid()
+
+##some stuff based on contacts script and related to sym_op (rt_mx) objectsS
+>>> residue_contacts[0][1][0][1]
+<cctbx_sgtbx_ext.rt_mx object at 0x297f190>
+>>> print residue_contacts[0][1][0][1]
+-x+1,y+1/2,-z
+>>> residue_contacts[0][1][0][1].as_xyz()
+'-x+1,y+1/2,-z'
+>>> sym_op.as_int_array()
+(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+>>> print sym_op.multiply(sym_op)
+x,y+2,z
+>>> print rt_mx('x,y,z+1').as_int_array()
+(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12)
+>>> rt_mx('x,y,z+1',r_den=1,t_den=1).as_int_array()
+(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+>>> x=rt_mx("x+2,y,z")
+>>> y=rt_mx("x+3,y+1,z")
+>>> print y.multiply(x.inverse())
+x+1,y+1,z
+
+atom seq numbers in phenix are from 0
+
+t=sym_op.t().as_double()
+t=[t[0]*prop_vec[0],t[1]*prop_vec[1],t[2]*prop_vec[2]]
+t=[int(i) for i in t]
+t=rt_mx(tr_vec(t,tr_den=1))
+j_transop, symop2, j_asymresid = SC_mapping(prop_vec, nres, nsymop,j_resid)
+j_transop=j_transop.multiply(t)
+transop=j_transop.multiply(i_transop.inverse())
+
+
+map correlation of 2 pdbs
+- an email from Pavel with a quick script
+- phenix.get_cc_mtz_mtz (for 2 mtz's)
+
+map quality sort of:
+phenix.remove_aniso file.mtz
+
+
+working on pdb structures and changing some values and printing out new pdb
+/home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/adp/tom/compare_aniso.py
+$SOURCE/amber_adptbx/refine_4lzt/fix_ambpdb.py
+
+CRYST1 record from pdb:
+ pdb_input.crystal_symmetry_from_cryst1())
+
+Structure factors from pdb:
+phenix.fmodel model.pdb high_resolution=2
+
+will calculate Fourier map coefficients up to specified resolution given input PDB file. It handles multi-model PDB files. Occupancies must be non-zero, and CRYST1 must be defined.
+
+
+#convert intensity to structure factor
+see in lines in /cctbx_project/mmtbx/utils/__init__.py :
+        f_obs_fw = french_wilson.french_wilson_scale(
+          miller_array=f_obs,
+          params=self.parameters.french_wilson,
+          sigma_iobs_rejection_criterion=\
+            self.parameters.sigma_iobs_rejection_criterion,
+          log=self.log) 
+
+#================================================================#
+# running queue and parallel on cci:
+
+qstat -f   #shows all queue on all machines
+qsub -t 1-12 -q all.q@theta ~nigel/sge/qblock.csh   #reserve 12 proc and the qblock script just sleeps
+ssh to theta and run phenix with nproc using nohup    
+exit and once process is done use qdel to kill the queue job
+
+# example of a script submitted to queue for serial run (no need to ssh and run manually). This is an SGE queue
+
+qsub run_script
+
+#! /bin/csh -q
+#$ -cwd
+#$ -o queue.output -j y -N amber_refine
+
+limit datasize 2000000
+source /net/cci/xp/phenix/phenix_env
+phenix.refine model.pdb data.mtz >& log
+exit
+#================================================================#
+#================================================================#
+# submitting multiple jobs on cci
+qsub -t 1-12 yields a SGE_TASK_ID number for each job submitted. In this case 1-12. If I did
+qsub -t 249-511 that would submit 12 jobs with SGE_TASK_ID numbers from 249 to 511. Nigel uses that task id number as a commandline variable to the script he wants to run and the script from that figures out what it wants to do. Yes this is nuts!
+#================================================================#
+
+qsub -q all.q@cage runscript.csh - submit to cage. Thunderbird does not work with my phenix build.
+
+
+
+#to get an mtzfile
+phenix.fetch_pdb 1exr --mtz
+
+
+#pdb hierarchy
+c/scripts/Phenix/test_hierarchy.py 
+#change residue number
+atom_group.parent().resseq=1005
+#change resname
+atom_group.resname='HID'
+
+#===============================================================#
+SCONS
+
+#env_amber_ext.Append(LIBPATH=env_etc.libpath_python)
+#env_amber_ext.Append(CCFLAGS=["-I%s" % amber_dir, "-DPHENIX"])  - this did not work
+#env_amber_ext.Append(SHCCFLAGS=["-I%s" % amber_dir, "-DPHENIX"]) - this is for .so files, worked
+#env_amber_ext.Append(CPPFLAGS=["-I%s" % amber_dir, "-DPHENIX"]) - worked and suggested
+#env_amber_ext.Append(CPPPATH=amber_dir)  - best, this is for includes
+env_amber_ext.Append(CPPDEFINES='AMBER')  - this is for defines
+env_amber_ext.Append(LIBS=["fftw3", "netcdf", "mdgx",])
+#print env_amber_ext.Dump() - will print the entire environment
+
+
+#easy_run 
+    ero = easy_run.fully_buffered(command=cmd)
+    err = StringIO.StringIO()
+    ero.show_stderr(out=err)
+    outl = ""
+
+#paths and stuff
+libtbx.setpaths_all, then grep
+libtbx.show... 
+libtbx.unset
+
+#elbow
+elbow.generate_all_chemical_component_restraint_files only_i=1 amber=True
+elbow.where_is_that_cif_file 
+elbow.generate_all_chemical_component_restraint_files amber=1 list_skip=1
+elbow.generate_all_chemical_component_restraint_files amber=1 only_code=01a max_length_smiles=200
+elbow.generate_all_chemical_component_restraint_files amber=True only_code=02j
+
+
+#if can't svn some repository they are in
+/net/cci/auto_build/repositories
+
+#space group smtry sgtbx
+[~/bin/phenix_svn2/source:]$ phenix.python
+Python 2.7.3 (default, Sep 26 2013, 20:03:06) 
+[GCC 4.6.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from cctbx import sgtbx
+>>> sg = sgtbx.space_group_info("P212121")
+>>> g = sg.group()
+>>> g.n_smx()
+4
+>>> for rt_mx in g.smx() :
+...   print rt_mx
+... 
+x,y,z
+x+1/2,-y+1/2,-z
+-x,y+1/2,-z+1/2
+-x+1/2,-y,z+1/2
+>>> rt_mx = list(g.smx())[0]
+>>> rt_mx.r()
+<cctbx_sgtbx_ext.rot_mx object at 0x7fa126b274b0>
+>>> rt_mx.t()
+<cctbx_sgtbx_ext.tr_vec object at 0x7fa126b27830>
+>>> r = rt_mx.r()
+>>> r.info()
+<cctbx_sgtbx_ext.rot_mx_info object at 0xd2b050>
+>>> r.as_double()
+(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0)
+>>> rt_mx.is_unit_mx()
+True
+
+# to expand flex array
+1. iotbx/pdb/multimer_reconstruction - Youval's code for NCS expansion
+2. x=flex.vec3_double(30) will create array of 0
+3. than can use loop to copy element by element
+4. felx array also has some weird methods (add, add_copy or smth).
+5. or you can convert to numpy then back to flex
+
+# ED map images: use pymol
+ray_opaque_background... (google or get Nigel script)
+ray trace ...
+
+#Weights 
+July 2011 crystallography newsletter
+wxc is the ratio of the gradient norms (restr/xray)
+wxc_scale is set to 0.5 (the empirical factor of 2)
+weight optimization searches a grid above and below (wxc*wxc_scale). The weights being tried in the optimization table during refinement are (wxc*wxc_scale). The last one tried is wxc*0.5 which would be the default without weight optimization.
+Comand line options:
+	wxc - changes wxc to a hard coded number (instead of the ration of gradient norms)
+	wxc_scale - changes the scaleing of the gradient norm
+	fix_wxc - sets (wxc*wxc_scale) to a hard number.
+
+#phenix.maps
+phenix.maps 4DJH.pdb 4djh-sf.cif
+phenix.maps 4DJH.pdb 4djh-sf.cif maps.map.map_type=Fo-F
+
+#emails Tom?Pavel around 11/14/13
+One of the most eye-opening facts for me from this and from looking at your compare aniso script is that if we have two alternate conformations, say A at 0.66 and B at 0.33 occupancy is the same as calculating Fcalc_A*2 + Fcalc_B.
+
+
+
+phenix.refine --diff-params lysozyme_refine_001.def
+
+
+#generate spacegroup rotation matrices, etc...
+xrs = pdb_inp.xray_structure_simple()
+symm = pdb_inp.crystal_symmetry()
+sites_frac = xrs.sites_frac()
+space_group = symm.space_group()
+for rt_mx in space_group.smx() :
+  if (not rt_mx.is_unit_mx()) :
+    sites_symm = rt_mx.r().as_double() * sites_frac + rt_mx.t().as_double()
+
+#for a single site
+site = scitbx.matrix.col(sites_frac[0])
+xyz_new = col(rt_mx.r() * xyz) + col(rt_mx.t().as_double())
+ or 
+rt_mx = scitbx.matrix.rt((rt_mx.r().as_double(), rt_mx.t().as_double()))
+xyz_new = rt_mx * xyz
+
+#new space group
+i=sgtbx.space_group_info("P212121")
+i.group()
+
+
+
+#lib shared object .so library
+The SConscript modification handles compile-time linking, but this doesn't guarantee runtime linking when using shared libraries - for anything in a non-standard location the LD_LIBRARY_PATH modification is still required.  This is why you need to copy amber_adaptbx/dispatcher_include_amber.sh into the build directory and re-run libtbx.configure or libtbx.refresh; it will then automatically add $AMBERHOME/lib to LD_LIBRARY_PATH in all of the dispatchers.
+
+
+# ImportError: include scope: no module amber_adaptbx (input line 6)
+This happens if I try to import amber_adaptbx which in turn tries to import sander. But the sander __init__.py is in 
+$AMBERHOME/lib/python2.7/site-packages which must be added to PYTHONPATH (done automatically by amber.sh).
+
+# run before committing
+libtbx.find_clutter --verbose
+
+#bond and angle rmsd
+ - phenix/refinement/xyz_reciprocal_refine.py calls geom = self.model.geometry_statistics()
+ - mmtbx/model.geometry_statistics() calls mmbx/model_statistics.geometry(pdb hiearchy, restr. manager)
+ - mmbx/model_statistics.geometry 
+	- energies_sites is created by calling restraints_manager.energies_sites which, if amber is on, creates energies_sites.geometry which is amber_geometry_manager.energies_sites(). 
+	- calls esg.angle_deviations() (esg is energies_sites.geometry, it's the Amber energies object if amber is being used) (if not amber esg is cctbx.geometry_restraints.energies.energies)
+    
+#ringer
+use ~/c/scripts/Python/ringer_ne_dist.py. There is a header that explains usage. Ringer needs the pdb file and an electron density mtz file. Use phenix.maps to get the latter or phenix.model_vs_data:
+	phenix.model_vs_data map=2mFo-DFc 4lzt-sf-truncated.mtz 4lzt.pdb
+
+
+#bootstrap
+1. info on https://sites.google.com/a/lbl.gov/phenix-basics/phenix-environment-setup/lbl---linux-machines 
+2. copy from cctbx/libtbx/auto-build/bootstrap.py
+3. to install and build everything
+python bootstrap.py --builder=phenix --cciuser=pawelrc --sfuser=pawelrc
+4. if just want to update (no rebuilding)
+python bootstrap.py --builder=phenix --cciuser=pawelrc --sfuser=pawelrc update
+5. to do just the base stuff (because if the base directory exists, bootstrap will skip building base even if building base produced errors before): 
+python modules/cctbx_project/libtbx/auto_build/install_base_packages.py --python-shared --nproc=4 --all
+
+6. cleanup is like this but will not erase base directory so will continue to skip that
+python ~/c/bin/phenix_bootstrap2/bootstrap.py --builder=phenix --cciuser=pawelrc --sfuser=pawelrc cleanup
+
+#pdb summary
+phenix.pdb.hierarchy filename.pdb
+
+#To generate r-free:
+phenix.reflection_file_converter --generate-r-free-flags 1ake_start.mtz --label="F,SIGF" --mtz=1ake_start_rfree
+

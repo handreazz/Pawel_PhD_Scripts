@@ -1,0 +1,3 @@
+trajin 01_02.nc netcdf
+rms first mass ':2-123 & !(@H=)' time 0.01 
+average average_01_02.mdcrd

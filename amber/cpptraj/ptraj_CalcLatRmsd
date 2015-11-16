@@ -1,0 +1,4 @@
+trajin RevSymm_01_01.nc
+trajin RevSymm_01_02.nc
+rms first mass out rmsd_lat_sdcn.dat ':1-124 & !(@H=,CA,C,O,N)' nofit time 0.01 
+rms first mass out rmsd_lat_bbone.dat ':1-124@CA & !(@H=)' nofit time 0.01

@@ -1,0 +1,18 @@
+parm /home/pjanowsk/c/Case/4lzt/RunSi/4lztUC.prmtop
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_01_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_02_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_03_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_04_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_05_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_06_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_07_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_08_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_09_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_10_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_11_01.nc 1 5000 1
+trajin /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/RevSym_12_01.nc 1 5000 1
+reference /home/pjanowsk/c/Case/4lzt/4lzt_ff12SB/analysis_i/revsym/AvgCoord_asu.rst7.1
+rms reference mass :3-127&!(@H=)
+matrix mwcovar name mwcvmat out mwcvmat.dat :1-129@CA 
+diagmatrix mwcvmat out evecs.dat vecs 387 thermo outthermo thermo.dat
+

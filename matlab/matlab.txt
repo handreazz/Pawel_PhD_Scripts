@@ -1,0 +1,139 @@
+#to find a certain value in the arrray
+index =find(arrayname==value)  ## can use all math operators ==, <, > etc.
+
+#to create fits interactively
+cftool
+
+#to script a fit
+X=x data selection
+Y= y data selection
+[pp,err]=fit(X,Y,'poly1') 
+plot(pp,'-',X,Y,'+')
+
+## Legend set label to a variable:
+plot1=plot(x(:,1),x(:,2),'b','DisplayName', num2str(slopex))
+or
+set(plot4,'DisplayName',num2str(slopex))
+
+## Legend dont display label for a plot
+plot1=plot(x(:,1),x(:,2),'b','DisplayName',num2str(slopex),'HandleVisibility','off')
+or
+set(get(get(plot6,'Annotation'),'LegendInformation'),'IconDisplayStyle','off')
+
+#import data
+d=importdata('dsspall.sum','\t',2)
+
+dlmread=you can specify the range but need a numberic only text file
+textscan=greatest versitility, can mix numbers and text
+
+
+#convert a column of cell strings to number:
+#Here I loaded a file to the variable exp. It became a struct with exp.textdata having the second column of numbers as cell strings: convert cell strings to strings using char and then to numbers using str2num
+
+a=str2num(char(exp.textdata(:,2)))
+
+#save data
+save test cValvH2O -ascii
+
+#set display format float
+format long
+format longG
+
+# plotting a function
+A=zeros(100,2)
+A(:,1)=0:99
+A(:,1)=A(:,1)*4*pi/100
+A(:,2)=arrayfun(@cos,A(:,1))
+plot(A(:,1),A(:,2))
+
+	or
+
+x = 0:0.01:2*pi;
+plot(x,cos(x)), grid on
+
+	or
+
+syms x
+f=x^2
+ezplot(f,[-2,2])
+f=subs(f,x,x/2)
+ezplot(f,[-2,2])
+
+	or
+
+g=inline('x.^2','x')
+fplot(g,[-360,360])
+
+	or
+
+g=inline('x.^2','x')
+x=-10:.1:10;
+plot(x,g(x))
+
+
+# x-tick lables in pi
+set(gca,'XTick',-pi:pi/2:pi)
+set(gca,'XTickLabel',{'-pi','-pi/2','0','pi/2','pi'})
+
+#slicing
+n=[exp(1:10); exp(20:22)]
+
+# for loop
+for i=1:12;
+h=h+y(1+(i-1)*61,2+(i-1)*61)
+end
+
+
+### LEAST SQUARES MINIMIZATION
+# Ch. 19 of Numerical Linear Algebra by Lloyd Trefethen and David Bau. 
+# We want to fit a polynomial of degree 14 on the interval [0,1] to the function exp(sin(4t). A is the Vandermonde matrix of the values of x corresponding to a descretization of the interval [0,1]. We want to solve Ax=b for x. The column vector x will be the 15 coefficients of the polynomial that minimizes the residuals to the values in b.
+
+m=100; n=15;
+t=(0:m-1)'/(m-1);
+A=[]; for i=1:n, A= [A t.^(i-1)]; end
+b=exp(sin(4*t))
+
+# by QR factorization via Housholder traingularization (A=QR) (fastest)
+[Q,R]=qr(A,0);
+x=R\(Q'*b);
+
+# by QR factorization with column pivoting (AP=QR where P is a permutation matrix)
+x=A\b;
+
+# by normal equations (bad because of ill conditioned matrices)
+x=(A'*A)\(A'*b);
+
+# by SVD (most expensive but most stable)
+[U,S,V]=svd(A,0);
+x=V*(S\(U'*b));
+
+# \ backslash operator is left matrix division, ie A\B is A^(-1)*B
+# residuals: R=b-A*x
+
+
+Matrix inverse: see above methods for least squares minimization, but in general if you want to do A^(-1)*Y you can do:
+A\Y
+or
+chol(KK)\(chol(KK)'\Y')
+
+#filter data
+x=[1,2,3,4,5,6,7]
+y=x>=5
+x(y)
+
+#setting default color order
+doc colormap
+cc=hsv(10)
+set(0, 'DefaultAxesColorOrder', cc);
+
+#function handles
+F = @(x,xdata)x(1)*exp(-x(2)*xdata) + x(3)*exp(-x(4)*xdata);
+G=@(x,y)x^2+y^2;
+N=@(x,y,z)(F(x,y)+G(y,z))
+>> N(x,2,3)
+ans =
+   13.0193
+
+# run script tmp.m from command line
+matlab -nosplash -nodesktop -r "tmp;quit;"
+

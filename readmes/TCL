@@ -1,0 +1,66 @@
+###loop , modify display style
+for { set i 0 } { $i <= 13 } { incr i } {
+mol modstyle 0 $i Ribbons
+}
+
+
+### input select frames of trajectory , load
+mol new {/net/casegroup2/u2/pjanowsk/Case/4lzt/RunSh/4lztUC.prmtop} type {parm7} first 0 last -1 step 1 waitfor 1
+mol addfile {/net/casegroup2/u2/pjanowsk/Case/4lzt/RunSh/rmsf/revsym/RevSymm_12_01.nc} type {netcdf} first 0 last -1 step 1000
+=============
+mol addfile {/net/casegroup2/u2/pjanowsk/Case/4lzt/RunSh/rmsf/revsym/average_rmsd.mdcrd} type {crd} first 0 last -1 step 1 waitfor 1 2
+
+
+
+### load many files and loops
+for { set i 1 } { $i <= 9} { incr i } {
+mol new ../UC.prmtop type {parm7}
+mol addfile RevSymm_01_0${i}.nc type {netcdf} first 0 last -1 step 1000 
+}
+for { set i 10 } { $i <= 12} { incr i } {
+mol new ../UC.prmtop type {parm7}
+mol addfile RevSymm_01_${i}.nc type {netcdf} first 0 last -1 step 1000 
+}
+
+#another way
+set list [list "fav8_10176_AsuTr.pdb" "fav8_101_AsuTr.pdb" "solvpep_AsuTr.pdb"]
+foreach item $list {
+mol new $item type {pdb}
+}
+
+
+
+
+### vector operations
+set v1 {10 9.8 7}
+vecsub {10 9.8 7} {0.1 0 -0.1}
+veclength {10 9.8 7}
+
+
+
+#### to save a selection
+mol load pdb your.pdb 
+set sel [atomselect top "not hydrogen"] 
+$sel writepdb new_noH.pdb 
+
+
+### commandline tcl script
+vmd -dispdev text -e yourscript.tcl -args all your arguments 
+
+
+### PBCTOOLS
+
+https://github.com/downloads/olenz/pbctools/pbctools-doc-2.5.pdf
+To get cell lengths and angles from trajectory file:
+
+	# Load the parm7 and dcd
+	vmd your.parm7 your.dcd
+
+	# In the vmd console type the following
+	package require pbctools
+
+	# to get the list of cell vectors
+	pbc get -all -namd
+
+	# to ge the list of lengts & angles
+	pbc get -all -vmd

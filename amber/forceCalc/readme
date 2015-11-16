@@ -1,0 +1,19 @@
+1. LoadHairpin is a script that creates a matrix with 1 row for each atom and 4 columns: 3 for coordinates and the 4th for the charge on the atom. This is needed for Dave's pmeMain script which calculates the forces.
+
+2. TestForces: a script which uses LoadHairpin and feeds it to pmeMain to calculate the total, directspace and reciprocal space electrostatic forces.
+
+3. Once you have forces for two systems, to compare, ie to get RMSD.
+a. get the difference matrix: dforce=fdirE-fdirR2;
+b. calculate the RMSD: (sqrt(sum(sum(dforce.^2))/natom)): i. square the deviations. ii. take average, iii. square root it.
+
+Sigmas: alpha is the sigma of the gaussian (so width) is 1/(2*alpha) (sometimes alpha is called beta). So to find out the width of my gaussians with my PME setings, I used Dave's getalpha script:  
+	sigma=0.5/getalpha(10,1e-05)
+This is the sigma for 10A cutoff and 1e-05 tolerance.
+
+When comparing forces, let's say I have 1.0 grid spacing and 4th order and want to compare to 1.5 spacing and 6th order. I can't just compare the two between each other. I need to compare to a reference which will be a very precise calculation. (because the difference between the two will be bigger because both diverge from the true value by different paths (like sum of variances)). So compare both to the true very precise calculation of the forces and show that they both differ by the same. Now to calculate the very precise values, I can't just increase the tolerance and spacing. If I increase the tolerance, the sigma will change, so the gaussians will shift so there will be differences again. So I need to increase the cutoff which will bring the sigma back up. Find the cutoff to have the sigma exactly equal (up to like 1e-10 precision!!!) to be able to compare. The cutoff and tolerance and sigma resulting from that (well alpha and sigma from the alpha) effect the direct sum forces.
+
+These are absolute RMSD's. So the relative RMSD's will be the same. In terms of magnitude, Dave says the forces are on the order of 10-30, so the relative force RMSD error will be about .01/10-30 so about .0003 to .001. 
+
+
+###
+George's method in namd direct: use the getforces.inp namd configuration file with the tcl script to produce log.dat with the atom and forces for that frame.

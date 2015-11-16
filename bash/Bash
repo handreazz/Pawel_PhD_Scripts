@@ -1,0 +1,653 @@
+###Windows
+VirtualBox
+tsclient (outlook)
+wine (windows programs)
+Playonlinux (windows programs)
+
+###Install
+sudo yum install
+yumex
+sudo yumex --root
+?sudo yum install glibc-static.x86_64?
+
+yum provides
+
+###CLUSTER submission
+qsub nameofscript
+qstat -u pjanowsk -n (gives node names of my jobs)
+qsub -I -l nodes=1:ppn=8 (assigns me an empty node with 8 processors)
+qstat -f username pjanowsk
+qstat -f jobid 11111
+cat/proc/cpuinfo
+cat/proc/meminfo
+qsub -W depend=afterok:${JID0} runObelix_mod3.sh
+
+## PBS
+Gyges:
+If you know your job will need a lot of memory, you can request a node with 16 GB of memory (gyges has 8 GB nodes and 16 GB nodes available). One way to do this would be to specify
+#PBS -l mem=9g
+that would exclude any of the 8 GB nodes.  That's mostly useful if you're requesting a whole node to yourself, but if you have a high memory job you probably should be anyway.
+#PBS -l pvmem=2048 
+means that each of the 4 cores will need 2 GB, for 8 GB of virtual memory available.  That's pretty much a whole node anyway.
+
+
+
+###NETWORK SIZE USAGE
+df -h (show moutnpoints)
+ll / (ll is ls -l, shows the links that exist in root folder)
+df . (tells where you actually are on the NFS)
+quota -s (only on gyges, tells how much I'm using)
+du -sh (tells how much a folder occupies)
+du -h name (tells how big a file or folder (name) is in human readable)
+
+#size of all directories in the current directorycd 
+du -sh `ls -d */`
+
+#list directories
+ls -1d */
+ 
+# list files
+find . -maxdepth 1 -type f
+
+###VERSIONS
+which gcc
+gcc--version
+
+###UNINSTALL
+make uninstall (find uninstall in the make file and see, find clean in the make file and see)
+make clean
+
+###MPI
+mpi-selector
+mpi-selector --query
+mpi-selector --set
+
+module unload
+module load
+module list
+module purge
+module avail
+
+
+###IP
+host hostname
+
+icc is intel compiler, gcc is gnu compiler
+
+
+ssh -l pjanowsk casegroup.rutgers.edu
+
+###LOOPS
+for i in `ls *pdb*`; do echo $i; done (bash)
+for i in *pdb*; do echo $i; done (bash, alternative version)
+foreach i (*pdb*)
+	echo $i
+end				(csh)
+
+
+#TEXT EDITING/CUTTING (string manipulatio)
+t=paul57
+echo ${t##paul} #everything after 'paul'
+	57
+echo ${t%7}  #delete shortest match of 7 from back of string
+	5
+echo ${t##??} #everything after the first two characters whatever they may be
+	ul57
+echo ${t##${t%??}} #last two characters whatever they may be
+
+echo ${t:0:1} #slice from position 0 lenght 1
+	p
+#delete everything after rst7
+i=71_nofit_CA.c0.rst7.8857
+echo ${i%${i##?*rst7}}
+	71_nofit_CA.c0.rst7
+
+
+[pjanowsk@casegroup composer_xe_2013.1.117]$ i=heloo.so.4.o
+[pjanowsk@casegroup composer_xe_2013.1.117]$ echo ${i%%.?*}
+heloo
+
+
+another way to change the extension:
+i=alongB.tga
+echo $i |sed s/\.tga$/\.jpg/ 
+another way:
+echo ${i/.tga/.jpg}
+
+
+#take all files named md* and change name to whatever was before 'crd' and add 'nc' to that (so changes extension crd to nc
+for i in `ls md*`; do mv $i ${i%crd}nc; done
+#another way to change extenstion
+for i in `ls *.tga`; do convert $i ${i/.tga/.jpg}; done
+
+#plotting xmgrace select just certain columns
+xmgrace -block nameoffile -bxy 1:3
+
+#invisible disappear show display text on command line
+stty -echo, stty echo
+
+### un tar gunzip
+tar -zxvf vibrant_ink_geany.tar.gz
+
+#tar and gunzip
+tar -czvf file.tar.gz filedir/* file1 file2
+
+###processes
+htop
+top, then k to kill, i to see nodes, h for help
+ps aux (shows all for all users) ps aupjanowsk shows only mine, 
+
+##increment by one (4 possibilities)
+let x++
+let x=x+1
+x=$(($x+1))
+((x++))
+
+
+##library paths
+cd ~/lib
+ln -s /usr/lib64/libcrypto.so libcrypto.so.6
+export LD_LIBRARY_PATH=~/lib:$LD_LIBRARY_PATH
+
+##logging
+ssh -l pjanowsk casegroup.rutgers.edu
+
+## remove hydrogens
+reduce -trim withH.pdb > withoutH.pdb
+for manual
+grep -v "ATOM.........EPW" 2OUE_pawelAH.pdb > test2.pdb
+
+
+##Teragrid:
+gsiscp -r equilN/ pawelrc@kraken-gsi.nics.utk.edu:~
+gsiscp -r pawelrc@kraken-gsi.nics.utk.edu:~/minimizeN/ .
+ #to copy only the files i don't already have and preserve time stamps
+rsync -azvu -e gsissh pawelrc@kraken-gsi.nics.utk.edu:/lustre/scratch/pawelrc/run6x/2oueIb_ff99/topo.prmtop .
+rsync -azvu /home/pjanowsk/Case/pepsim/test/ . # copy contents of test to current location
+rsync -azvu /home/pjanowsk/Case/pepsim/test .  # copy test and its contents to current location
+# rsync only specific file extension
+rsync -azvu --include '*/' --include '*.tmp' --exclude '*' /home/pjanowsk/Case/pepsim/test/ . 
+
+#.NFS
+lsof nameofNFSfile - will tell you which process is behind it
+kill -9 numberofprocess - force kill that dumb process
+
+##copy stuff from many folders
+for i in equilIc equilId equilIe equilSc equilSd equilSe; do cp minimize${i##equil}/Xtalx${i##equil}.prmtop minimize${i##equil}/Xtalx${i##equil}.minall equil${i##equil}/; done
+
+##cut and paste columns
+cut -d, -f1-5 test.csv > start.txt (cuts out first 5 columns)
+cut -d, -f3 test.csv> replace.txt
+cut -d, -f7 test.csv > end.txt
+paste -d '' start.txt replace.txt end.txt (will paste those three side by side, the apostrophes are so without tabs between)
+#often the aboe does not work (like with pdb files) so use this (the above, btw, is if the delimieter is a comma)
+cut -c1-24 2OUE.pdb >tmp1
+
+##piping pipe
+does a dash (-) signify the piped text?
+cut -d, -f7 test.csv | paste -d, start.txt replace.txt -
+
+
+!qsub repeats previous qsub command (or whatever command I write instead of qsub)
+
+##sorting by column
+sort -n +5 -6 temp2.pdb >temp3.pdb   (to sort a pdb file so that residues are in order)
+sort -k1n -k2n -k3n filename (sort by first three fields in that order (like for hkls))
+
+
+cp /home/cerutti/AmberReload/AmberTools/src/sff/AmberNetcdf.[ch] . 
+gcc -g -Wall -o new new.c
+valgrind -v ./new -o inputf outfill
+
+
+#shutdown computer from ssh
+shutdown -h now
+
+#SCP or rsync stuff:
+scp -r pjanowsk@172.16.65.167:/home/pjanowsk/Case/pepsim/prepValOK/RedWaterPep.pdb .
+ifconfig # to find your ip address
+scp -r minimize/ pjanowsk@tyr.rutgers.edu:/home/pjanowsk
+
+# rsync
+rsync -av $dave/*out OutDiags/
+rsync -av --ignore-existing $dave/*out OutDiags/ #would ignore files already in the existing directory, only copy the new ones
+rsync -azvu --progress /lustre/janowski/hairpin_msi/ /project/yorkdm/pawel/hairpinXtal #a is for archive which preserves time stamps and is recursive, z is for compression so faster, -u is for not overwriting newer files (that have been modified), progress displays transfer progress
+
+#grep for "RMSD" in all files named "*.py" in current directory and subdirectories
+grep -r --include="*.py" "RMSD" .
+grep -r -l "RMSD" *
+
+
+grep -v "ATOM............B" ../2p7e_PDBorig.pdb >tmp.pdb
+grep "C1\| P " UC.pdb | wc -l
+#grep or
+grep -E "noratio_(0.006|0.02|0.04|0.08|0.5)"
+
+#sorting a pdb file for atoms
+sort -n +5 -6 temp2.pdb >temp3.pdb  
+
+#modify creation date of a file (yyyymmddhhmm)
+touch -t 201007101540 filename.txt
+find . -type f -mtime +20 -exec touch -t 201112170000 "{}" \; (change date of all files older than 20 days
+
+
+#remove current and subfolders
+find . -name "*BAK" -exec rm -f {} \;
+find . -name "*en" -print0 | xargs -0 rm
+
+
+#chmod permissions of all files or all directories at once ({} gets replaced by the current file find is processing \; is to end the exec command).
+find . -type d -exec chmod 755 {} \;
+find . -type f -exec chmod 644 {} \;
+
+#move all files older than a certain date from one directory structure to another
+for i in */; do cd $i; find . -type f -mtime +17 -exec mv "{}" /project/yorkdm/pawel/hairpinXtal/$i/ \;; cd ..; done
+
+#public key
+go into ~/.ssh and it is what is in id_rsa.pub
+
+# which shell am I using
+echo $0
+
+#remove empty lines which have a space and then a carriage return /M)
+sed '/^ *^M/d' temp.txt >tmp
+
+#eliminate duplicates of certain columns (like anomalous scattering hkls)
+awk '{t[$1" "$2" "$3]=$4" "$5" "$6" "$7}END{for (i in t){print i,t[i]}}' fav8.hkl |sort -k1n -k2n -k3n >fav8_NoAnomal.hkl
+
+#exit, quit, stop execution of a script in bash
+kill -SIGINT $$
+
+#find and replace
+sed 's/%NProc=1/%NProc=4/g' MPD1-gau.com >MPD1.com
+:%s/TER.*/TER/g  # in vi replace entire line with first letters TER with a line that only has TER
+
+#RMSD with awk
+grep 'ATOM      1' model1.pdb model2.pdb | cut -d: -f 2 | cut -c 31-54 | awk '{printf "%s ",$0;}' | awk '{print sqrt(($1-$4)^2+($2-$5)^2+($3-$6)^2);}'
+
+#grep
+grep -P '^\s*\S+\s+0\s+0' cryst_2x1x1.dat
+grep -P '^\s*([1-9]|1[1-3])\s+0\s+0' cryst_2x1x1.dat
+	# all files of an extension recursively
+grep -R "  refine {" --include=*eff ./* 
+	# one line after
+grep -R "optimize_xyz_weight" --include=*eff -A 2 ./*
+
+
+# perl
+perl -ne '/ATOM\s+29\s+\S+\s+\S+\s+(\S+)/ or next; print "$1\n"' ../p2p7eIa_nowat.pdb
+
+# get find all lines between two patterns
+sed -n '/RESIDUE  SER/,/Bond A/p' resID.txt 
+awk '/RESIDUE  SER/ , /RESIDUE  NME/{print}' resID.txt
+awk '/Dihedral/,/RESIDUE/{if(!/Dihedral/ && !/RESIDUE/)print} '
+
+# set bash prompt
+export PS1="[\W] $"
+
+# set tcsh command prompt
+set prompt="\n%{\033[0;32m%}%n@%m:%{\033[0;33m%}%~%{\033[1;30m%}>%{\033\[0;3m%} "
+
+#convert row to column
+ls | tr '' '\n'
+
+#delete files greater than 1GB
+for i in `find -type f -size +1G`; do if [ $i != ./rmsf/xaja/xajatraj.mdcrd ];then rm $i;fi;done
+
+# compare 2 files (in color!)
+vim -d filename1 filename2 
+
+# download files directory from internet
+#no-parent is so you don't get all the files but just the directory you specify
+wget -r --no-parent --reject "index.html*" http://bl831.als.lbl.gov/~jamesh/amber/fav8/
+#if you don't want the content of subdirectories than add -l keyword
+wget -r -l 1 --no-parent --reject "index.html*" http://bl831.als.lbl.gov/~jamesh/amber/
+
+#get time
+time="$(date +"%T")"
+
+#get temp file name
+mktemp -u /tmp/pjanowsk/helloXXX
+
+#list names of each file but each on one line
+ls -1
+
+#latex compiling: if using bibtex you'll need to compile 4 times: you can use latex or pdflatex
+pdflatex nameoffile.tex
+bibtex nameofile
+pdflatex nameoffile.tex
+pdflatex nameoffile.tex
+#BTW, to get the good clean bib file for bibtex, run ~/scripts/python/clean_bibliography.py (read the instructions first).
+
+#
+#lconf is in devel/git/Management/LaTeX/bin/ 
+lconf nameoffile.tex
+#this creates a Makefile
+make ps2pdf  # I think this expects all eps files. Just to be sure don't have pdf, just eps files. Embedds fonts into pdf.
+make pdf  #uses latex2pdf
+
+#eps files in latex: if you use lconf and make ps2pdf you don't worry about eps. But if using pdf2latex need to add
+\usepackage{epstopdf}    to the header of the tex file and when you compile
+pdflatex --shell-escape nameoffile.tex
+
+#polskie znaki latex
+\usepackage[polish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+# awk print specific column
+ ls -lht | awk '{print $9}'
+ awk '{print $1}' nameoffile
+# awk format 
+cat tmp.txt | awk '{printf("%2d   %9.4f  %9.4f  %9.4f  %9.4f\n",$1,$2,$3,$4,$5)}' >>data_SER.txt
+/home/pjanowsk/Desktop/PatRecProject/Data/GetDih.sh
+
+#awk if
+PHI=`cat phi.txt | awk '{if ($1==1)print$2}'`
+
+# awk sum all columns and print sum (NF is number of fields), ($NF is the value of the last field)
+awk '{for(i=1;i<=NF;++i)sum+=$i;print sum}'
+
+# awk assign value to some variable, run on text file
+awk -v cpu=$cpu '$1==cpu{print $2}' nameoffile
+
+# awk print first line
+awk 'NR==1{print $1,$2,$3}'
+or
+awk '{print $1,$2,$3;exit}'
+
+# awk change separator field , +0 makes it a float I think
+[pjanowsk@krakow myplay2]$ echo "B=10" |awk -F "=" '{print $2+0}'
+10
+
+# awk variables
+# this won't work because single quotes and variable not expanded
+B=5
+awk 'BEGIN{b=$B;printf("B is %s\n", b)}' sometextfile.txt
+# this will work but need to escape the quotes
+awk "BEGIN{b=$B;printf(\"B is %s\n\", b)}" sometextfile.txt
+# this is a better way to do it
+awk -v b="$B" 'BEGIN{ printf("B is %s\n", b) }' sometextfile.txt
+# awk heredocs
+# this won't work because $3 is expanded when the heredoc is written. Use \$3
+cat <<EOF > awk.in
+/ATOM/{print $3}
+EOF
+awk -f awk.in out1.pdb 
+
+
+# test if variable exists. Make sure you put the variable call in quotes!!! The last statment tests if variable has
+# been defined but is empty. To test for non existence use -z option instead.
+[pjanowsk@krakow RunCase]$ unset $val1
+[pjanowsk@krakow RunCase]$ unset val1
+[pjanowsk@krakow RunCase]$ if [ -n "$val1" ]; then echo 'hi'; fi
+[pjanowsk@krakow RunCase]$ val1=
+[pjanowsk@krakow RunCase]$ if [ -n "$val1" ]; then echo 'hi'; fi
+[pjanowsk@krakow RunCase]$ val1=1
+[pjanowsk@krakow RunCase]$ if [ -n "$val1" ]; then echo 'hi'; fi
+hi
+[pjanowsk@krakow RunCase]$ unset val1
+[pjanowsk@krakow RunCase]$ val1=
+[pjanowsk@krakow RunCase]$ if [ -n "${val1+xxx}" ]; then echo 'hi'; fi
+hi
+
+# awk specific lines
+awk 'NR==5 || NR==9' nameoffile
+# awk specific range of lines
+awk 'NR>=5&&NR<=9' nameoffile
+
+#awk
+file=fav8_99001.pdb
+pframe=`echo $file | awk '{file=$0;while(gsub("[0-9]$|.pdb$",""));printf("%05d",substr(file,length($0)+1)) }'`
+# The while loop keeps going as long as it is true first matching .pdb then each digit in succession and replacing
+# them with empty string. This leaves $0=fav8_ which has length 5. substr works on the variable file and cuts it from 5+1=6 place on which gives 99001.pdb. Printf with interger format converts that to 99001.
+
+#print every nth line
+awk '!(NR % 3)' file1 > file2
+
+
+
+
+# sed find replace in a file
+sed -i 's/CRSYT/CRYST/g' fav8_99001.pdb 
+
+#pick longest string in the pdb filename to be the frame number
+pframe=`echo $file | grep -o "[0-9]*" |sort -nr |head -1`  
+
+#rsync exclude file
+rsync -azvu --exclude-from=exclude.lst /home/pjanowsk/Case/pepsim/source1 .
+
++ /source1/junk/
++ /source1/junk/keep/
+- /source1/junk/*
+- /source1/*
+
+
+# first there was tarballs but you needed to do configure, make, make install so then they started to make rpms but then 
+# you needed to do rpm and in the correct order, so then they made yum or apt-get. When you have an rpm you can either 
+# yum install it or rpm it
+
+#vim split windows
+vi file1 file2
+:vsp -split windows
+:n - to next file
+ctrl-w-w  - switch windows
+
+#vim multiple files
+:ls list of files
+:1b first file
+:3b second file, etc
+
+#vim tabs
+:tabnew opens up new tab
+:e opens new file in tab
+vim -p filename filename2  - opens files in tabs
+:tabn :tabp moves between tabs
+:qa close all tabs
+
+#vim explore
+:Explore
+:Vex
+
+#geany
+for color schemes look in ~/.config/geany/filedefs
+To specify which file extensions the filedefs apply to modify Tools--ConfigurationFiles--filetype_extensions.conf
+To change background color in a filedef file: in the [styling] section, each line follows this format:
+key=foreground color;background colo; bold; italic
+So to change from black (0x000000) to cobalt (0x131b33) change the second field of the "default" keyword
+
+#missing libs
+yum whatprovides */libXdmcp.*
+yum install libXdmcp-1.1.1-3
+
+#convert mov to avi
+sudo apt-get install ffmpeg libavcodec-extra-53
+ffmpeg -i input.mov -g 60 -vcodec msmpeg4v2 -acodec libmp3lame -f avi output.avi
+
+#for same quality convert mov to avi
+#!/bin/bash  
+for i in *.MOV;
+do name=`echo $i | cut -d’.’ -f1`;
+echo $name;
+avconv -i ${name}.MOV -b 19000k -b:a 192k -s 960x540 ${name}.avi
+done
+
+
+# for loop separator newline not space
+IFS=$'\n'IFS=$'\n'
+
+#convert gif animation to avi
+convert ../avgcompare_anim.gif some%05d.png
+ffmpeg -sameq -i some%05d.png some.avi
+
+#change avi size
+#change quality
+ffmpeg -i some.avi -b 2000k -r 15 some2.avi
+#change quality and dimension
+ffmpeg -i some.avi -s 480x360 -b 1000k some2.avi
+#check current bitrate, rate, dimensions
+ffmpeg -i some.avi
+
+
+
+
+
+#apt-get list available packages
+sudo apt-cache search libavcodec-extra
+
+#flash player problems on linxu in chrome and firefox
+1. Don't use the flash player chrome comes with. Install your own 
+ - sudo yum install flash-plugin
+ - or download the tar.gz and take libflashplayer.so into /usr/lib64/plugins/
+2. In chrome do chrome://plugins
+ - make sure only the flashplayer you just installed is enabled. Disable the native one
+3. For mozilla copy libflashplayer.so into whereever mozilla is installed: 
+	- /usr/lib/firefox or /usr/lib64/mozilla/plugins or /usr/lib/mozilla/plugins
+4. Where ever the libflashplayer.so is that the browser is using go to that folder and run
+	sudo perl -pi.bak -e 's/libvdpau/lixvdpau/g' libflashplayer.so
+  So it's not looking for libvdpau anymore and not accelerating graphics which screws up colors.
+
+#vim start-up load initialize
+To see what vim is doing at startup run "vim -V".
+
+
+
+
+# xargs parallel
+GNU Parallel makes sure the output from different processes are not mixed. To see the difference compare these:
+find . -type f | xargs -P 40 -n 10 grep -H ‘.’
+find . -type f | parallel -P 40 -n 10 grep -H ‘.’
+
+
+#find where home is mounted or real physical path
+pwd -P
+readlink -f .
+
+# Bash prompt (add git branch name)
+# you can look in /etc/bash_completion.d/git for more info
+PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$
+
+
+
+#vim macros
+q - to start recording
+any letter - label for the macro
+execute sequence of commands
+q to stop recording
+
+@label (label is the any letter above) to execute macro
+3000@label - execute macro 3000 times
+
+#ssh problems
+Your home directory on the remote machine was chmod 775. ssh won't work unless the whole path to the public and private keys on each side is 755 or less.
+
+#vim paste many times same thing
+vnoremap <leader>p "_dP in vim.rc
+:reg to see buffers
+"0p to paste from previous buffer
+
+#select many lines
+Nyy  - yank N lines
+ma (to mark), go down to last line, y'a to yank between the marked line and here
+
+$ end of line
+g_ last non whitespace character
+A end of line and edit
+0 beginning of line
+^ first non whitespace character
+
+#Make modify command line variable
+make -e AMBERBUILDFLAGS="-g" parallel
+
+
+#which thread/core is a process using
+You can use top to list the utilization of each core. Press 1 if necessary to split the CPU row into a separate row for each core.
+You can also add a column that shows the last-used core for each process. Press f to bring up the field list, then j to activate the "P" column. Then press space to return to the live view.
+
+
+#SVN resolve conflicts
+p - postpone will create a copy of my file, previous commited file, present commited file and a file with the diff changes in it (with original file name). Best to use meld to compare my file with the present commited file. Hand modify, then accept by
+
+svn resolve --accept working filename
+
+
+cp /home/foo/realllylongname.cpp{,-old}
+cp /home/foo/realllylongname.cpp{-old,}
+!!
+pushd/popd
+
+!$ - last non-command item (Alt.)
+!^ - first non-command item
+!* - all non-command items
+!:2 - 2nd non-command item
+!$:h, !$:t - head and tail
+add "bind Space:magic-space" to .bashrc and any ! combination will be automatically expanded when you hit space
+
+ehco foo bar baz
+^ehco^echo
+
+rename 's/text_to_find/been_renamed/' *.txt
+
+export HISTCONTROL="erasedups:ignoreboth"
+export HISTFILESIZE=500000
+export HISTSIZE=100000
+export HISTIGNORE="&:[ ]*:exit"
+shopt -s histappend
+shopt -s cmdhist
+stty stop ""
+
+diff <(ssh server1 'rpm -qa | sort') <(ssh server2 'rpm -qa | sort')
+diff <(./myscript.sh) expected_output.txt
+
+!!:p
+!?foo?:p
+!?foo
+
+# disk usage, size of directory
+du -a | sort -n | tail -99
+du -sk ./* | sort -n | awk 'BEGIN{ pref[1]="K"; pref[2]="M"; pref[3]="G";} { total = total + $1; x = $1; y = 1; while( x > 1024 ) { x = (x + 1023)/1024; y++; } printf("%g%s\t%s\n",int(x*10)/10,pref[y],$2); } END { y = 1; while( total > 1024 ) { total = (total + 1023)/1024; y++; } printf("Total: %g%s\n",int(total*10)/10,pref[y]); }
+du -h --max-depth=1 |sort -n
+
+mkdir -p tmp/a/b/c
+
+###   Handy Extract Program
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xvjf $1        ;;
+            *.tar.gz)    tar xvzf $1     ;;
+            *.bz2)       bunzip2 $1       ;;
+            *.rar)       unrar x $1     ;;
+            *.gz)        gunzip $1     ;;
+            *.tar)       tar xvf $1        ;;
+            *.tbz2)      tar xvjf $1      ;;
+            *.tgz)       tar xvzf $1       ;;
+            *.zip)       unzip $1     ;;
+            *.Z)         uncompress $1  ;;
+            *.7z)        7z x $1    ;;
+            *)           echo "'$1' cannot be extracted via >extract<" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+&&
+ctrl-A  begin foe line
+ctrl-E  end of line
+ctrl-K erase forward
+ctrl-U erase back
+ctrl-->, ctrl-<- move one work
+ctrl-L clear screen
+
+export CDPATH=.:/home/gadolin/sth:/home/gadolin/dir1/importantDir
+
+
+# kill many proc at once
+ps -aux | grep chrome | awk '{print $2}' | xargs kill -9
+
+# matlab run commandline
+alias matlabrun='matlab -nosplash -nodisplay -nodesktop <'
+	/usr/local/bin/matlab
+
+

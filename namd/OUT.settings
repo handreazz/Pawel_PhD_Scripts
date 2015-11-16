@@ -1,0 +1,6 @@
+# Output
+restartfreq         10000
+dcdfreq             10000
+outputEnergies      10000
+outputPressure      10000
+

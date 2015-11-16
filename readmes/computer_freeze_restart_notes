@@ -1,0 +1,14 @@
+
+###Chrome
+cd .config/google-chrome
+mv Default temp
+rm -rf Default
+cp -R temp Default
+
+
+###Thunderbird
+go to .thunderbird and into the folder (only folder there, which has the profile) (in doubt check the thunderbird.ini file for path of the profile folder).
+Once in the profile folder, erase the file .parentlock.
+
+####Mozilla
+change places.sqlite to some other name, than make a copy and call it places. sqlite

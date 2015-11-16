@@ -1,0 +1,8 @@
+parm na.prmtop
+trajin na.pdb
+matrix mwcovar name mwcvmat out mwcvmat.dat :1-2
+diagmatrix mwcvmat out evecs7.dat vecs 6 nmwiz nmwizvecs 4 nmwizfile out.nmd thermo outthermo thermo.dat
+#run
+#modes fluct out rmsfluct.dat name evecs7.dat beg 1 end 6
+#projection modes evecs7.dat out project.dat beg 1 end 6
+#run

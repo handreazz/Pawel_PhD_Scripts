@@ -1,0 +1,352 @@
+####Lambda, filter, map, reduce
+>>> foo = [2, 18, 9, 22, 17, 24, 8, 12, 27]
+>>> 
+>>> print filter(lambda x: x % 3 == 0, foo)
+[18, 9, 24, 12, 27]
+>>> 
+>>> print map(lambda x: x * 2 + 10, foo)
+[14, 46, 28, 54, 44, 58, 26, 34, 64]
+>>> 
+>>> print reduce(lambda x, y: x + y, foo)
+139
+
+###Read netCDF files: cf http://gfesuite.noaa.gov/developer/netCDFPythonInterface.html
+import Scientific.IO.NetCDF
+from Numeric import * 
+from NetCDF import * or from Scientific.IO import NetCDF as Net
+file = Net.NetCDFFile(filename, 'r')
+variableNames = file.variables.keys() 
+var = file.variables['nameofvariable']
+varShape = var.shape 
+data=var[:] or data = var.getValue()
+
+(just to get the structure of the netcdf file in bash use "ncdump -h nameoffile")
+
+
+## to test for a matching string
+if len(re.findall(regex, string)) > 0:
+  print hello
+
+#to import from stander output: to pass or capture variables from terminal
+import commands
+names = commands.getoutput("ls bigmatrix*ns")
+mount = commands.getoutput('mount -v')
+frames=float(commands.getoutput('ncframes %s' %TRAJ))
+  	OR
+
+import subprocess
+import shlex
+import glob
+cmd='ls *nc'
+arg=shlex.split(cmd)
+arg = arg[:-1] + glob.glob(arg[-1])
+print arg
+output = subprocess.check_output(arg)
+
+	OR
+
+import commands	
+test=commands.getoutput('ls dist*dat').split()
+for i in range(len(test)):
+	if 'pdb' in test[i]:
+		test.pop(i)
+print test
+
+
+
+
+#checking for NaN
+	if isnan(avgbfac):
+		continue
+
+### modules, classes and documentations
+http://mdanalysis.googlecode.com/svn/trunk/doc/html/documentation_pages/coordinates/DCD.html#module-MDAnalysis.coordinates.DCD
+
+import MDAnalysis.coordinates.DCD as DCD
+dcd = DCD.DCDReader(filename)
+
+In any case, when I get lost, I use the dir command to see what I can, and cannot do.  You can use the dir(object) and type(object) commands on any python variable.  So you can try type(DCD) to make sure that DCD is a module and not a class.  You can also type dir(DCD) to see a list of all it's members.  
+
+%format write print
+out.write('%4d  %5.2f  %4s  %4s \n' %(lnum, float(linef[10]),atom, resid))
+
+
+
+
+#size dimension shape of a numpy array
+shape(data)
+
+# savetxt format
+savetxt(ofile, combined,fmt=['%2d','%6.4f'])
+
+#copy variable without referencing changing the original
+x=y #changes to x will change y
+x=y[:] #changes to x will not change y, x is a copy, has different location in memory
+
+# mateusz
+lista=[i+1 for i in range(10) if i%2==0]
+
+# check dcd frames
+import MDAnalysis.coordinates.DCD as DCD
+for i in range(2:23):
+	filename='md%d.dcd' %(i)
+	dcd = DCD.DCDReader(filename)
+	print dcd
+
+# where is a module read from
+import numpy
+>>> numpy.__file__
+'/usr/lib64/python2.7/site-packages/numpy/__init__.pyc'
+
+# add directory to read python modules from
+in .bashrc add:
+export PYTHONPATH=~/scripts/python:$PYTHONPATH
+
+# debugging
+	#interact
+import code; code.interact(local=locals())
+	# orYou can merge the locals() and globals() dictionaries and then pass the result to code.interact():
+import code; code.interact(local=dict(globals(), **locals()))
+
+	#assert
+assert type(id) is IntType, "id not ineger: %s" % id
+	#pdb
+import pdb; pdb.set_trace()
+	#ipdb
+ import ipdb; ipdb.set_trace()
+
+# end execution upon encountering error
+sys.exit("Error: file extension not known. Please use nc, rst7 or pdb.")
+
+#input arguments
+# use
+sys.argv[1]
+# or argparse
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("file1", help="name of file 1")
+parser.add_argument("file2", help="name of file 2")
+parser.add_argument("atom", help="atom number",type=int)
+args = parser.parse_args()
+A=rst7(args.file1)
+
+# command history
+import readline
+for i in range(readline.get_current_history_length()):
+	print readline.get_history_item(i)
+
+
+
+## 2D histogram or heatmap
+#version 1
+ax = fig.add_subplot(2,2,1)
+plt.hexbin(data[:,1],data[:,2], gridsize=50)
+plt.axis([-1.5,1.5,-1.5,1.5])
+plt.xlabel('a-vector')
+plt.ylabel('b-vector')
+plt.colorbar()
+ax.grid(True)
+
+#version2 (watch out, not yet sure which data ends up on which axis, plot without extent keyword specified to see how imshow plots the array with y-axis decreasing, needs testing)
+ax = fig.add_subplot(2,2,3)
+heatmap, xedges, yedges = histogram2d(data[:,2],data[:,3], bins=50)
+heatmap=heatmap[:,::-1] #imshow plots the matrix y-axis from top to bottom
+plt.imshow(heatmap, interpolation='nearest',extent=[-1.5,1.5,-1.5,1.5])
+plt.xlabel('b-vector')
+plt.ylabel('c-vector')
+plt.colorbar()
+ax.grid(True)
+
+#installing packages modules
+#OPTION 1: using PIP
+#you may need to do the following with sudo in front
+easy_install pip #or easy_install --upgrade pip
+pip install --upgrade numpy # or whatever package you want to upgrade
+#another example
+sudo pip install -U matplotlib
+
+#OPTION 2: using setup.py
+tar xzf ScientificPython-2.x.y.tar.gz
+cd ScientificPython-2.x.y
+python setup.py build
+python setup.py install
+
+# on my new ubuntu this didn't work.Couldn't find oldnumeric.h. I think new numpy moved this to a different location so I had to grep where the Scientific was including this header and hardcode the include address. Then when I tried to import NetCDF I was getting "cant find modlue Scientific_netcdf." To get this working I copied the Scientific_netcdf.so file from my work computer to laptop (linux2 directory). Then erased Scietnific.IO.NetCDF.pyo and .pyc files so that recompiled and I could not load it. 
+# seems you also get Scientific by doing
+sudo apt-get python-netcdf
+
+#for multiple versions of python use virtualenv!
+http://docs.python-guide.org/en/latest/dev/virtualenvs/
+
+# This is in my .bashrc
+export WORKON_HOME=~/Envs
+source /usr/bin/virtualenvwrapper.sh 
+#some example code
+mkvirtualenv mmlib --system-site-packages
+lsvirtualenv
+workon mmlib
+cdvirtualenv
+cd ~/c/Case/tlsmd/pymmlib-code/pymmlib/
+/u2/home/pjanowsk/Envs/mmlib/bin/python setup.py build
+/u2/home/pjanowsk/Envs/mmlib/bin/python setup.py install
+# to add a path to the virutalenv
+add2virtualenv ~/my/path
+If you want to remove these path edit the file myenvhomedir/lib/python2.7/site-packages/_virtualenv_path_extensions.pth
+
+
+# 3D visualization use mayavi in Enthought distribution
+
+
+
+#ternary operator
+inc = inc/2 if inc/2 else (0 if inc==1 else 1)
+
+# reg ex
+    import re
+    p=re.compile('regex')
+    p.findall(string)
+
+frames=float(commands.getoutput('ncframes %s' %TRAJ))
+
+# filter numpy array with multiple criteria
+x is some array
+i=(x[:,0]>1.0) | (x[:,1]>1.0) | (x[:,2]>1.0)
+newarray=x[i]
+
+#NETCDF
+# If ScientificPython doesn't work use
+# opt1: scipy
+from scipy.io import netcdf
+f = netcdf.netcdf_file('test.nc', 'r')
+print f.history
+time = f.variables['time']
+print time.units
+print time.shape
+print time[:]
+f.close()
+#opt2: netCDF4
+# see http://www-pord.ucsd.edu/~cjiang/python.html
+
+# format numpy array printing
+set_printoptions(precision=3)
+set_printoptions(suppress=True)
+
+#sorting a dictionary by the fourth element of the key which is a tuple
+l=sorted(supercell_contacts.iteritems(), key=lambda x: x[0][4] )
+
+#no new line after print: add comma
+print "%s %3d" %(transop, len(tmp_l)),
+
+
+#getattr examples:
+#1
+import statsout
+def output(data, format="text"):                              
+    output_function = getattr(statsout, "output_%s" % format) 
+    return output_function(data)    
+#2
+methodList = [method for method in dir(object) if callable(getattr(object, method))]
+
+
+# and or trick, and-or trick
+(1 and [a] or [b])[0]
+(0 and [a] or [b])[0]
+
+
+
+>>> s = 'buildConnectionString'
+>>> s.ljust(30) 
+
+>>> li = ['a', 'b', 'c']
+>>> print "\n".join(li) 
+
+
+#reverse order of numpy array
+l[argsort(l)[::-1]]
+
+#get stack trace
+import inspect
+inspect.stack()[1] etc.
+
+or
+
+for i in inspect.stack():
+  print i[1], i[2], i[4]
+
+# double sorting of nested loops
+  summaries.sort(key=lambda x: (-x[0][0], -x[0][1]) )
+
+#.so libary not found
+share object libraries are searched for in the environement LD_LIBRARY_PATH but just adding to and exporting LD_LIBRARY_PATH does not always seem to work. The way that works is to add the directory to the /etc/ld.so.conf and then run ldconfig	
+
+# check if variable exists or was defined
+          try:
+            cif_object
+          except NameError:
+            print "well, it WASN'T defined after all!"
+          else:
+            print "sure, it was defined."
+
+# check if executable in path
+#1st way
+afitt_installed = False
+for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, 'afitt')
+            if os.path.isfile(exe_file) and os.access(exe_file, os.X_OK):
+              afitt_installed = True
+            else:
+              afitt_installed = False
+#2nd way
+import subprocess
+afitt_installed=False
+x=subprocess.Popen(['which', 'afitt'],stdout=subprocess.PIPE)
+if x.communicate()[0] != '':
+  afitt_installed=True
+
+
+#subprocess shell command
+x=subprocess.check_output(command, shell=True)
+subprocess.check_call(command,shell=True)  - this is the standard to just run something. 
+p = subprocess.Popen(command, shell=True,stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+# class and decorator
+In [1]: class Foo(object):
+    def __init__(self):
+        self._thing = 5
+    @property
+    def thing(self):
+        return self._thing
+    @thing.setter
+    def thing(self, value):
+   ...:         self._thing = value
+
+#dump print out all attributes of object (introspection) (if no __dict__)
+def dump(obj):
+  for attr in dir(obj):
+      print "obj.%s = %s" % (attr, getattr(obj, attr))
+
+#random numpy stuff
+np.copy - not change original
+np.ravel - flatten
+np.zeros((5,5)).astype(int)
+np.zeros(5, dtype=int)
+np.recarray - record array
+np.zip, np.dtype.names - give names to recarray columns
+
+#Filtering
+index = np.where(arr>2)
+np.delete
+index = arr>2
+arr2=arr[arr>2]
+
+#operate on specific elements
+i=arr>2
+b=arr[i]
+b=b**2-2
+arr[i]=b
+
+#scipy stuff
+curve fit, fsolve, findIntersections, interpolate, univariatespline, griddate, mgrid, smoothBivariateSpline, quad, trap2, distributions (pdf, cdf, rvs), normaltest, kstest, tmean, hmean, skew, describe
+
+

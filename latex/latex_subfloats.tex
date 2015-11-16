@@ -1,0 +1,438 @@
+\documentclass[12pt,letterpaper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subfig}
+%\usepackage{fullpage}
+\usepackage[vmargin=2cm]{geometry}
+\renewcommand{\thesubfigure}{\roman{subfigure}} %change format of subfloat labels
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}} %scientific notation
+\newcommand{\degr}{\ensuremath{^\circ}}
+\author{Pawe\l{} Janowski}
+\title{bullets}
+
+
+\begin{document}
+\section{Methods}
+
+\begin{enumerate}
+\item \textbf{Crystal Supercell Structure:} (I have not written methods yet but these figures would be referenced in the methods section when I talk about constructing the supercell.)Presentation of three orthogonal views of the 4x3x3 supercell, an oblique view and a stereo view.Note the formation of water channels along the crystalographic a-axis (coinciding with the cartesian x-axis).
+
+	\begin{figure}[H]
+	\setcounter{subfigure}{0}
+	\centering
+	\subfloat[Supercell viewed along the crystallographic a-axis.]{\includegraphics[width=0.35\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ViewsinGeneral/alongA}}
+	\subfloat[Supercell viewed along the crystallographic b b-axis.]{\includegraphics[width=0.35\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ViewsinGeneral/alongB}}
+	\quad
+	\subfloat[Supercell viewed along the crystallographic c-axis.]{\includegraphics[width=0.35\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ViewsinGeneral/alongC}}
+	\subfloat[Supercell viewed from an oblique angle.]{\includegraphics[width=0.35\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ViewsinGeneral/oblique}}
+	\quad
+	\subfloat[Stereo view of the supercell from an oblique angle.]{\includegraphics[width=0.7\textwidth,height=6cm]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ViewsinGeneral/oblique_stereo}}
+	\end{figure}
+
+	\begin{itemize}
+	\item Add an image of just one unit cell?
+	\end{itemize}	
+
+\end{enumerate}
+
+\section{Results}
+\subsection{Simulation of crystal: convergence and integrity of lattice and unit cells}
+\begin{enumerate}
+\item \textbf{ Volume:} The volume of the crystal cell is correctly maintained throughout the simulation. The volume of the reported crystal unit cell was 2795.8 \AA{}\textsuperscript{3} ($10.802\text{\AA} \times 16.361\text{\AA} \times 17.853\text{\AA}$).The 4x3x3 supercell therefore has dimensions of ($32.4060$\AA{} x $49.0830$\AA{} x $53.5590$\AA{}) and a volume of $1.0065\e{5}\text{\AA}$.The forcefield does a good job of maintaining the experimental volume of the system throughout the simulation.Because the pressure scaling is isotropic, unit cell parameters are maintained similar to the volume.
+
+
+%	\begin{figure}[H]
+%	\centering
+%	\includegraphics[scale=.2]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/volume/myfile}
+%	\caption{Volume expressed as a percentage of the reported crystal volume over 250ns of trajectory.}
+%	\end{figure}
+
+%	\begin{figure}[H]
+%	\includegraphics[scale=.2]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/outs/volume_avg}
+%	\caption{Absolute volume during the course of the 250 ns simulation.}
+%	\end{figure}
+
+
+
+	\begin{figure}[H]
+	\setcounter{subfigure}{0}
+	\centering
+	\subfloat[Volume expressed as a percentage of the reported crystal volume over 250ns of trajectory.]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/volume/myfile}}
+	\subfloat[Absolute volume during the course of the 250 ns simulation.]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/outs/volume_avg}}
+	\qquad
+	\subfloat[Value of a-coordinate during the 250ns simulation.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ptraj/acoord}}
+	\subfloat[Value of b-coordinate during the 250ns simulation.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ptraj/bcoord}}
+	\subfloat[Value of c-coordinate during the 250ns simulation.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ptraj/ccoord}}
+%	\caption{wat}
+	\end{figure}
+
+
+
+	\begin{itemize}
+	\item need to get volume graphs for the other 4 simulations and extended for 500ns
+	\end{itemize}
+
+
+\item \textbf{ Basic Simulation Parameters: } Basic simulation parameters are all good.
+
+
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[Total, kinetic and potential energy during the course of the 250ns simulation.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/outs/energies}}
+	\subfloat[Pressure over the course of the 250ns trajectory.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/outs/pressure}}
+	\subfloat[Temperature over the course of the 250ns trajectory.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/outs/temperature}}
+	\end{figure}
+
+
+
+\item \textbf{RMSD:} Root mean square deviation of the simulated crystal peptide structures as compared with the reported structure converges after approximately 20ns of production simulation. RMSD over the last 230ns of the 250ns simulation is $1.44\pm0.12$\AA for the entire peptide and $1.17\pm0.12$\AA for the backbone atoms only. The crystal waters on the other hand do not converge. RMSD increases steadily over the course of the simulation and reaches $12.31$ \AA after after 250ns.
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[RMSD of the entire peptides (side chains and backbone) over the course of the 250 ns simulation.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ptraj/rmsd_peptides}}
+	\subfloat[RMSD of the peptide backbones over the course of the 250 ns simulation.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ptraj/rms_backbone6final}}
+	\subfloat[RMSD of the crystalographic waters over the course of the 250 ns simulation.]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ptraj/rmsd_water}}
+	\end{figure}
+
+	\begin{itemize}
+	\item need to get rmsd from other simulations (500ns, 1ms, extra and less waters)
+	\end{itemize}
+	
+The crystallographic raw data is an averaged diffraction result over time and over the space of the repeating crystal unit cell. Therefore we also calculated an average simulated unit cell structure. First an average structure was calculated for each of the unit cells in the supercell from the last 200ns of the trajectory. The reverse of the symmetry transformations used to originally create the supercell was then applied to each unit cell to bring all 36 unit cells to once again occupy the same region of space. An average structure was then calculated from these 36 average unit cell structures. The resulting RMSD fit (See Fig. A)of this average structure compared to the crystal was .87762\AA and dropped to .80327 when hydrogen atoms, terminal residues and CD and CE atoms of phenylalanine rings were removed from the RMSD calculation. The reason for removing the CD and CE atoms from RMSD calculation is that the aromatic ring of the phenylalanine often undergoes 180\degr rotation. While the effect of such a rotation of the aromatic side chain produces no change in structure, the resultant RMSD calculation is quite high because the CD and CE atoms are distinguished from each other.
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[RMSD fit of the average structure of obtained by carrying out the reverse symmetry transformations on the average structures of each unit cell (cyan) compared to the original crystal structure (yellow). RMSD is 0.87762.]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/AvgStructure/avg_cryst.png}}
+	\subfloat[RMSD of the average structure of cell \#22 (red) compared to the crystal structure. Note the greater difference visible in the N-terminal of chain A (bottom right in the picture.) RMSD is 1.6236]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/AvgStructure/cryst_22.png}}
+	\end{figure}
+
+
+RMSD was also calculated for the average structure from the last 200ns of simulation for each unit cell separately (See Fig. X). A mean RMSD value of .9342\AA was obtained with a maximum RMSD of 1.6236 and a minimum of 0.9342. It is interesting to note that this mean RMSD was higher than the RMSD of the average structure of the unit cell averages. In other words, when the simulated unit cell structure resembles the reported crystal more closely when it is averaged both over time and over space as is also the case in the crystallographic experiment.Three unit cells, \#7, 8 and 22, differed significantly from the rest of the unit cells. An RMSD calculation of only Chain A (Fig.Y) and only of Chain B(Fig.Z) showed that unit cellc \#7 and \#22 differed from the crystal and most of the simulations cells in the Chain A, whereas cell \#8 differed due to changes in Chain B. The differences between these three unit cells and the crystal structure were seen to come mostly from a bending of the N-terminal of one of the two peptide chains.
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/unitcells/rmsdUC_AB}
+	\caption{Fig X. RMSD calculations of each unit cell. i) color matrix showing the RMSD value between all unit cells and the crystal structure (position $0$ on the matrix.ii) bar graphs of the RMSD results of each unit cell compared to the crystal structure. The mean, maximum and minimum of this calculation are shown above.}
+	\end{figure}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/unitcells/rmsdUC_A}
+	\caption{Fig.Y. As Fig. X but in this case RMSD fitting was only done between Chains A of the various unit cells.}
+	\end{figure}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/unitcells/rmsdUC_B}
+	\caption{Fig Z. As Fig. X but in this case RMSD fitting was only done between Chains B of the various unit cells.}
+	\end{figure}
+
+	\begin{itemize}
+	\item should all three of these figures be included?
+	\end{itemize}
+
+\item \textbf{Backbone distances:} In a further effort to investigate how well the forcefield maintained the crystal lattice structure, we analysed the changes in backbone distances between residues. The average differences in the distance between the C-alpha carbons of all of the simulated residues as compared with the distanced in the crystal structure were calculated (Fig. A, Supplementary Data). The maximum increase in distance (atoms moving apart) between C-alpha atoms was over 6\AA and the maximum decrease (atoms moving closer together) was over 4.5\AA. Closer inspection revealed that the larges values corresponded to movement of the peptide chain terminal residues. For example, the largest increase in distance corresponded to the almost 180 rotation of the terminal OMe residue in the first peptide chain of unit cell 7 (See Supplemenatary Data Fig.B).Analysis of the change in distances between C-alpha atoms omitting the C-alphas in terminal residues produced maximum changes of $\pm 4$ \AA with most changes falling within the $\pm2$\AA range (See Fig.A).
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[Matrix of changes in distance between c-alpha atoms of the entire super cell (720 residues total) as compared to the crystal structure. Values are average changes in distance over the last 50 ns of the simulation. Red signifies atoms which in the simulation have moved further apart than they were in the reported crystal structure, blue signifies c-alpha atoms which have moved closer together.]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/diff_last50to0ns.png}}
+	\subfloat[Matrix of changes in distances between c-alpha atoms of the entire super cell with the exclusion of peptide chain terminal residues.]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/diff_last50to0ns_notails.png}}
+	\caption{Figure A}
+	\end{figure}
+	
+We next caluclated the average change in distance between C-alphas of each of the 20 residues in the unit cell averaged over all 36 unit cells. Results for the last 50ns block of the 250 ns simulation are shown in Fig. C. Analysis over the course of the entire trajectory revealed little differences between individual stages of the simulation.Analysis of the results shows to significant recurring changes in all the unit cells. The Val8 and Vavl 18 (both backbones and side chains) are seen to come closer together in almost every one of the 36 unit cells (See Fig.D and Supplementary Data). On the other hand the largest moving apart between residues is observed between Aib5 and Aib19. This is seen to be in part due to a slight bending in the main chain of the first peptide of the unit cell dimer and in part due to the movement of Aib19 on the second peptide away from the first peptide effectuated by the coming together of Val18 towards Val8.(Fig.D).
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/avg1_last200to150ns}}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/avg1_last150to100ns}}
+	\quad
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/avg1_last100to50ns}}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/avg1_last50to0ns}}
+	\caption{Figure C. Change in distance between c-alpha atoms of the 20 residues in the unit cell averaged over all 36 unit cells of the supercell. i)Average over 50-100ns block of the simulation. ii)Average over 100-150ns block of the simulation.iii)Average over 150-200ns block of the simulation.iv)Average over 200-250ns block of the simulation.}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/images/8_18.jpg}}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/images/5_19b.jpg}}
+	\caption{Figure D. Images of the movement typical changes in structure seen in the simulation causing the greatest changes in c-alpha distances shown in Figure C. Yellow is the crystal structure and red is a typical simulation structure. Stick representations of the residues in question have been added for clarity. i) Coming together of Val8 and Val18. ii) Drawing apart of Aib5 and Aib19.}
+	\end{figure}
+
+
+\item \textbf{Crystal contacts:} Crystal contacts contributing to the stabilization of the crystal lattice are seen to be maintained during the course of the simulation. 
+
+	\begin{itemize}
+	\item Here I need to present some images showing how the aromatic residue stacking is maintained throughout the simulation. Also look for other crystal contacts and water hydrogen bonding.
+	\end{itemize}
+
+
+\item\textbf{B-factors:}Crystallographic b-factors provide information about the deviations in the experimental crystal from the reported crystal structure. These deviations can arise both from movements of the individual atoms within the unit cell and from disorder in the crystal lattice itself (positions of unit cells relative to each other). A key indication of how well a simulation models a crystal structure is its ability to reproduce the reported b-factors. Atomic b-factors were measured from root mean square fluctuations in the simulation via the simple conversion
+$B=F^{2}*\dfrac{8\pi^{2}}{3}$
+where F is the root mean square fluctuation in three dimensions and B is the thermal isotropic B-factor.For the calculation of fluctuations, only the last 200ns of the simulation were used to ensure that convergence had been attained. The calculation of B-factors in a crystal supercell simulation presents an additional challenge, because of the multiple copies of each unit cell that are being simulated. We tested four different approaches to calculating B-factors. I) ``Supercell method''- RMSF was calculated for each atom directly from the supercell simulation. After, a single B-factor for each atom in the unit cell was obtained by averaging the B-factors of that atom for each of its copies in the 36 unit cells. Previous to calculating the RMSF, the trajectory frames were fit either by purely translational (fit to center of mass of supercell) or by translational/rotational (quaternion alignment of peptide backbone atoms) fitting. The results showed that using translational or rotational/translational fitting did not impact the results significantly (cf. Supplemental Data, Fig.A). II) ``Unitcell method'' - The trajectory of each unit cell was cut out from the entire supercell trajectory.For each unti cell, translational/rotational fitting to peptide backbone atoms was perfromed on each frame of the trajectory. B-factors were then calculated for the atoms in each unit cell. Final B-factors were obtained by averaging the result for each atoms from the 36 unit cells. The difference between this method and the previous one is that the fitting is done for each unit cell separately, allowing for the calculation of an average structure better suited to each unit cell and therefore lowering the resulting atomic position variances (rmsf). See Supplemental Data for plots of the b-factors for each unit cell individually. It is interesting to note that unit cell 8 which was one of the unit cells with markedly higher RMSD to the crystal, had remarkably low b-factors even in the terminal residues, indicating that it was caught in a very deep energy well. III) ``Supertrajectory'' - Individual unit cell trajectories were cut out from the supertrajectory as in the previous approach. The unit cell trajectories were then stacked end-to-end producing a 9ms (250ns*36) trajectory.Each frame was fit via backbone quaternion alignment to the first frame. RMSF was calculated directly from the entire trajectory. This method is similar to the ``unit cell method'' with the difference being that the former averages variances obtained from each unit cell whereas the latter calculates a single variance from the entire pool of data. Because mathematically, an average of variances of parts of a system must be less than or equal to a variance of the entire system. It was further seen that aligning the frames first to the Chain A of the unit cell and calculating the fluctuations and then to chain B and calculating the corresponding fluctuations produced further lowered the b-factor values. The results of these three approaches to calculating B-factors are presented in Fig.M. As expected the b-factors for the ``supercell method'' are extraordinarily high due to the constraints imposed by attempting to align the entire crystal lattice at once while the bfactors obtained from the ``unit cell'' method are the lowest. 
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/bfactorsAllnotPHEH_200ns_ABsep3.png}}
+	\subfloat[]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/bfactorsAllnotPHEH_200ns_supertrajVSavgUC.png}}
+	\caption{B-factors calculated using the ``supercell'', ``unit cell'' and ``supertrajectory'' methods (see text for details). Positional variance was calculated from the last 200ns of the trajectory. B-factors are shown for individual atoms in the peptide sequence with the exclusion of terminal residues (OME and BOC) and phenylalanine CD and CE atoms for the reasons explained in the text.}
+	\label{bfactorsA}
+	\end{figure}
+
+
+While the unit cell methods outlined previously produced very good correlation with the experimental b-factors, the b-factors obtained were lower than those observed experimentally. While this is a good sign of the stability of the simulation and could also be attributed to the inherent error in the experimental data collection, the methods used presented thus far suffer from a fundamental drawback: by having to translationally/rotationally fit the unit cells, only the positional fluctuations arising from intra-unit cell atomic dynamics are being accounted for while all information about positional variance arising from crystal lattice disorder is lost. Therefore, a fifth method was devised to calculate b-factors. In this approach, referred to here as the ``reverse symmetry'' method, the reverse of the symmetry operations originally used to create the supercell is applied to the average structure of each unit cell trajectory. In this way, alignment of unit cells is obtained not by translationa/rotational alignment but by reversing symmetry operations and thus preserving whatever lattice disorder may have entered into the system during the trajectory. As a further step, the 36 average structures were fit using quaternion backbone alignment. This would have to a great degree eliminated lattice disorder positional fluctuations while maintaining information on intra-unit cell positional fluctuations of atoms. (Fig N.) Slighlthy lower b-factors were also obtained by excluding cells 7,8 and 22 which had significantly higher RMSD compared to the crystal structure (see above) from the calculation (cf. Supplementary Data).
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/AvgStructure/ReverseSymAvg_bfactors.png}}
+	\subfloat[]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/AvgStructure/ReverseSymAvg_wRMSD_bfactors.png}}
+	\caption{B-factors calculated using the ``reverse symmetry'' method with and without translational/rotational backbone alignment.}
+	\label{bfactorsB}
+	\end{figure}
+
+
+	\begin{itemize}
+	\item need to combine the two subfigures in figure \ref{bfactorsA} and \ref{bfactorsB} into one graph
+	\item calculate correlation between simulation and experimental b-factors and make table or add to graph
+	\item need to redo reverse symmetry method so that I am not reverse translating on the average unit cell structures but on the entire trajectory
+	\end{itemize}
+
+\subsection{Water dynamics in the crystal}
+\item \textbf{Water channels:} The crystal packing of this system is such that channels allowing for the sterically unhindered movement of waters along the crystal a-axis (coincident with the cartesian x-axis) and between adjacent unit cells is made possible. The simulation trajectory (See Supplemental Data) did in fact reveal very dynamic water molecules. Closer visual inspection of the trajectory suggested that the water molecules do not flow smoothly but rather quickly ``hop'' between adjecent unit cells. They also do not move out to form an even distribution across the three dimensional space of the water channel but rather tend to cluster in a more restrained area of each unit cell's space. Furthermore, some waters appear to remain more or less permanently locked in a certain position while others appear to be much more dynamic, undergoing multiple hopping events throughout the trajectory. These observation prompted questions about the nature of these channels, the waters' diffusion rate and above all, whether the observation of such dynamic waters could be consistent with the reported crystal structure containing well defined water positions.
+
+To see whether the water was freely mobile inside the waterchannels, we measured the diffusion constant of the water using the equation 
+
+$$D=\dfrac{\sum_{i}[r_i(t+\Delta t)-r_i(t)]^2}{6{\Delta}t}$$
+
+for the three dimensional case and 
+
+$$D=\dfrac{\sum_{i}[r_i(t+\Delta t)-r_i(t)]^2}{2{\Delta}t}$$
+
+for the one dimensional case. Plots of water average total diffused distance from the initial crystallographic position for the waters in the system (Figure D) confirmed that the water was moving out through the channels (x-axis) while being constrained to the width and height of the channel in the y and z directions. A calculation of the diffusion constant along the axis of the water channels yielded a value of $0.0023\pm0.0005 x10^{-5} cm^2/s$ which is much lower than the reported diffusion constant of $5.19x10^{-5} cm^2/s$ for tip3p water, indicating that the water is not diffusing freely within the water channel. This is consistent with the original report of the waters forming crystal packing hydrogen bond interactions.As a control we also ran a simulation of a pure water box on using the same computer architecture and obtained a diffusion constant of $5.91x10^{-5} cm^2/s$ which agrees with the reported diffusion constant considering that the simulation temperature here is 300\degr K in comparison to the 277\degr K that the original constant was measured at.
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[Three dimensions]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/waterdist/totdiffusion.png}}
+	\subfloat[x-axis]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/waterdist/xaxisdiffusion.png}}
+	\quad
+	\subfloat[y-axis]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/waterdist/yaxisdiffusion.png}}
+	\subfloat[z-axis]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/waterdist/zaxisdiffusion.png}}
+	\caption{Plots of total squared water displacement from the original crystallographic position vs. time. Total distance was measured at each time step for each water and then averaged over the 72 waters in the system. The slope of this plot is used to calculate the diffusion constant in accordance with the equation cited in the text.}
+	\end{figure}
+
+To elucidate whether all or only a subset of supercell copies of the four crystallographic waters were moving throughout the water channels, plots of distance from original position were made for each of the waters in each of the 36 unit cells in the system (Fig. NA). An average displaced distance plot was then calculated for each of the four waters (Fig. NB). The results show that all four of the crystal waters behave similarly and display similar dynamics within the water channels with convergence of the total displaced distance over time. Moreover, an average unit cell structure was calculated for the entire trajectory by stacking the individual unit cell trajectories on end and wrapping the waters that had migrated out of their original unit cell back into it. The average water positions of the four waters in this average structure (Fig. M) all lie very close to on top of each other and are located roughly in the center of the four crystallographic water positionsl. This further shows that all four waters behave in the same way and none is favoured to remain bound in it's original position more than the others.
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[Displacement of each water in each of the simulated 36 water cells plotted over the entire 250ns trajectory. The displaced distance was measure always to the center of mass of residue 7.]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/waterdist/waterdist.png}}
+	\subfloat[Displacement of each of the four waters plotted over the course of the entire trajectory averaged over the 26 copies of each of the four waters.]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/waterdist/avg_waterdist.png}}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/WaterWrap/avgwaterpositions2.png}
+	\caption{Superposition of the original crystal structure (cyan) and the average unit cell structure from the simulation (blue) viewed approximately along the b-axis. The four original crystallographic water positions are seen distinctly separted and surrounding the superimposed average positions of the four waters in the simulation.}
+	\end{figure}
+
+The trajectory appeared to show that the water molecules were not diffusing to occupy the water channels in a homogenous distribution, but were in fact restricted to a tight space in the volume of each water cell and their movement consisted of fast ``hops'' between unit cells. To further test if this was in fact so, a histogram of water positions along the crystallographic a-axis (the water channel axis) was made(Fig. A). The results show clear peaks coinciding with the centers of the unit cells and roughly with the regions of space where the crystallographic waters were located and water channel space almost completely devoid of water occupation in between. Thus the waters do not uniformly distribute themselves throughout the water channels.
+
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ChannelWater/channelProfileX}
+	\caption{Fig.A: Histogram of water molecule distribution along the a-axis (water channels) of the crystal. The four major peaks coincide with the four unit cells located along this axis of the supercell. The red coloured peaks to the right and left correpsond to waters which had migrated to adjecent cells of the infinite crystal lattice created by applying periodic boundary conditions.}
+	\end{figure}
+	
+	
+	
+The visual inspection of the trajectory also indicated that when waters hop to adjecent unit cells, unit cells containing more and less than four waters are formed. A detailed analysis of this revealed that in fact unit cells of as few as 1 and as many as 9 waters appear throughout the trajectory. Fig. B shows a histogram of these states. The distribution shows that the 4-state is the most populous but that the 3 and 5 states are also highly populated. An analysis of the permanence times of each state was carried out by calculating the average time that each state remains before switching to another state. This analysis was also carried out with a ``smoothing function'' in which the ``smoothing parameter'' was the number of consecutive trajectory frames that a state had to remain changed for the change to be registered. In this way, noise variations such as a switch from one very permanent state to another but for only one frame of trajectory, would not be counted. The results (Fig C) show that the 3-state is the most permanent and stable state. This result and the relative average permanence times of the other states remained unchanged regardless of the smoothing parameter used. (Fig. D and Supplementary Data).
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ChannelWater/watersPerCell.png}
+	\caption{Fig.B: Histogram of water states over the course of the entire 250ns trajectory. Each state refers to the number of water molecules found within the confines of a given unit cell.}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ChannelWater/PermanenceTimes_smooth1.png}
+	\caption{Fig.C: Average permanence times of each state with smoothing function equal to 1 (every change of state was registered).}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ChannelWater/PermanenceTable.png}
+	\caption{Fig.D: Table showing the average permanence times for each state by smoothing function employed, the total number of state transitions and the average number of events per 1ns of trajectory.}
+	\end{figure}
+
+Water dynamics were similarly analysed in the other simulations, both in the 1ms simulation, in a simulation in which an extra water was added to each one of the 9 water channels in the system and a simulation in which a water was removed from each of the channels. In each case the water dynamics displayed the same behavior as for the 250ns simulation presented above. (Cf. Supplementary Data).
+
+A further simulation was run in which all of the peptide heavy atoms in the system were positionally constrained by a factor equal to
+$constraint=k*B$
+where B is the experimental isotropic B-factor and k is a scaling factor adjusted so that the simulation B-factors calculated using the ``reverse symmetry'' method reproduced the experimental B-factors as best as possible (Cf. Supplementary Data). This was done to ensure that the peptide structures of each unit cell were behaving as closely like the reported crystal as possible. The resulting trajectory confirmed that the waters were in fact hopping dynamically in the water channels and displayed similar ensemble distributions and permanenece times as in the other simulations.
+
+To see whether the waters dynamics seen in this simulation could be consistent with the quadruple water position found in the crystallographic data, we calculated a three dimensional density histogram of the waters. Waters that had migrated out of the unit cell were project back into a single unit cell. The resulting density histogram was mapped as a wire mesh and visualized superimposed on the crystal structure (Fig. N). The result is suprisingly consistent with the crystal reported water positions. The ears of highest density are slightly shifted but two areas are reproduced corresponding to two of the waters and an elongated area of density is formed corresponding to the other two waters which are found very close together in the crystal structure. Thus the dynamic movement of waters in the crystal is consistent with crystal diffraction that could have been collected from space and time averaged electron density of the crystal waters.
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/WaterWrap/vmdscene1.png}
+	\caption{Fig.N: Wire mesh representation of water density throughout the entire 250ns trajectory superimposed on the crystal structure. 3D density histogram was calculated on a 1x1x1\AA grid. The threshold density of the displayed mesh is 10000.}
+	\end{figure}
+
+
+% % % % %
+% % % % %
+
+
+\item \textbf{}
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+%	\subfloat[]{\includegraphics[width=0.3\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/}
+	\end{figure}
+	
+	\begin{enumerate}
+	\item 
+	\end{enumerate}
+
+
+\end{enumerate}
+
+
+% % % % %
+% % % % %
+% % % % %
+
+\section{Discussion}
+\begin{itemize}
+\item The ff99SB force field does a good job at maintainig the crystal lattice in the simulations. Crystal contacts are also maintained. High fluctuations of the N-terminal residues.
+\item RMSD. RMSD fitting of chain A and B separately showed some relative shifts of these two chains. Speculate on whether these could be small changes inherent in the crystal or caused by the force field. 
+\item Discuss observed changes: why do the Valines move together? Three unit cell structures with markedly different RMSD, but at least one of them is remarkably stable. Helps in vision of crystal as ensemble of various conformations with the diffracted data a time and space average. 
+\item B-factors: discuss methods for calculating them and why the Reverse Symmetry method is best. Discuss contributions from atomic intra-cell fluctuation, intra-cell relative domain position fluctuation and inter-cell (lattice disorder).Maybe simulations could one day identify the greatest source of fluctuation and steer crystallographer in that direction when refining.
+\item Channels and surprising movement of waters. Water does not flow freely but is very dynamic hopping between unit cells while preserving H-bond interactions.The four waters are not distinguishable and unevenly distributed within the channel.
+\item Permanence times, distribution varies but final density is consistent with crystallographic findings. All this shows how crystallographers can obtain information on dynamics from simulations that would otherwise be lost. 
+
+\end{itemize}
+
+
+\section{Supplementary Data}
+\begin{enumerate}
+\item \textbf{Backbone distances:}
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[Close-up of the region with greatest positive (moving apart) shift in figure A above.]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/zoom1diff_last50to0ns.png}}
+	\subfloat[Image of the region producing the largest shift above.Cyan spheres represent locations of CA128 and CA130 atoms and red spheres represent a typical simulation structure, revealing that the biggest shift in the simulation is caused by a rotation of the terminal Aib130 residue.]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/res131_6Adist}}
+	\caption{Figure B}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/diff_last200to150ns.png}}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/diff_last150to100ns.png}}
+	\quad
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/diff_last100to50ns.png}}
+	\subfloat[]{\includegraphics[width=0.4\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/diff_last50to0ns.png}}
+	\caption{Matrix of changes in distance between c-alpha atoms of the entire super cell (720 residues total) as compared to the crystal structure. Values are average changes in distance over the last 50 ns of the simulation. Red signifies atoms which in the simulation have moved further apart than they were in the reported crystal structure, blue signifies c-alpha atoms which have moved closer together. i)Average over 50-100ns block of the simulation. ii)Average over 100-150ns block of the simulation.iii)Average over 150-200ns block of the simulation.iv)Average over 200-250ns block of the simulation.}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/backbonedist/distmatrices/bigmatrix_last50to0ns}
+	\caption{Change in distances between c-alpha atoms for each of the 36 unit cells averaged over the last 50ns of the trajectory.}
+	\end{figure}
+
+\item \textbf{B-factors:}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/bfactorsAllHeavyAtoms1.png}
+	\caption{Comparison of B-factors calculated using the ``supercell method'' (see text) with prior fitting of trajectory frames using only translational (center of mass) vs. translational/rotational (quaternion) fitting.}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/bfactors_TransVsRot.png}
+	\caption{This is an alternative way to present the above results. What's better?}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/bfactorsExcludedRes7_8_22.png}
+	\caption{Comparison of B-factors calculated using the ``unit cell method'' (see text) with and without inclusion of unit cells 7, 8 and 22.}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/bfactors_ABtogVsABsep.png}
+	\caption{Comparison of B-factors calculated using the ``unit cell method'' with translational/rotational fitting of unit cells done to both chains at once and to Chain A and Chain B separately.This graph also displays the B-factors obtained for the terminal residues and phenylalanine CD and CE atoms which are not shown in the rest of the b-factor graphs.}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/unitcells/bfactorsUC_wterminal.png}
+	\caption{B-factors calculated for each unit cell separately. Graphs include b-factors calculated for the terminal residues. Interestingly, unit cell 8, which was one of the unit cells with the markedly high RMSD from the crystal, displays remarkably low b-factor values.}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/bfactors_fitPHEvsNofitPHE.png}
+	\caption{Comparison of b-factors calculated using the ``unit cell'' method with and without phenylalanine CD and CE atoms included in the translational/rotational fitting.}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/ScatterSupertrajvsExp.png}
+	\caption{Scatter plot comparing b-factors obtained with the ``supertrajectory'' method to the experimental b-factors.B-factors in simulation are generally lower than in the crystal, which is good because here we have eliminated lattice disorder contribution to b-factors. The atoms that have higher b-factors in simulation are the ones that had high b-factors to begin with in the crystal. The conclusion is that the simulation makes the dynamic atoms overly dynamic.\textbf{I think this is a good graph not for supplemental data but for discussion.}}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\setcounter{subfigure}{0}
+	\subfloat[]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/ScatterRevSymmvsExp.png}}
+	\subfloat[]{\includegraphics[width=0.5\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/rmsf/ScatterRevSymmRMSDvsExp.png}}
+	\caption{Scatter plot comparing b-factors obtained using the ``reverse symmetry'' method to the experimental results. i) reverse symmetry only, without rotational/translational fitting. ii) reverse symmetry followed by rotational/translational fitting.}
+	\end{figure}
+
+\item \textbf{Water channels:}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ChannelWater/PermanenceTimes_smooth2.png}
+	\caption{Average permanence times of water states, smooth parameter=2.}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ChannelWater/PermanenceTimes_smooth3.png}
+	\caption{Average permanence times of water states, smooth parameter=3.}
+	\end{figure}
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\textwidth]{/net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/ChannelWater/PermanenceTimes_smooth5.png}
+	\caption{Average permanence times of water states, smooth parameter=5.}
+	\end{figure}	
+
+	
+	\begin{enumerate}
+	\item add the file /net/casegroup2/u2/pjanowsk/Case/pepsim/analysis/WaterWrap/watdense10000.gif which is an animation of the water density to the supplemental data
+	\item add some animation of the trajectory to the supplementary data
+	\end{enumerate}
+
+	
+\end{enumerate}
+\end{document}

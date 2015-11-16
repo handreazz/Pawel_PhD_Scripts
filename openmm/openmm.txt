@@ -1,0 +1,35 @@
+from chemistry.amber.openmmloader import OpenMMAmberParm as AmberParm
+import simtk.openmm as mm
+import simtk.openmm.app as app
+import simtk.unit as u
+parm = AmberParm('solv.prmtop', 'solv.rst7')
+system = parm.createSystem(nonbondedMethod=app.PME,
+nonbondedCutoff=8.0*u.angstroms, removeCMMotion=False)
+#system.getForces()
+platform = mm.Platform.getPlatformByName('CUDA')
+properties = dict(CudaPrecision='mixed')
+#help(mm.Context)
+integrator = mm.VerletIntegrator(2.0*u.femtoseconds)
+context = mm.Context(system, integrator, platform, properties)
+context.setPositions(parm.positions)
+state = context.getState(getForces=True, getEnergy=True,
+enforcePeriodicBox=True)
+state.getForces()
+#type(state.getForces())
+#state.getForces().value_in_unit(u.kilocalories_per_mol/u.angstrom)[0]
+state.getForces().value_in_unit(u.kilocalories_per_mole/u.angstrom)[0]
+#state.getForces().value_in_unit(u.kilocalories_per_mole/u.angstrom**2)[0]
+state.getForces().value_in_unit(u.kilocalories_per_mole/u.angstrom)[0]
+state.getPotentialEnergy().value_in_unit(u.kilocalorie_per_mole)
+#parm.positions
+#parm.positions[0]
+import numpy as np
+u.Quantity(np.zeros(10), u.angstrom)
+parm.ptr('natom')
+np.zeros((29881, 3)).tolist()
+stupid_positions = np.zeros((29881, 3)).tolist() * u.angstroms
+context.setPositions(stupid_positions)
+context.getPositions()
+context.getState(getPositions=True).getPositions()
+context.setPositions(parm.positions)
+context.getState(getPositions=True).getPositions()

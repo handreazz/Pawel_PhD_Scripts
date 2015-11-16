@@ -1,0 +1,94 @@
+<html>
+<head>
+  <title>Modes_HowTo</title>
+  <link href='http://fonts.googleapis.com/css?family=Tangerine|Lustria' rel='stylesheet' type='text/css'>
+  <style type="text/css">
+  <!-- 
+  body {font-family:Lustria, sans-serif}
+  -->
+</style>
+</head>
+
+<body lang=EN-US>
+
+  <p style="text-align:center; font-family:'Tangerine',serif; font-size:60px;
+  text-shadow: 4px 4px 4px #aaa;">Visualizing Modes</p>
+  <hr>
+
+  <p> 
+  <a href="http://prody.csb.pitt.edu/nmwiz/"   target="_blank">NormalModeWizard </a><sup><a href="#fn1" id="ref1">1</a></sup>, 
+  or NMWiz, provides a convenient and flexible way to visualize molecular 
+  modes (normal, quasi-harmonic). An NMWiz plug-in is available in 
+  <a href="http://www.ks.uiuc.edu/Research/vmd/" target="_blank">VMD</a>
+  as of version 1.9.1. To use NMWiz one needs to generate an "nmd"
+  format file. Here's how to do it.</p>
+
+  <h3 style="font-family:'Lustria', serif">If you do not have an evecs file with modes yet: </h3>
+  <ol>
+    <li>
+      <p>Calculate modes using the diagmatrix command in cpptraj
+      and adding the following flags. </p>
+      <ul>
+        <li>nmwiz - flag to tell cpptraj to produce an nmd file</li>
+        <li>nmwizvecs &ltnumber_of_modes&gt - number of modes to write to the nmd file (default=20)</li>
+        <li>nmwizfile &ltnmd_file_name&gt - name of nmd file to write </li>
+      </ul>
+      <p>Here is an example cpptraj script that will calculate 
+      quasi-harmonic normal modes of a trajectory and save the 10 
+      lowest-frequency normal modes to the file out.nmd.</p>
+      <pre style="background-color:#D2EE95">
+        
+        parm na.prmtop
+        trajin na.pdb
+        matrix mwcovar name mwcvmat out mwcvmat.dat
+        diagmatrix mwcvmat out evecs.dat nmwiz nmwizvecs 10 nmwizfile out.nmd
+        </pre>
+    </li>  
+    <li>Load the nmd file into NMWiz:
+      <pre style="background-color:#D2EE95">
+        
+        vmd -e name_of_nmd_file.nmd  
+      </pre>
+      <p>Make sure you have VMD version 1.9.1 or later. The NMWiz plugin
+      will automatically open allowing you to visualize the modes.</p>
+    </li>  
+  </ol>  
+
+
+  <h3>If you already have an evecs file, you don't need to rerun cpptraj. </h3>
+  <ol>
+    <li>
+      Create a pdb file that matches the topology/trajectory
+      used to calculate the modes: 
+      <pre style="background-color:#D2EE95">
+        
+        ambpdb -p na.prmtop &ltna.rst7 &gtna.pdb      
+        </pre>
+    </li>
+    <li>
+      Convert the evecs file to nmd format using 
+      $AMBERHOME/AmberTools/src/xtalutil/Auxillary/make_nmd.py.For example: 
+      <pre style="background-color:#D2EE95">
+        
+        ./make_nmd.py -n 20 -ipdb na.pdb -ievecs evecs.dat -ofile out.nmd
+      </pre>
+      <p>Type ./make_nmd.py -h for help on each of the flags.</p>
+    </li>
+    <li>
+      Load the nmd file into NMWiz via the command:
+      <pre style="background-color:#D2EE95">
+        
+        vmd -e name_of_nmd_file.nmd
+      </pre>
+      <p>Make sure you have VMD version 1.9.1 or later. The NMWiz plugin
+      will automatically open allowing you to visualize the modes. </p>
+    </li>
+  </ol>
+  <p>For more information on using the NMWiz plug-in see 
+    <a href="http://prody.csb.pitt.edu/tutorials/nmwiz_tutorial/" target="_blank">http://prody.csb.pitt.edu/tutorials/nmwiz_tutorial/</a> or 
+    <a href="http://www.ks.uiuc.edu/Research/vmd/plugins/nmwiz/" target="_blank">http://www.ks.uiuc.edu/Research/vmd/plugins/nmwiz/</a></p>
+  <hr>
+  <sup id="fn1">1. Bakan A, Meireles LM, Bahar I ProDy: Protein Dynamics
+  Inferred from Theory and Experiments Bioinformatics 2011 27(11):1575-1577.</sup>
+</body>
+</html>

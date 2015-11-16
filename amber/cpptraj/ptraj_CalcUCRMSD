@@ -1,0 +1,5 @@
+reference average_01_02.mdcrd
+trajin ../UC_centonpdb.rst7
+trajin average_01_01.mdcrd
+trajin average_01_02.mdcrd
+rms reference mass out RMSD_UC_01_02.dat ':2-123 & !(@H=)' time 0.01 

@@ -1,0 +1,20 @@
+refinement {
+  main {
+    number_of_macro_cycles=3
+  }
+  refine {
+    strategy = *individual_sites individual_sites_real_space rigid_body                individual_adp group_adp tls occupancies group_anomalous
+    adp {
+      individual {
+        anisotropic = "not (element H)"
+	isotropic = "element H"
+      }
+    }
+  }
+  bulk_solvent_and_scale {
+    bulk_solvent = False
+    anisotropic_scaling = False
+    k_sol_b_sol_grid_search = False
+    minimization_k_sol_b_sol = False
+  }
+}

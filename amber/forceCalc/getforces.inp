@@ -1,0 +1,94 @@
+## OUTPUT/INPUT                                          
+# Amber/(t,s,x)leap generated parm and crd file  
+parmfile       topo.prmtop
+ambercoor      equil30.rst7
+
+
+# Output 
+restartfreq         1      
+dcdfreq             1 
+xstFreq             1 
+outputEnergies      1 
+outputPressure      1 
+outputname          output
+temperature 0
+
+## SIMULATION PARAMETERS                                  
+# AMBER FF settings
+amber on
+rigidBonds     all 
+useSettle      on 
+rigidTolerance 1.0e-8 
+cutoff         9.0 
+pairlistdist   11.0 
+switching      off 
+exclude        scaled1-4 
+readexclusions yes 
+1-4scaling     0.83333333 
+scnb           2.0 
+zeromomentum   on 
+ljcorrection   on
+watermodel     tip4
+
+# Integrator Parameters 
+timestep            1.00 
+nonbondedFreq       1 
+fullElectFrequency  1 
+#stepspercycle       10 
+stepspercycle       1 
+
+# Constant Temperature Control is off 
+langevin            off    
+# Constant Pressure Control is off 
+langevinPiston        off
+
+
+
+# PME (for full-system periodic electrostatics)
+PME                 on
+cellBasisVector1      93.2745    0.         0.
+cellBasisVector2     -46.6373   80.7781     0.
+cellBasisVector3       0.        0.       131.2535
+cellOrigin            78.6537094  61.4930000 141.9602966 
+
+PMEGridSpacing      1.0  	;#see manual for how GridSpacing and GridSize work
+PMETolerance        1.0e-5 	;#default is 10e-6
+PMEInterpOrder      4      	;#default
+
+## EXECUTION SCRIPT     
+
+
+
+tclforces on 
+
+tclForcesScript {
+
+    #Open log file
+    set output_name "log.dat"
+    set output [open $output_name a]
+    ###### set natoms to the total number of atoms in your system #########	
+    set natoms 30598
+    
+    #add atoms
+    for { set i 1 } { $i <= $natoms} { incr i } {
+              addatom $i
+    }
+    
+    
+    proc calcforces {} {
+    	global output 
+    	#load the forces with loadtotalforces not with loadforces
+    	loadtotalforces f
+    
+    	foreach {atom fi} [array get f] {
+       		puts $output "$atom $fi"
+    	}
+    
+    
+    }
+
+}
+
+
+
+run 1

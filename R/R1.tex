@@ -1,0 +1,88 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float} %necessary to make [H] work for figures (place in text)
+\title{(yeaheyah)}
+\author{Pawe\l{} Janowski}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+%\usepackage{fullpage}
+\parskip 8pt
+\begin{document}
+\begin{flushright}
+\parskip 0pt
+Pawe\l{} Janowski
+ 
+\today
+\vspace{10 mm}
+\end{flushright}
+\begin{center}
+\begin{Large}
+\textbf{Basic Applied Statistics
+Assignment 1: Introduction to R}
+\vspace{10 mm}
+\end{Large}
+\end{center}
+
+
+\begin{enumerate}
+\item a. 9.421006 b. 4.091491 c. If you leave the comma you get the logarithm of the number 12 to the base 345.
+\item Setosa: 3.428, Versicolor: 2.77, Virginica: 2.974
+\item 
+  \begin{enumerate}
+  \item Histogram:
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW1/3a.png}
+	\end{figure}
+  \item In very gross terms one could argue it resembles a normal curve, but if you increase the number of bins you see that there are two peaks, so maybe it's some more complex bimodal distribution.
+  \item Less than20:about 4\%. More than 50: about 8 \%.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \item 1957
+  \item millimeters
+  \item Boxplot:
+  	\begin{figure}[H]
+  	\centering
+  	\includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW1/4c.png}
+  	\end{figure}
+  \item Hedge sparrow: 23.12. Meadow pipet: 22.30. Pied wagtail: 22.90. Robin: 22.58. Tree pipet: 23.09. Wren: 21.13.
+  \item It is very hard to say. The average size of the eggs in Wrens' nests certainly seems to be smaller and this would confirm the hypothesis because a Wren is a very small bird. As for the rest, it would not seem to confirm the hypothesis: the average for the hedge sparrow is higher than for the robin but both these birds are about the same size. The same arguement goes for the meadow and tree pipits. The pied wagtail is the largest of the birds and so should have the largest size cuckoo eggs but neither the means nor the boxplots demonstrate this.
+  \end{enumerate}
+\item
+  \begin{enumerate}
+  \item Scatterplot:
+    	\begin{figure}[H]
+    	\centering
+    	\includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW1/5a.png}
+    	\end{figure}
+    	I see a cyclic up and down pattern corresponding to the changing seasons.
+  \item 'l' stands for line, so it connects the points on the graph. In this case there is so much data that it is easier to read with 'l'.
+  \item 'b' draws both the points and the line. It's pretty nice. 
+  \item This scatterplot shows that the bills are highest during the winter months:
+      	\begin{figure}[H]
+      	\centering
+      	\includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW1/5c.png}
+      	\end{figure}
+  \item In this boxplot I notice that the variance of the gas bills is greater during the winter months:
+        	\begin{figure}[H]
+        	\centering
+        	\includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW1/5e.png}
+        	\end{figure}
+  \item My plot shows the gas bills per day in december from 1999 to 2009. I wanted to see if there was some general trend. For example, if the gas bills grew steadily from 1999 to 2009 one could argue that the winters were getting colder or that the people in a hedonistic Minnesotan society were getting softer. But it doesn't seem that way. One could check if the higher bills correlate to Decembers that had lower temperatures.
+          	\begin{figure}[H]
+          	\centering
+          	\includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW1/5f.png}
+          	\end{figure}
+  \end{enumerate}
+\end{enumerate}
+
+\end{document}

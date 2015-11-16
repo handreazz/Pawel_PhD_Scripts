@@ -1,0 +1,5 @@
+trajin RevSymm_01_01.nc
+trajin RevSymm_01_02.nc
+center mass origin
+atomicfluct out bfac_com_calpha.dat :1-124@CA|:125-126@C1' byatom bfactor
+atomicfluct out bfac_com_res.dat ':1-126 & !@H=' byres bfactor

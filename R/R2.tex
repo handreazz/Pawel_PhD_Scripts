@@ -1,0 +1,124 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{float} %necessary to make [H] work for figures (place in text)
+\usepackage{subfig}
+\title{(yeaheyah)}
+\author{Pawe\l{} Janowski}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+%\usepackage{fullpage}
+\parskip 8pt
+\begin{document}
+\begin{flushright}
+\parskip 0pt
+Pawe\l{} Janowski
+ 
+\today
+\vspace{10 mm}
+\end{flushright}
+\begin{center}
+\begin{Large}
+\textbf{Basic Applied Statistics
+Assignment 2: Simulation Experiments}
+\vspace{10 mm}
+\end{Large}
+\end{center}
+
+
+\begin{enumerate}
+\item 
+  \begin{enumerate}
+  \item Below are the QQ plots generated from the four normal samples (n=10,n=20,n=20,n=30). We see that the samples generally fit the straight line of the theoretical quantiles. However the more measurments we have, the better and more evident is the fit. This is because of the effects of averaging.
+%	\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/1a_1.png}
+%	\end{figure}
+    
+    \begin{figure}[H]
+            \setcounter{subfigure}{0}
+            \centering
+            \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/1a_1.png}}
+            \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/1a_2.png}}
+            \quad
+            \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/1a_3.png}}
+            \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/1a_4.png}}
+        \end{figure}
+        
+  \item Below we see the histogram and qqplot for each sample: first the three normal distribution samples with variance 3 and then the 3 t-distribution samples. What we see here is that both of these distributions are heavy-tailed in comparison to the standard normal distribution. However, this is only apparent once one uses higher numbers of observations (with few observations, not so apparent).What is puzzling, however, is that the t-distribution histograms do not look symmetric as I think they should. Also, the qqplots seem to show a heavier tail for the t-distribution than for the sd=3 normal distribution which I think should not be the case.
+      \begin{figure}[H]
+          \setcounter{subfigure}{0}
+          \centering
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_1nhist.png}}
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_1n.png}}
+          
+          \quad
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_2nhist.png}}
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_2n.png}}
+          
+          \quad
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_3nhist.png}}
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_3n.png}}
+      \end{figure}
+      \begin{figure}[H]
+          \setcounter{subfigure}{0}
+          \centering
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_1thist.png}}
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_1t.png}}
+          
+          \quad
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_2thist.png}}
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_2t.png}}
+          
+          \quad
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_3thist.png}}
+          \subfloat{\includegraphics[width=0.35\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/2a_3t.png}}                              
+        \end{figure}
+  \end{enumerate}
+
+\item Below are the histograms of the means for three different binomial distribution simulations. Each simulation consisted of 10000 experiments. The number of observations in each experiment is provided as well as the p value. One can see that the more skewed the binomial distribution is (values of p closer to 0 or to 1) the more observations per experiment are necessary to shift the distribution of the means towards a normal distribution. In fact, as can be seen in the last figure, even 1000 observations/exeriment do not completely remove the skewness from the p=.01 binomial distribution.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/3a.png}
+        \end{figure}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/3b.png}
+        \end{figure}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/3c.png}
+        \end{figure}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\textwidth]{/home/pjanowsk/Desktop/Statistics/HW2/3d.png}
+        \end{figure}
+
+\item 
+    \begin{enumerate}
+        \item Problem 2: \\
+        a) 10/20=.5 \\
+        b)(10-4)/20=6/20=.3
+        \item Problem 4: \\
+        a) $E(\overline{X}-\overline{Y})=E(\overline{X})-E(\overline{Y})=\mu_1-\mu_2$\\
+        b.$V(\overline{X}-\overline{Y})=V(\overline{X})+V(\overline{Y})=2.75/\sqrt{27}+4.43/\sqrt{20}=7.18$ \\
+        I am confused: what the difference is between the standard error of $\overline{X}-\overline{Y}$ and the estimated standard error. If I estimate $\sigma$ from the sample variance, I think this is already an estimated standard error. If I use the value of 1.462 for $\sigma$, this is also an estimated standard error. To get a standard error (not an estimated standard error) my understanding is that I would need to know the real population variance, but this is unknown.\\
+        $\sigma_{\hat{\theta}}=\sqrt{V(\overline{X}-\overline{Y})}=1.52$\\
+        $\hat{\sigma}_{\hat{\theta}}=\hat{\sigma}/\sqrt{n_{1}}+\hat{\sigma}/\sqrt{n_{2}}=1.462/\sqrt{27}+1.462/\sqrt{20}=0.61$\\
+        c. $\sigma_{1}/\sigma_{2}=\sqrt{V(X)}/\sqrt{V(Y)}=\sqrt{2.75}/\sqrt{4.42}=0.79$\\
+        d. $V(X-Y)=V(X)+V(Y)=2.75+4.42=7.18$
+        \item Problem 8:\\
+        a. $68/80=0.85$\\
+        b. If it works you need two randomly select two nondefective components. Assuming that the population is large enough to disregard non-replacement, $P=p*p=0.85*0.85=0.7225$
+    \end{enumerate}
+
+\end{enumerate}
+
+\end{document}

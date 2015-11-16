@@ -1,0 +1,260 @@
+# .bashrc
+
+### Clean path
+export PATH=/home/pjanowsk/casegroup2/bin:/bin:/usr/bin:/usr/local/bin
+### Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+#source /cottus/opt/intel/Compiler/11.1/069/bin/iccvars.sh intel64
+#source /cottus/opt/intel/Compiler/11.1/069/bin/ifortvars.sh intel64
+INTEL_LICENSE_FILE=/cottus/opt/intel/Compiler/11.1/069/licenses 
+source /cottus/opt/intel_2013/composer_xe_2013.1.117/bin/iccvars.sh intel64
+source /cottus/opt/intel_2013/composer_xe_2013.1.117/bin/compilervars.sh intel64
+
+### User specific aliases and functions
+alias rm='rm'
+alias lhd='ls -lth | head'
+alias untar='tar -zxvf'
+alias vmd='/home/pjanowsk/c/bin/vmd'
+alias allow='find . -type d -exec chmod 775 {} \; | find . -type f -exec chmod 775 {} \;'
+umask 0002 #set default permissions for new files
+export GREP_OPTIONS='--color=auto'  #color highlighting in grep/egrep
+export HISTSIZE=
+export HISTFILESIZE=
+HISTCONTROL=ignoreboth
+HISTIGNORE='ls:bg:fg:history'
+HISTTIMEFORMAT="[%F %T] "
+export HISTFILE=~/.bash_history
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+shopt -s histappend
+alias matlab='/home/pjanowsk/bin/matlab/bin/matlab'
+alias matlabrun='matlab -nosplash -nodisplay -nodesktop <'
+alias acroread='/cottus/u1/opt/Adobe/Reader9/bin/acroread'
+alias sirius='/cottus/u1/opt/sirius/1.2/Sirius'
+#alias python='/usr/bin/python'
+alias mercury='/home/pjanowsk/bin/Mercury_2.4/bin/mercury'
+alias jabref='$JRE_HOME/bin/java -jar ~/bin/jabref/JabRef-2.6.jar'
+#alias quicksynergy="/usr/local/bin/quicksynergy"
+
+
+#=====================================================================================#
+###SCHRODINGER
+#export SCHRODINGER=/home/schrodinger/suite2010
+#export LM_LICENSE_FILE=@cottus
+#alias maestro='/home/schrodinger/suite2010/maestro'
+#alias schrodinger='/home/schrodinger/suite2010/'
+###END_SCHRODINGER
+#=====================================================================================#
+
+
+#=====================================================================================#
+###GLOBUS (teragrid access)
+#export GLOBUS_LOCATION=$HOME/globus
+#export MYPROXY_SERVER=myproxy.teragrid.org
+#export MYPROXY_SERVER_PORT=7514
+#export GLOBUS_LOCATION MYPROXY_SERVER MYPROXY_SERVER_PORT
+
+#export GLOBUS_LOCATION=/opt/gt/5.0.4
+#export LD_LIBRARY_PATH=$GLOBUS_LOCATION/lib:$LD_LIBRARY_PATH
+#export LD_RUN_PATH=$GLOBUS_LOCATION/lib:$LD_RUN_PATH
+
+#silenced the next line so that i can use rsync from home (no output to terminal
+#when bashrc is sourced. But this not working could cause loginto xsede to fail.
+#source $GLOBUS_LOCATION/etc/globus-user-env.sh
+
+#alias refmyproxy='myproxy-logon -T -l pawelrc -s myproxy.teragrid.org -t 264'
+#alias ranger='gsissh pawelrc@tg-login.ranger.tacc.teragrid.org'
+#alias cobalt='gsissh pawelrc@login-co.ncsa.teragrid.org'
+#alias kraken='gsissh pawelrc@kraken-gsi.nics.utk.edu'
+#alias lincoln='gsissh pawelrc@lincoln.ncsa.uiuc.edu'
+#alias longhorn='gsissh pawelrc@tg-login.longhorn.tacc.teragrid.org'
+#alias spur='gsissh pawelrc@tg-login.spur.tacc.teragrid.org'
+#alias ember='gsissh pawelrc@login-ember.ncsa.teragrid.org'
+#alias gyges='ssh -X gyges'
+alias msi='ssh -XY janowski@itasca.msi.umn.edu'
+alias tyr='ssh -X tyr'
+###END_GLOBUS
+#=====================================================================================#
+
+
+export PYTHONPATH=~/c/scripts/python:$PYTHONPATH
+
+#EIGEN (C++ algebra libraries)
+#export LD_LIBRARY_PATH=/home/pjanowsk/Desktop/eigen/Eigen/:$LD_LIBRARY_PATH
+
+#MYQ (Insuk's que prorgram)
+#export PATH=~/c/myq/bin:$PATH
+
+### PDB programs from Huanwang
+#export PATH=$PATH:/home/pjanowsk/c/bin/sf-valid/bin
+export PATH=$PATH:/home/pjanowsk/c/bin/prog-vari/bin
+export PROG_VARI=/home/pjanowsk/c/bin/prog-vari
+
+### JAVA
+export JAVA_HOME=/cottus/u1/opt/java/jre1.6.0_23_x64
+export JRE_HOME=$JAVA_HOME
+#export JAVA_LD_PATH
+#export CLASSPATH
+
+
+### AMBER
+export AMBERHOME='/home/pjanowsk/amberSD'
+export LD_LIBRARY_PATH="$AMBERHOME/lib:$HOME/lib:$LD_LIBRARY_PATH"
+export xtal=$AMBERHOME/AmberTools/src/xtalutil/
+source $AMBERHOME/amber.sh
+
+alias testambermpi="time mpirun -np 2 pmemd.MPI -O -i ~/testamber/minall.in -o ~/testamber/minall.out -c ~/testamber/SCN_wat.crd -p ~/testamber/SCN_wat.prmtop -r ~/testamber/SCN_wat_tmp.rst7"
+alias testamber="time pmemd -O -i ~/testamber/minall.in -o ~/testamber/minall.out -c ~/testamber/SCN_wat.crd -p ~/testamber/SCN_wat.prmtop -r ~/testamber/SCN_wat_tmp.rst7"
+
+
+
+### PHENIX
+source /home/pjanowsk/c/bin/phenix_svn/build/setpaths.sh
+source /home/pjanowsk/c/bin/phenix_svn/source/phenix_regression/setup_aliases.sh
+export AMBER_LIBRARY_DIR=/net/casegroup2/u2/pjanowsk/Phenix/AmberLibrary
+
+
+###########################################################
+#R-required(to run R ssh to gyges)
+#export SW=/cottus/u1/opt
+#export PATH=$SW/R/2.10.x/generic/bin:$PATH
+
+# optional
+
+# ----  R - gui  ---  JGR  -------------------
+#alias JGR='/cottus/opt/R/2.10.x/generic/lib64/R/library/JGR/scripts/run'
+#alias jgr='/cottus/opt/R/2.10.x/generic/lib64/R/library/JGR/scripts/run'
+
+# ----  R - gui  ---  Komodo Edit for R  -----
+#export PATH=$SW/komodo/Komodo-Edit-5.2.4/bin:$PATH
+# --------------------------------------------
+# ----  R - gui  ---  rkward  -----  (in gyges default path -- /usr/bin/rkward )
+# --------------------------------------------
+# ----  R - gui  ---  rattle, Rcmdr, pmg  ----  ( in R generic bin dir )
+#       http://www.sciviews.org/_rgui/index.html
+# --------------------------------------------
+#########################################################
+
+#export R_LIBS_USER=/home/pjanowsk/R/x86_64-redhat-linux-gnu-library:/usr/lib64/R/library:/usr/share/R/library
+# others in your group can use this to use packages in their home and yours by using the path settings here:
+#  ~/R/x86_64-redhat-linux-gnu-library:/home/pjanowsk/R/x86_64-redhat-linux-gnu-library:/usr/lib64/R/library:/usr/shar/R/library
+
+###########################################################
+if [ `hostname` = "krakow" ]; then
+  module purge
+  source /opt/gaussian/setup-gv-g09-A02-amd64.sh
+  export GAUSS_SCRDIR=/scratch/pawel
+
+   ###GLOBUS (teragrid access)
+   export GLOBUS_LOCATION=/opt/gt/5.0.4
+   export LD_LIBRARY_PATH=$GLOBUS_LOCATION/lib:$LD_LIBRARY_PATH
+   export LD_RUN_PATH=$GLOBUS_LOCATION/lib:$LD_RUN_PATH
+   source $GLOBUS_LOCATION/etc/globus-user-env.sh
+
+   alias refmyproxy='myproxy-logon -T -l pawelrc -s myproxy.teragrid.org -t 264'
+   alias ranger='gsissh pawelrc@tg-login.ranger.tacc.teragrid.org'
+   alias cobalt='gsissh pawelrc@login-co.ncsa.teragrid.org'
+   alias kraken='gsissh pawelrc@kraken-gsi.nics.utk.edu'
+   alias lincoln='gsissh pawelrc@lincoln.ncsa.uiuc.edu'
+   alias longhorn='gsissh pawelrc@tg-login.longhorn.tacc.teragrid.org'
+   alias spur='gsissh pawelrc@tg-login.spur.tacc.teragrid.org'
+   alias ember='gsissh pawelrc@login-ember.ncsa.teragrid.org'
+   alias gordon='gsissh pawelrc@gordon.sdsc.edu'
+   alias keenland='gsissh pawelrc@gsissh.keeneland.nics.xsede.org'
+   alias trestles='gsissh pawelrc@trestles.sdsc.edu'
+   alias blacklight='gsissh pawelrc@blacklight.psc.teragrid.org'
+   alias stampede='ssh pawelrc@stampede.tacc.utexas.edu'
+   alias gyges='ssh -X gyges'
+   alias cci='ssh -X pawelrc@cci.lbl.gov'
+
+#   alias space=du -sk ./* | sort -n | awk 'BEGIN{ pref[1]="K"; pref[2]="M"; pref[3]="G";} { total = total + $1; x = $1; y = 1; while( x > 1024 ) { x = (x + 1023)/1024; y++; } printf("%g%s\t%s\n",int(x*10)/10,pref[y],$2); } END { y = 1; while( total > 1024 ) { total = (total + 1023)/1024; y++; } printf("Total: %g%s\n",int(total*10)/10,pref[y]); }'
+
+
+fi
+
+#===============================================================================
+#               GIT REPOSITORY MANAGMENT
+#===============================================================================
+#
+# Git/yorkgroup
+#
+export GIT_HOME="$HOME/c/devel/git"
+if [ -d $GIT_HOME ]; then
+    for gitdir in `find $GIT_HOME -maxdepth 4 -name "*.git" -type d`; do
+	BASHRC=${gitdir%.git}bashrc
+	if [ -x $BASHRC ]; then eval `$BASHRC`; fi
+    done
+fi
+#
+# Git/Local Projects
+#
+export PROJECT_HOME="$HOME/c/devel/projects"
+if [ -d $PROJECT_HOME ]; then
+    for gitdir in `find $PROJECT_HOME -maxdepth 4 -name "*.git" -type d`; do
+	BASHRC=${gitdir%.git}bashrc
+	if [ -x $BASHRC ]; then eval `$BASHRC`; fi
+    done
+fi
+
+# Use this version below on your main machine.
+# Otherwise, if you are on a remote machine, then
+# add the user@host of your main account.
+
+export PROJECT_HOST_BASE=$USER@$HOSTNAME;
+
+tkYorkLib.pl(){ export LANG=C; $GIT_MANAGEMENT_BIBLIOGRAPHY/tkYorkLib.pl acroread; }
+#===================================================================================
+
+# Added by CCP4 package manager:
+source /net/casegroup2/u2/pjanowsk/bin/ccp4_6.3/ccp4-6.3.0/bin/ccp4.setup-sh
+
+#PATH
+export PATH=/usr/bin:~/c/bin:$AMBERHOME/bin:$AMBERHOME/lib:/cottus/u1/opt/Adobe/Reader9/bin:$PATH
+#/usr/bin added here so that python2.7 is ahead of phenix.python
+#Dave Cases compiler directories added to path. Probably not necessary as long as compiler scripts sourced at top. But make sure $AMBERHOME/bin is added last so that it is first in path and `which mpirun` gives $AMBERHOME/bin
+#export PATH=$AMBERHOME/bin:$PATH:/cottus/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/bin/intel64:/cottus/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/mpirt/bin/intel64:/cottus/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/bin/intel64:/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/bin/intel64_mic:/u1/opt/intel_2013/composer_xe_2013.1.117/composer_xe_2013.1.117/debugger/gui/intel64
+
+
+#to get latest gcc compiler on casegroup (for compiling amber on casegroup
+if [ `hostname` = "casegroup.rutgers.edu" ]; then
+export PATH=/home/case/bin:$PATH
+fi
+
+#matlab /net/cottus/u1/opt/matlab/R2011a/bin/matlab
+#LM_LICENSE_FILE=@prion.rutgers.edu
+PROMPT_COMMAND='history -a'
+
+#virtualenvwrapper
+export WORKON_HOME=~/Envs
+source /usr/bin/virtualenvwrapper.sh
+
+###   Handy Extract Program
+extract () {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xvjf $1        ;;
+            *.tar.gz)    tar xvzf $1     ;;
+            *.bz2)       bunzip2 $1       ;;
+            *.rar)       unrar x $1     ;;
+            *.gz)        gunzip $1     ;;
+            *.tar)       tar xvf $1        ;;
+            *.tbz2)      tar xvjf $1      ;;
+            *.tgz)       tar xvzf $1       ;;
+            *.zip)       unzip $1     ;;
+            *.Z)         uncompress $1  ;;
+            *.7z)        7z x $1    ;;
+            *)           echo "'$1' cannot be extracted via >extract<" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+biggest () {
+	du -sk ./* | sort -n | awk 'BEGIN{ pref[1]="K"; pref[2]="M"; pref[3]="G";} { total = total + $1; x = $1; y = 1; while( x > 1024 ) { x = (x + 1023)/1024; y++; } printf("%g%s\t%s\n",int(x*10)/10,pref[y],$2); } END { y = 1; while( total > 1024 ) { total = (total + 1023)/1024; y++; } printf("Total: %g%s\n",int(total*10)/10,pref[y]); }'
+}
+
+
+

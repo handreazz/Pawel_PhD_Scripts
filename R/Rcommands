@@ -1,0 +1,63 @@
+##TO RUN A SCRIPT
+R CMD BATCH final1.R
+
+##TO INSTALL ON CORNPOPS (NetID password)
+install.packages("mclust", lib="/ilab/users/pjanowsk/final1")
+library("mclust", lib.loc="/ilab/users/pjanowsk/final1")
+
+###SAVE SESSSION
+install.packages(session)
+library(session)
+save.session("pawel")
+restore.session("pawel")
+
+###READING DATA
+d=read.table("hyb.txt")
+da=as.matrix(d[,3:147))
+
+###AVERAGES/MEANS
+apply(x,1,min) (1 row, 2 column)
+
+####HISTOGRAM
+jpeg("jpg.jpg")
+hist(da, breaks = 50, density=NULL, angle=45,col="green", border="black",labels=10,main="Histogram of hybridization intensities",xlab="hybridization log-ratio", ylab="count")
+dev.off()
+
+###KMEANS
+cl<-kmeans(dmeanrow,5, iter.max=20, nstart=1000)
+plot(x, col = cl$cluster)
+points(cl$centers, col = 1:2, pch = 8, cex=2)
+
+
+###MARYSI KMESND LOOP
+library(cluster)
+km=c()
+for (i in 2:15) {
+	km<-c(km, kmeans(h, i, nstart=20)) ### clusters with different 
+km_1<-as.matrix(
+for ( i in 1:14) {
+	t1<-c(t1, km_1[(3+i*4),]) } ####
+km_4<-kmeans(h, 4, nstart=1000)
+cluster<-km_4$cluster
+h_cl<-data.frame(hyb$V2, cluster, apply(h, 1, mean))
+or<-h_cl[order(h_cl$cluster),]
+or_1=subset(or,or$cluster==1)
+or_2=subset(or,or$cluster==2)
+or_3=subset(or,or$cluster==3)
+or_4=subset(or,or$cluster==4)
+
+
+
+##########################################
+
+
+library("mclust", lib.loc="/ilab/users/pjanowsk/final1")
+def<-defaultPrior(dmeanrow, G=5, modelName="V")
+h_BCI2<-mclustBIC(dmeanrow, G=5, prior=priorControl())
+h_model<-mclustModel(dmeanrow, h_BCI2)
+es<-estep(modelName=h_model$modelName, data = dmeanrow, parameters=h_model$parameters) 
+map<-map(es$z)
+h_mix_cl<-data.frame(d$V2, map, dmeanrow)
+jpeg("3.jpg")
+plot (h_mix_cl$d.V2,h_mix_cl$dmeanrow, col=h_mix_cl$map, xlab="Position", ylab="Hybridization intensity", main="Probes clustered by hybridization intensity", sub="mixture model, 5 gaussians", pch=20,cex=1)
+dev.off()

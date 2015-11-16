@@ -1,0 +1,4 @@
+parm ../../4lztUC.prmtop
+trajin ../../4lztUC.pdb
+trajin ../revsym/for_adp.nc
+multidihedral chip resrange 1-129 out chi.dat
